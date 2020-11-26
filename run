@@ -1,0 +1,10 @@
+A=`realpath $0`
+IN=`realpath $1`
+OUT=`pwd`/$2
+if [[ "$2" == "" ]]
+then
+	OUT="$OUT"a
+fi
+cd `dirname "$A"`
+python3 mcasm/mcasm.py "$IN" memory && g++ -c OzEmu/main.cpp && g++ main.o -lsfml-graphics -lsfml-window -lsfml-system -lncurses -o "$OUT"&& "$OUT"
+rm main.o
