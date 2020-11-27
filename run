@@ -7,4 +7,4 @@ then
 fi
 cd `dirname "$A"`
 python3 mcasm/mcasm.py "$IN" memory && g++ -c OzEmu/main.cpp && g++ main.o -lsfml-graphics -lsfml-window -lsfml-system -lncurses -o "$OUT"&& "$OUT"
-rm main.o
+rm -rf main.o mcasm/__pycache__

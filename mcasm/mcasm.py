@@ -4,7 +4,7 @@ import sys
 from functions import *
 
 
-commands = {"add": add, "sub": sub, "mul": sub, "div": mul, "mov": mov,
+commands = {"add": add, "sub": sub, "mul": mul, "div": div, "mov": mov,
 			"and": and_, "or": or_, "xor": xor, "cmp": cmp_, "int": int_,
 			"jmp": jmp, "loop": loop, "push": push, "pop": pop,
 			"mod": mod, "print": print_, "delay": delay, "send": send,

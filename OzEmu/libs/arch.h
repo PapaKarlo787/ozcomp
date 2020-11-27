@@ -206,8 +206,6 @@ private:
 //если есть n то перевернуть все биты
 	void jmp_c() {
 		char f = (char)readNum(1);
-		
-		std::cout<<(int)f<<std::endl;
 		if((f & flags) != 0)
 			jmp();
 		else
@@ -333,7 +331,7 @@ private:
 
 	void set_cursor_r() {
 		readRegisters();
-		lcd.setCursor(R[r1], R[r2]);
+		lcd.setCursor((unsigned int)R[r1], (unsigned int)R[r2]);
 	}
 
 	void draw_screen() {

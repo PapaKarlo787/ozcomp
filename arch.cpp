@@ -1,18 +1,17 @@
+#include <Arduino.h>
 #include <sd_raw.h>
 #include <PS2Keyboard.h>
-#include <Arduino.h>
 #include <MyScreen.h>
 
 
-class OzArch
-{
+class OzArch {
 public:
 	OzArch() {
 		if (!sd_raw_init()) while(true);
-		keyboard.begin(8, 3);
 		lcd.begin();
+		keyboard.begin(8, 3);
 		randomSeed(analogRead(0));
-    lcd.setCursor(0, 0);
+		lcd.setCursor(0, 0);
 	}
   
 	void exec() {
@@ -30,13 +29,48 @@ private:
 	PCD8544 lcd;
   
 	void (OzArch::*comms[43]) (void) = {
-		&OzArch::add_rr, &OzArch::add_rc, &OzArch::sub_rr, &OzArch::sub_rc, &OzArch::mul_rr, &OzArch::mul_rc,
-		&OzArch::div_rr, &OzArch::div_rc, &OzArch::mov_rm, &OzArch::mov_mr, &OzArch::mov_rr, &OzArch::mov_rc,
-		&OzArch::mov_rmor, &OzArch::mov_morr, &OzArch::and_rr, &OzArch::and_rc, &OzArch::or_rr, &OzArch::or_rc,
-		&OzArch::xor_rr, &OzArch::xor_rc, &OzArch::cmp_rr, &OzArch::cmp_rc, &OzArch::jmp, &OzArch::jmp_c,
-		&OzArch::lp, &OzArch::push, &OzArch::pop, &OzArch::mod_rr, &OzArch::mod_rc, &OzArch::print_num,
-		&OzArch::print_line, &OzArch::del_r, &OzArch::del_c, &OzArch::snd_r, &OzArch::snd_c, &OzArch::to_int,
-		&OzArch::get_key, &OzArch::set_cursor, &OzArch::set_cursor_r, &OzArch::draw_screen, &OzArch::call, &OzArch::ret,
+		&OzArch::add_rr, 
+		&OzArch::add_rc, 
+		&OzArch::sub_rr, 
+		&OzArch::sub_rc, 
+		&OzArch::mul_rr, 
+		&OzArch::mul_rc,
+		&OzArch::div_rr, 
+		&OzArch::div_rc, 
+		&OzArch::mov_rm, 
+		&OzArch::mov_mr, 
+		&OzArch::mov_rr, 
+		&OzArch::mov_rc,
+		&OzArch::mov_rmor, 
+		&OzArch::mov_morr, 
+		&OzArch::and_rr, 
+		&OzArch::and_rc, 
+		&OzArch::or_rr, 
+		&OzArch::or_rc,
+		&OzArch::xor_rr, 
+		&OzArch::xor_rc, 
+		&OzArch::cmp_rr, 
+		&OzArch::cmp_rc, 
+		&OzArch::jmp,
+		&OzArch::jmp_c,
+		&OzArch::lp, 
+		&OzArch::push, 
+		&OzArch::pop, 
+		&OzArch::mod_rr, 
+		&OzArch::mod_rc, 
+		&OzArch::print_num,
+		&OzArch::print_line, 
+		&OzArch::del_r,
+		&OzArch::del_c,
+		&OzArch::snd_r,
+		&OzArch::snd_c, 
+		&OzArch::to_int,
+		&OzArch::get_key, 
+		&OzArch::set_cursor, 
+		&OzArch::set_cursor_r, 
+		&OzArch::draw_screen,
+		&OzArch::call, 
+		&OzArch::ret,
 		&OzArch::rnd
 	};
 	
@@ -46,7 +80,7 @@ private:
 		r2 = (i & 240) / 16;
 	}
   
-	uint32_t readNum(uint8_t n) {
+	int readNum(uint8_t n) {
 		uint32_t x = 0;
 		for (uint8_t i = 0; i < n; i++)
 			x = x * 256 + read();
@@ -145,7 +179,7 @@ private:
 	void mov_rc() {
 		readRegisters();
 		uint32_t x = readNum(4);
-		R[r1] = *(double*)&x;
+		R[r1] = *(uint8_t*)&x;
 	}
 
 //r1 - destination, r2 - index
@@ -228,7 +262,7 @@ private:
 	void print_line() {
 		uint32_t temp = ip;
 		ip = readNum(4);
-		while (char c = read())
+		while (uint8_t c = read())
 			lcd.write(c);
 		ip = temp + 4;
 	}
@@ -289,39 +323,37 @@ private:
 	}
 
 	void set_cursor() {
-		byte x = (byte)readNum(1);
-		byte y = (byte)readNum(1);
+		uint8_t x = (uint8_t)readNum(1);
+		uint8_t y = (uint8_t)readNum(1);
 		lcd.setCursor(x, y);
 	}
 
 	void set_cursor_r() {
 		readRegisters();
-		lcd.setCursor(R[r1], R[r2]);
+		lcd.setCursor((uint32_t)R[r1], (uint32_t)R[r2]);
 	}
 
 	void draw_screen() {
 		uint32_t temp = ip;
 		ip = readNum(4);
-		for (int i = 0; i < 504; i++)
+		for (uint32_t i = 0; i < 504; i++)
 			lcd.send(HIGH, (uint8_t)readNum(1));
 		ip = temp + 4;
 	}
 
 	void call() {
-		uint32_t temp = readNum(4);
-		write(sp-=4, (uint8_t*)&(ip), 4);
-		for (byte i = 0; i < 16; i++)
-			write(sp-=4, (uint8_t*)&(R[i]), 4);
-		ip = temp;
+		uint32_t old_ip = ip + 4;
+		ip = readNum(4);
+		for (uint8_t i = 0; i < 4; i++) { 
+			uint8_t t[1];
+			t[0] = old_ip % 256;
+			old_ip /= 256;
+			write(sp-=1, t, 1);
+		}
 	}
 	
 	void ret() {
 		ip = sp;
-		for (byte i = 15; i > -1; i--) {
-			sp += 4;
-			uint32_t x = readNum(4);
-			R[i] = *(double*)&x;
-		}
 		ip = readNum(4);
 		sp += 4;
 	}
