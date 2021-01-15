@@ -48,6 +48,12 @@ public:
 		for (int i = 0; i < str.size(); i++)
 			write(str[i]);
 	}
+	
+	void print(int num){
+		std::string str = to_string(num);
+		for (int i = 0; i < str.size(); i++)
+			write(str[i]);
+	}
 
 	void send(unsigned int _, unsigned char num){
 		unsigned int x = cursor % 84;

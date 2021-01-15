@@ -115,9 +115,13 @@ def mod(data, l):
 	return rc(data, 27, 28)
 
 
-def print_(data, l):
+def print_int(data, l):
+	return print_(data, l, 43)
+
+
+def print_(data, l, n=29):
 	if re.match(reg_re, data[0]):
-		return bytes([29, int(data[0][1:])])
+		return bytes([n, int(data[0][1:])])
 	return bytes(jump(30, data))
 
 
@@ -174,27 +178,6 @@ def ret(data, l):
 
 def rnd(data, l):
 	return bytes([42])
-
-
-def data(data, l):
-	if data[1] != "," or not re.match(int_re, data[2]):
-		raise Exception
-	n = int(data[2])
-	result = []
-	if re.match(float_re, data[0]):
-		x = IEEE754(float(data[0]))
-		to_bytes(result, x, 0)
-		return bytes(result * n)
-	elif re.match(int_re, data[0]):
-		x = int(data[0], 16 if "x" in data[0] else 10)
-	else:
-		raise Exception
-	while True:
-		result.insert(0, x % 256)
-		x //= 256
-		if x == 0:
-			break
-	return bytes(result * n)
 
 
 def err_rc(data):

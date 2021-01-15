@@ -28,7 +28,7 @@ private:
 	PS2Keyboard keyboard;
 	PCD8544 lcd;
   
-	void (OzArch::*comms[43]) (void) = {
+	void (OzArch::*comms[44]) (void) = {
 		&OzArch::add_rr, 
 		&OzArch::add_rc, 
 		&OzArch::sub_rr, 
@@ -71,7 +71,8 @@ private:
 		&OzArch::draw_screen,
 		&OzArch::call, 
 		&OzArch::ret,
-		&OzArch::rnd
+		&OzArch::rnd,
+		&OzArch::print_int
 	};
 	
 	void readRegisters() {
@@ -270,6 +271,11 @@ private:
 	void print_num() {
 		readRegisters();
 		lcd.print(R[r1]);
+	}
+
+	void print_int() {
+		readRegisters();
+		lcd.print((uint32_t)R[r1]);
 	}
 
 	void push() {

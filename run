@@ -1,3 +1,7 @@
+if [[ $1 == "" ]]; then
+	echo Usage $0 prog.asm [out.bin]
+	exit 1
+fi
 A=`realpath $0`
 IN=`realpath $1`
 OUT=`pwd`/$2
