@@ -10,7 +10,8 @@ commands = {"add": add, "sub": sub, "mul": mul, "div": div, "mov": mov,
 			"jmp": jmp, "loop": loop, "push": push, "pop": pop,
 			"mod": mod, "print": print_, "delay": delay, "send": send,
 			"gkey": gkey, "setc": setc, "draw": draw, "data": data,
-			"call": call, "ret": ret, "rnd": rnd, "iprint": print_int}
+			"call": call, "ret": ret, "rnd": rnd, "iprint": print_int,
+			"dd": dd}
 
 
 pattern = re.compile(r"\[|\]|\+|-?[\w\.]+|,|:|;.*|-")

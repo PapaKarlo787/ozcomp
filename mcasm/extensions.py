@@ -25,15 +25,17 @@ def data(data, l):
 			break
 	return bytes(result * n)
 
-def db(data, l):
+def dd(data, l):
 	result = []
-	while(data):
+	while data:
 		if not data[1] != ',' or not re.match(int_re, data[0]):
 			raise Exception
-		n = int(data.pop(0))
-		if n > 255:
-			raise Exception("Wrong type!")
-		result.append(n)
-		data.pop(0)
+		loc_res = []
+		data[0] = int(data[0])
+		while data[0]:
+			loc_res.insert(0, data[0] % 256)
+			data[0] //= 256
+		result += loc_res
+		data = data[2:]
 	return bytes(result)
 
