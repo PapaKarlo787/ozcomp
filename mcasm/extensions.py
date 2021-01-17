@@ -28,14 +28,18 @@ def data(data, l):
 def dd(data, l):
 	result = []
 	while data:
-		if not data[1] != ',' or not re.match(int_re, data[0]):
+		if data[1] != ',':
 			raise Exception
+		if re.match(int_re, data[0]):
+			data[0] = int(data[0])
+		elif re.match(float_re, data[0]):
+			data[0] = IEEE754(float(data[0]))
+		else:
+			raise Exception		
 		loc_res = []
-		data[0] = int(data[0])
 		while data[0]:
 			loc_res.insert(0, data[0] % 256)
 			data[0] //= 256
 		result += loc_res
 		data = data[2:]
 	return bytes(result)
-

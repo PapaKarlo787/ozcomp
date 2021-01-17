@@ -29,7 +29,7 @@ private:
 	PS2Keyboard keyboard;
 	PCD8544 lcd;
   
-	void (OzArch::*comms[44]) (void) = {
+	void (OzArch::*comms[48]) (void) = {
 		&OzArch::add_rr, 
 		&OzArch::add_rc, 
 		&OzArch::sub_rr, 
@@ -73,7 +73,11 @@ private:
 		&OzArch::call, 
 		&OzArch::ret,
 		&OzArch::rnd,
-		&OzArch::print_int
+		&OzArch::print_int,
+		&OzArch::movb_rm,
+		&OzArch::movb_mr,
+		&OzArch::movb_rmor,
+		&OzArch::movb_morr
 	};
 	
 	void readRegisters() {
@@ -168,9 +172,23 @@ private:
 		ip = temp + 4;
 	}
 
+	void movb_rm() {
+		readRegisters();
+		unsigned int temp = ip;
+		ip = readNum(4);
+		R[r1] = readNum(1);
+		ip = temp + 4;
+	}
+
 	void mov_mr() {
 		readRegisters();
 		write(readNum(4), (unsigned char*)&(R[r1]), 4);
+	}
+
+	void movb_mr() {
+		readRegisters();
+		char x = (char)R[r1];
+		write(readNum(4), (unsigned char*)&(x), 1);
 	}
 
 	void mov_rr() {
@@ -194,9 +212,23 @@ private:
 		ip = temp + 4;
 	}
 
+	void movb_rmor() {
+		readRegisters();
+		unsigned int temp = ip;
+		ip = readNum(4)+((unsigned int)R[r2]);
+		R[r1] = readNum(1);
+		ip = temp + 4;
+	}
+
 	void mov_morr() {
 		readRegisters();
 		write(readNum(4)+((unsigned int)R[r2]), (unsigned char*)&(R[r1]), 4);
+	}
+	
+	void movb_morr() {
+		readRegisters();
+		char x = (char)R[r1];
+		write(readNum(4)+((unsigned int)R[r2]), (unsigned char*)&(x), 1);
 	}
 	
 	void jmp() {
@@ -330,9 +362,7 @@ private:
 	}
 
 	void set_cursor() {
-		char x = (char)readNum(1);
-		char y = (char)readNum(1);
-		lcd.setCursor(x, y);
+		lcd.setCursor((char)readNum(1), (char)readNum(1));
 	}
 
 	void set_cursor_r() {

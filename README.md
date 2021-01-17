@@ -85,7 +85,7 @@ GKEY	| N/A		| 	gets keyboard char in R15, 0 if no char
 |Name 	| Arguments |	Decription
 |-:|:-:|:-
 DATA	| C1/C2 	|	repeat C2 times bytes of C1
-
+DD		| C1,C2,...	|	copy numbers in memory
 
 ##### Other
 

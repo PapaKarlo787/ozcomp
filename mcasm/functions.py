@@ -14,68 +14,34 @@ label_re = "([a-z]\w*)$"
 nl = 1
 
 def add(data, l):
-	err_rc(data)
 	return rc(data, 0, 1)
 	
 
 def sub(data, l):
-	err_rc(data)
 	return rc(data, 2, 3)
 
 	
 def mul(data, l):
-	err_rc(data)
 	return rc(data, 4, 5)
 
 	
 def div(data, l):
-	err_rc(data)
 	return rc(data, 6, 7)
 
 
-def mov(data, l):
-	try:
-		err_rc(data)
-		return rc(data, 10, 11)
-	except Exception:
-		if re.match(reg_re, data[0]) and data[1] == ",":
-			r = int(data[0][1:])
-			result = get_mor(data[2:], l)
-			if len(data) == 7:
-				result[0] = result[0] + r
-				result.insert(0, 12)
-			else:
-				result = [8, r] + result
-		elif re.match(reg_re, data[-1]) and data[-2] == ",":
-			r = int(data[-1][1:])
-			result = get_mor(data[:-2], l)
-			if len(data) == 7:
-				result[0] = result[0] + r
-				result.insert(0, 13)
-			else:
-				result = [9, r] + result
-		else:
-			raise Exception
-		return bytes(result)
-
-
 def and_(data, l):
-	err_rc(data)
 	return rc(data, 14, 15)
 
 
 def or_(data, l):
-	err_rc(data)
 	return rc(data, 16, 17)
 
 
 def xor(data, l):
-	err_rc(data)
 	return rc(data, 18, 19)
 
 
 def cmp_(data, l):
-	err_rc(data)
 	return rc(data, 20, 21)
 
 
@@ -83,8 +49,35 @@ def jmp(data, l):
 	return bytes(jump(22, data, l))
 
 
+def mod(data, l):
+	return rc(data, 27, 28)
+
+
+def loop(data, l):
+	return bytes(jump(24, data))
+
+
+def mov(data, l):
+	try:
+		return rc(data, 10, 11)
+	except Exception:
+		return movb(data, l, 12, 8, 13, 9)
+
+
+def movb(data, l, k1=46, k2=44, k3=47, k4=45):
+	if re.match(reg_re, data[0]) and data[1] == ",":
+		r = int(data[0][1:])
+		result = finish_mor(data, k1, k2, r, get_mor(data[2:], l))
+	elif re.match(reg_re, data[-1]) and data[-2] == ",":
+		r = int(data[-1][1:])
+		result = finish_mor(data, k3, k4, r, get_mor(data[:-2], l))
+	else:
+		raise Exception
+	return bytes(result)
+
+
 def jc(data, cond, l):
-	bit = 0 if cond[0] == 'n' else 1
+	bit = 0 if 'n' in cond[0] else 1
 	byte = 0
 	for i in "gle":
 		byte *= 2
@@ -94,25 +87,14 @@ def jc(data, cond, l):
 	return bytes(result)
 
 
-def loop(data, l):
-	return bytes(jump(24, data))
-
-
-def push(data, l):
+def push(data, l, k=25):
 	if not re.match(reg_re, data[0]):
 		raise Exception
-	return bytes([25, int(data[0][1:])])
+	return bytes([k, int(data[0][1:])])
 
 
 def pop(data, l):
-	if not re.match(reg_re, data[0]):
-		raise Exception
-	return bytes([26, int(data[0][1:])])
-
-
-def mod(data, l):
-	err_rc(data)
-	return rc(data, 27, 28)
+	return push(data, l, 26)
 
 
 def print_int(data, l):
@@ -158,19 +140,22 @@ def setc(data, l):
 	if data[1] == ",":
 		if re.match(reg_re, data[0]) and re.match(reg_re, data[2]):
 			return bytes([38, int(data[2][1:]) * 16 + int(data[0][1:])])
-		c1 = int(data[0], 16 if "x" in data[0] else 10)
-		c2 = int(data[2], 16 if "x" in data[2] else 10)
+		c1 = int(data[0], 16 if "0x" == data[0][:2] else 10)
+		c2 = int(data[2], 16 if "0x" == data[2][:2] else 10)
 		if c1 > -1 and c2 > -1:
 			return bytes([37, c1, c2])
 	raise Exception
 
 
 def draw(data, l):
+	if not len(data):
+		data.append("screen_buff")
 	return bytes(jump(39, data, l))
 
 
 def call(data, l):
 	return bytes(jump(40, data, l))
+
 
 def ret(data, l):
 	return bytes([41])
@@ -187,16 +172,13 @@ def err_rc(data):
 
 
 def rc(data, f, s, l=0):
+	err_rc(data)
 	if data[2][0] == "r":
 		result = [f]
 		result.append(int(data[2][1:]) * 16 + int(data[0][1:]))
 	elif re.match(label_re, data[2]):
-		result = [s]
-		if data[2] in labels:
-			to_bytes(result, labels[data[2]])
-		else:
-			to_rebuild.append((data[2], l + 1, nl))
-			result += [0] * 4
+		result = [s, 0, 0, 0, 0]
+		to_rebuild.append((data[2], l + 1, nl))
 	else:
 		result = [s, int(data[0][1:])]
 		x = IEEE754(float(int(data[2], 16) if "x" in data[2] else data[2]))
@@ -217,37 +199,36 @@ def jump(n, data, l=0):
 	if re.match(int_re, data[0]):
 		to_bytes(result, int(data[0], 16 if "x" in data[0] else 10))
 	elif re.match(label_re, data[0]):
-		if data[0] in labels:
-			to_bytes(result, labels[data[0]])
-		else:
-			to_rebuild.append((data[0], l + 1, nl))
-			result += [0] * 4
+		to_rebuild.append((data[0], l + 1, nl))
+		result += [0] * 4
 	else:
 		raise Exception
+	return result
+
+
+def finish_mor(data, k1, k2, r, result):
+	if len(data) == 7:
+		result[0] += r
+		result.insert(0, k1)
+	else:
+		result = [k2, r] + result
 	return result
 
 
 def get_mor(data, l=0):
 	result = []
 	if len(data) == 3 and data[0] == "[" and data[2] == "]":
-		if data[1] in labels:
-			to_bytes(result, labels[data[1]], 0)
-		elif re.match(reg_re, data[1]):
-			result = [int(data[1][1:])*16, 0, 0, 0, 0]
+		if re.match(reg_re, data[1]):
+			result = [int(data[1][1:])*16]
 		else:
 			to_rebuild.append((data[1], l + 2, nl))
-			result = [0] * 4
 	elif (len(data) == 5 and data[0] == "[" and data[4] == "]"
 		and data[2] == "+" and re.match(reg_re, data[3])):
 		if re.match(reg_re, data[3]):
 			result = [int(data[3][1:])*16]
 		else:
 			raise Exception("No such register")
-		if data[1] in labels:
-			to_bytes(result, labels[data[1]])
-		else:
-			to_rebuild.append((data[1], l + 2, nl))
-			result += [0] * 4
+		to_rebuild.append((data[1], l + 2, nl))
 	else:
 		raise Exception
-	return result
+	return result + [0] * 4
