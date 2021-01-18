@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <ctime>
+#include <cmath>
 #include <unistd.h>
 #define HIGH 1
 #define LOW 0

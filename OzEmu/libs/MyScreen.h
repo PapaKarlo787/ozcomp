@@ -31,8 +31,8 @@ public:
 
 	void setCursor(unsigned int x, unsigned int y){
 		x %= 84;
-		y %= 48;
-		cursor = x + (y / 8) * 84;
+		y %= 6;
+		cursor = x + y * 84;
 	}
 
 	void write(unsigned char c){

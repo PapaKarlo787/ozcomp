@@ -1,6 +1,7 @@
 import re
 import argparse
 import sys
+import os
 from functions import *
 from extensions import *
 
@@ -11,14 +12,14 @@ commands = {"add": add, "sub": sub, "mul": mul, "div": div, "mov": mov,
 			"mod": mod, "print": print_, "delay": delay, "send": send,
 			"gkey": gkey, "setc": setc, "draw": draw, "data": data,
 			"call": call, "ret": ret, "rnd": rnd, "iprint": print_int,
-			"dd": dd, "movb": movb}
+			"dd": dd, "movb": movb, "pow": pow_}
 
 
-pattern = re.compile(r"\[|\]|\+|-?[\w\.]+|,|:|;.*|-")
+pattern = re.compile(r"\".*\"|\[|\]|\+|-?[\w\.]+|,|:|;.*|-")
 
 
 def manage_line(data):
-	global data_base, addr
+	global data_base, addr, nl
 	if data and data[-1][0] == ";":
 		data.pop()
 	if not data:
@@ -34,16 +35,25 @@ def manage_line(data):
 		labels[data[0]] = len(data_base)
 	elif re.match("jn?[egl]$", data[0]):
 		data_base += jc(data[1:], data[0][1:], len(data_base))
+	elif data[0] == "include" and len(data) == 2 and "\"\"" == data[1][0]+data[1][-1]:
+		nl, _ = (nl, start(data[1][1:-1]))
 	else:
 		raise Exception
 
 
-def start(fn):
+def start(fn, visited=[]):
 	global nl
+	if os.path.abspath(fn) in visited:
+		raise Exception("file {} already included".format(fn))
+	visited.append(os.path.abspath(fn))
 	with open(fn) as f:
 		for l in f:
-			manage_line(pattern.findall(l.lower()))
-			nl += 1
+			try:
+				manage_line(pattern.findall(l.lower()))
+				nl += 1
+			except Exception as e:
+				msg = str(e) if str(e) else "Wrong line"
+				raise Exception("{}: {} (line {})".format(fn, msg, nl))
 
 
 def add_labels():
@@ -75,6 +85,5 @@ if __name__ == "__main__":
 		add_labels()
 		save(args.outf)
 	except Exception as e:
-		x = "Wrong line" if str(e) == "" else str(e)
-		print(x + " (line {})".format(nl))
+		print(e)
 		sys.exit(1)

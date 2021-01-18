@@ -29,7 +29,7 @@ private:
 	PS2Keyboard keyboard;
 	PCD8544 lcd;
   
-	void (OzArch::*comms[48]) (void) = {
+	void (OzArch::*comms[50]) (void) = {
 		&OzArch::add_rr, 
 		&OzArch::add_rc, 
 		&OzArch::sub_rr, 
@@ -77,7 +77,9 @@ private:
 		&OzArch::movb_rm,
 		&OzArch::movb_mr,
 		&OzArch::movb_rmor,
-		&OzArch::movb_morr
+		&OzArch::movb_morr,
+		&OzArch::pow_rr,
+		&OzArch::pow_rc
 	};
 	
 	void readRegisters() {
@@ -161,6 +163,17 @@ private:
 		readRegisters();
 		unsigned int x = readNum(4);
 		R[r1] /= *(float*)&x;
+	}
+	
+	void pow_rr() {
+		readRegisters();
+		R[r1] = pow(R[r1], R[r2]);
+	}
+	
+	void pow_rc() {
+		readRegisters();
+		unsigned int x = readNum(4);
+		R[r1] = pow(R[r1], *(float*)&x);
 	}
 	
 	void mov_rm() {

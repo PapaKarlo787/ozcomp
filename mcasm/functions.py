@@ -15,7 +15,7 @@ nl = 1
 
 def add(data, l):
 	return rc(data, 0, 1)
-	
+
 
 def sub(data, l):
 	return rc(data, 2, 3)
@@ -27,6 +27,10 @@ def mul(data, l):
 	
 def div(data, l):
 	return rc(data, 6, 7)
+
+
+def pow_(data, l):
+	return rc(data, 48, 49)
 
 
 def and_(data, l):
