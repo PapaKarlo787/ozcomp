@@ -12,7 +12,8 @@ commands = {"add": add, "sub": sub, "mul": mul, "div": div, "mov": mov,
 			"mod": mod, "print": print_, "delay": delay, "send": send,
 			"gkey": gkey, "setc": setc, "draw": draw, "data": data,
 			"call": call, "ret": ret, "rnd": rnd, "iprint": print_int,
-			"dd": dd, "movb": movb, "pow": pow_}
+			"dd": dd, "movb": movb, "pow": pow_, "point": point,
+			"circle": circle, "line": line}
 
 
 pattern = re.compile(r"\".*\"|\[|\]|\+|-?[\w\.]+|,|:|;.*|-")
@@ -26,7 +27,6 @@ def manage_line(data):
 		return
 	if data[0] in commands:
 		data_base += commands[data[0]](data[1:], len(data_base))
-		labels["screen_buff"] = len(data_base)
 	elif len(data) == 2 and data[1] == ":":
 		if data[0] in labels:
 			raise Exception("Label '{}' already presents".format(data[0]))
@@ -70,7 +70,6 @@ def add_labels():
 def save(fn):
 	with open(fn, 'wb') as f:
 		f.write(data_base)
-		f.write(b'\x00'*504)
 		f.flush()
 
 
@@ -80,7 +79,6 @@ if __name__ == "__main__":
 		parser.add_argument("inf", help="input file")
 		parser.add_argument("outf", help="output file")
 		args = parser.parse_args()
-		labels["screen_buff"] = 0
 		start(args.inf)
 		add_labels()
 		save(args.outf)

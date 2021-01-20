@@ -58,7 +58,7 @@ def mod(data, l):
 
 
 def loop(data, l):
-	return bytes(jump(24, data))
+	return bytes(jump(24, data, l))
 
 
 def mov(data, l):
@@ -108,7 +108,7 @@ def print_int(data, l):
 def print_(data, l, n=29):
 	if re.match(reg_re, data[0]):
 		return bytes([n, int(data[0][1:])])
-	return bytes(jump(30, data))
+	return bytes(jump(30, data, l))
 
 
 def delay(data, l):
@@ -130,6 +130,34 @@ def send(data, l):
 	return bytes([34, x])
 
 
+def point(data, l):
+	return setc(data, l, (51, 50))
+
+
+def circle(data, l):
+	if len(data) == 5 and data[1] == data[3] and data[3] == ',':
+		if re.match(float_re, data[0]) or re.match(int_re, data[0]):
+			r = int(data[0], 16 if "x" in data[0] else 10)
+			if not (re.match(int_re, data[2]) and re.match(int_re, data[4])):
+				raise Exception
+			result = list(map(int, data[2::2]))
+			to_bytes(result, IEEE754(r), 0)
+			print(result)
+			return bytes([53] + result)
+		if re.match(reg_re, data[0]) and re.match(reg_re, data[2]) and re.match(reg_re, data[4]):
+			data = list(map(lambda x: int(x[1:]), data[::2]))
+			return bytes([52, data[0], data[2]*16+data[1]])
+	raise Exception
+
+
+def line(data, l):
+	res1 = setc(data[:3], l, (55, 54))
+	res2 = setc(data[-3:], l, (55, 54))
+	if len(data) == 7 and res1[0] == res2[0]:
+		return res2+res1[1:]
+	raise Exception
+
+
 def int_(data, l):
 	if re.match(reg_re, data[0]):
 		return bytes([35, int(data[0][1:])])
@@ -140,21 +168,19 @@ def gkey(data, l):
 	return bytes([36])
 
 
-def setc(data, l):
+def setc(data, l, k=(37, 38)):
 	if data[1] == ",":
 		if re.match(reg_re, data[0]) and re.match(reg_re, data[2]):
-			return bytes([38, int(data[2][1:]) * 16 + int(data[0][1:])])
+			return bytes([k[1], int(data[2][1:]) * 16 + int(data[0][1:])])
 		c1 = int(data[0], 16 if "0x" == data[0][:2] else 10)
 		c2 = int(data[2], 16 if "0x" == data[2][:2] else 10)
 		if c1 > -1 and c2 > -1:
-			return bytes([37, c1, c2])
+			return bytes([k[0], c2, c1])
 	raise Exception
 
 
 def draw(data, l):
-	if not len(data):
-		data.append("screen_buff")
-	return bytes(jump(39, data, l))
+	return bytes([39])
 
 
 def call(data, l):

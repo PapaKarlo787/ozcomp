@@ -8,7 +8,7 @@
 unsigned int analogRead(unsigned int _){}
 
 unsigned int random(unsigned int max){
-	return rand();
+	return rand() % max;
 }
 
 void randomSeed(unsigned int _){

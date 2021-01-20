@@ -1,8 +1,8 @@
-#include <iostream>
 #include "Arduino.h"
 #include "sd_raw.h"
 #include "PS2Keyboard.h"
 #include "MyScreen.h"
+#include <iostream>
 
 
 class OzArch {
@@ -13,6 +13,8 @@ public:
 		keyboard.begin(8, 3);
 		randomSeed(analogRead(0));
 		lcd.setCursor(0, 0);
+		for (int i = 0; i < 504; i++)
+			screen_buffer[i] = 0;
 	}
   
 	void exec() {
@@ -29,7 +31,7 @@ private:
 	PS2Keyboard keyboard;
 	PCD8544 lcd;
   
-	void (OzArch::*comms[50]) (void) = {
+	void (OzArch::*comms[56]) (void) = {
 		&OzArch::add_rr, 
 		&OzArch::add_rc, 
 		&OzArch::sub_rr, 
@@ -79,7 +81,13 @@ private:
 		&OzArch::movb_rmor,
 		&OzArch::movb_morr,
 		&OzArch::pow_rr,
-		&OzArch::pow_rc
+		&OzArch::pow_rc, 
+		&OzArch::point_rr,
+		&OzArch::point_cc,
+		&OzArch::circle_r,
+		&OzArch::circle_c,
+		&OzArch::line_r,
+		&OzArch::line_c
 	};
 	
 	void readRegisters() {
@@ -383,14 +391,6 @@ private:
 		lcd.setCursor((unsigned int)R[r1], (unsigned int)R[r2]);
 	}
 
-	void draw_screen() {
-		unsigned int temp = ip;
-		ip = readNum(4);
-		for (unsigned int i = 0; i < 504; i++)
-			lcd.send(HIGH, (char)readNum(1));
-		ip = temp + 4;
-	}
-
 	void call() {
 		unsigned int old_ip = ip + 4;
 		ip = readNum(4);
@@ -415,4 +415,6 @@ private:
 	void rnd(){
 		R[13] = random(1024);
 	}
+	
+#include "new_features.h"
 };
