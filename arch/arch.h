@@ -5,6 +5,7 @@ float R[16];
 uint8_t r1, r2;
 PS2Keyboard keyboard;
 PCD8544 lcd;
+uint8_t screen_buffer[504];
 
 uint8_t read(){
   uint8_t temp[1];
@@ -44,12 +45,19 @@ void write(uint32_t poi, uint8_t* data, uint32_t n){
   sd_raw_sync();
 }
 
+void draw_screen() {
+	lcd.setCursor(0, 0);
+	for(uint32_t i = 0; i < 504; i++)
+		lcd.send(HIGH, screen_buffer[i]);
+}
+
 
 #include "ariphmetics.h"
 #include "moves.h"
 #include "screen_kbd.h"
 #include "logics.h"
 #include "jumps_and_stack.h"
+#include "geometry.h"
 
 
 void to_int() {

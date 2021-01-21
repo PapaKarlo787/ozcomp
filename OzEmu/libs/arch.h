@@ -30,8 +30,9 @@ private:
 	char r1, r2;
 	PS2Keyboard keyboard;
 	PCD8544 lcd;
-  
-	void (OzArch::*comms[56]) (void) = {
+	unsigned char screen_buffer[504];
+
+	void (OzArch::*comms[256]) (void) = {
 		&OzArch::add_rr, 
 		&OzArch::add_rc, 
 		&OzArch::sub_rr, 
@@ -87,7 +88,8 @@ private:
 		&OzArch::circle_r,
 		&OzArch::circle_c,
 		&OzArch::line_r,
-		&OzArch::line_c
+		&OzArch::line_c,
+		&OzArch::clear_screen
 	};
 	
 	void readRegisters() {
@@ -124,244 +126,31 @@ private:
 		sd_raw_sync();
 	}
 
+	void draw_screen() {
+		lcd.setCursor(0, 0);
+		for(unsigned int i = 0; i < 504; i++)
+			lcd.send(HIGH, screen_buffer[i]);
+	}
+
 	void write(unsigned int poi, unsigned char* data, unsigned int n){
 		sd_raw_write(poi, data, n);
 		sd_raw_sync();
 	}
 
-	void add_rr() {
-		readRegisters();
-		R[r1] += R[r2];
-	}
 
-	void add_rc() {
-		readRegisters();
-		unsigned int x = readNum(4);
-		R[r1] = R[r1] + *(float*)&x;
-	}
-	
-	void sub_rr() {
-		readRegisters();
-		R[r1] -= R[r2];
-	}
+#include "arch/ariphmetics.h"
+#include "arch/moves.h"
+#include "arch/screen_kbd.h"
+#include "arch/logics.h"
+#include "arch/jumps_and_stack.h"
+#include "arch/geometry.h"
 
-	void sub_rc() {
-		readRegisters();
-		unsigned int x = readNum(4);
-		R[r1] -= *(float*)&x;
-	}
-		
-	void mul_rr() {
-		readRegisters();
-		R[r1] *= R[r2];
-	}
-
-	void mul_rc() {
-		readRegisters();
-		unsigned int x = readNum(4);
-		R[r1] *= *(float*)&x;
-	}
-
-	void div_rr() {
-		readRegisters();
-		R[r1] /= R[r2];
-	}
-	
-	void div_rc() {
-		readRegisters();
-		unsigned int x = readNum(4);
-		R[r1] /= *(float*)&x;
-	}
-	
-	void pow_rr() {
-		readRegisters();
-		R[r1] = pow(R[r1], R[r2]);
-	}
-	
-	void pow_rc() {
-		readRegisters();
-		unsigned int x = readNum(4);
-		R[r1] = pow(R[r1], *(float*)&x);
-	}
-	
-	void mov_rm() {
-		readRegisters();
-		unsigned int temp = ip;
-		ip = readNum(4);
-		unsigned int x = readNum(4);
-		R[r1] = *(float*)&x;
-		ip = temp + 4;
-	}
-
-	void movb_rm() {
-		readRegisters();
-		unsigned int temp = ip;
-		ip = readNum(4);
-		R[r1] = readNum(1);
-		ip = temp + 4;
-	}
-
-	void mov_mr() {
-		readRegisters();
-		write(readNum(4), (unsigned char*)&(R[r1]), 4);
-	}
-
-	void movb_mr() {
-		readRegisters();
-		char x = (char)R[r1];
-		write(readNum(4), (unsigned char*)&(x), 1);
-	}
-
-	void mov_rr() {
-		readRegisters();
-		R[r1] = R[r2];
-	}
-
-	void mov_rc() {
-		readRegisters();
-		unsigned int x = readNum(4);
-		R[r1] = *(float*)&x;
-	}
-
-//r1 - destination, r2 - index
-	void mov_rmor() {
-		readRegisters();
-		unsigned int temp = ip;
-		ip = readNum(4)+((unsigned int)R[r2]);
-		unsigned int x = readNum(4);
-		R[r1] = *(float*)&x;
-		ip = temp + 4;
-	}
-
-	void movb_rmor() {
-		readRegisters();
-		unsigned int temp = ip;
-		ip = readNum(4)+((unsigned int)R[r2]);
-		R[r1] = readNum(1);
-		ip = temp + 4;
-	}
-
-	void mov_morr() {
-		readRegisters();
-		write(readNum(4)+((unsigned int)R[r2]), (unsigned char*)&(R[r1]), 4);
-	}
-	
-	void movb_morr() {
-		readRegisters();
-		char x = (char)R[r1];
-		write(readNum(4)+((unsigned int)R[r2]), (unsigned char*)&(x), 1);
-	}
-	
-	void jmp() {
-		ip = (unsigned int)readNum(4);
-	}
-
-//zero, less, greater
-//если есть n то перевернуть все биты
-	void jmp_c() {
-		char f = (char)readNum(1);
-		if((f & flags) != 0)
-			jmp();
-		else
-			ip += 4;
-	}
-
-	void and_rr() {
-		readRegisters();
-		R[r1] = (unsigned int)R[r1] & (unsigned int)R[r2];
-	}
-	
-	void and_rc() {
-		readRegisters();
-		unsigned int x = readNum(4);
-		R[r1] = (unsigned int)R[r1] & (unsigned int)(*(float*)&x);
-	}
-	
-	void or_rr() {
-		readRegisters();
-		R[r1] = (unsigned int)R[r1] | (unsigned int)R[r2];
-	}
-	
-	void or_rc() {
-		readRegisters();
-		unsigned int x = readNum(4);
-		R[r1] = (unsigned int)R[r1] | (unsigned int)(*(float*)&x);
-	}
-	
-	void xor_rr() {
-		readRegisters();
-		R[r1] = (unsigned int)R[r1] ^ (unsigned int)R[r2];
-	}
-	
-	void xor_rc() {
-		readRegisters();
-		unsigned int x = readNum(4);
-		R[r1] = (unsigned int)R[r1] ^ (unsigned int)(*(float*)&x);
-	}
-
-	void cmp_rr() {
-		readRegisters();
-		setFlags(R[r1] - R[r2]);
-	}
-
-	void cmp_rc() {
-		readRegisters();
-		unsigned int x = readNum(4);
-		setFlags(R[r1] - *(float*)&x);
-	}
-  
-	void get_key() {
-		R[15] = keyboard.available() ? keyboard.read() : 0;
-	}
-	
-	void print_line() {
-		unsigned int temp = ip;
-		ip = readNum(4);
-		while (char c = read())
-			lcd.write(c);
-		ip = temp + 4;
-	}
-	
-	void print_num() {
-		readRegisters();
-		lcd.print(R[r1]);
-	}
-
-	void print_int() {
-		readRegisters();
-		lcd.print((int)R[r1]);
-	}
-
-	void push() {
-		readRegisters();
-		write(sp -= 4, (unsigned char*)&(R[r1]), 4);
-	}
-
-	void pop() {
-		readRegisters();
-		unsigned int temp = ip;
-		ip = sp;
-		unsigned int x = readNum(4);
-		R[r1] = *(float*)&x;
-		ip = temp;
-		sp += 4;
-	}
 
 	void to_int() {
 		readRegisters();
-		R[r1] = (unsigned int)R[r1];
+		setFlags(R[r1] = (unsigned int)R[r1]);
 	}
 
-	void mod_rr() {
-		readRegisters();
-		R[r1] = (unsigned int)R[r1] % (unsigned int)R[r2];
-	}
-
-	void mod_rc() {
-		readRegisters();
-		unsigned int x = readNum(4);
-		R[r1] = (unsigned int)R[r1] % (unsigned int)(*(float*)&x);
-	}
 
 	void del_r() {
 		readRegisters();
@@ -373,45 +162,6 @@ private:
 		delay((unsigned int)*(float*)&x);
 	}
 
-	void snd_r() {
-		readRegisters();
-		lcd.send(HIGH, (char)R[r1]);
-	}
-  
-	void snd_c() {
-		lcd.send(HIGH, (char)readNum(1));
-	}
-
-	void set_cursor() {
-		lcd.setCursor((char)readNum(1), (char)readNum(1));
-	}
-
-	void set_cursor_r() {
-		readRegisters();
-		lcd.setCursor((unsigned int)R[r1], (unsigned int)R[r2]);
-	}
-
-	void call() {
-		unsigned int old_ip = ip + 4;
-		ip = readNum(4);
-		for (char i = 0; i < 4; i++) { 
-			unsigned char t[1];
-			t[0] = old_ip % 256;
-			old_ip /= 256;
-			write(sp-=1, t, 1);
-		}
-	}
-	
-	void ret() {
-		ip = sp;
-		ip = readNum(4);
-		sp += 4;
-	}
-
-	void lp() {
-		ip = R[14]-- > 0 ? readNum(4) : ip + 4;
-	}
-  
 	void rnd(){
 		R[13] = random(1024);
 	}

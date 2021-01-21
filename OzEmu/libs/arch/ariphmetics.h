@@ -5,8 +5,8 @@ void add_rr() {
 
 void add_rc() {
 	readRegisters();
-	uint32_t x = readNum(4);
-	setFlags(R[r1] += *(float*)&x);
+	unsigned int x = readNum(4);
+	setFlags(R[r1] = R[r1] + *(float*)&x);
 }
 
 void sub_rr() {
@@ -16,10 +16,10 @@ void sub_rr() {
 
 void sub_rc() {
 	readRegisters();
-	uint32_t x = readNum(4);
+	unsigned int x = readNum(4);
 	setFlags(R[r1] -= *(float*)&x);
 }
-  
+	
 void mul_rr() {
 	readRegisters();
 	setFlags(R[r1] *= R[r2]);
@@ -27,7 +27,7 @@ void mul_rr() {
 
 void mul_rc() {
 	readRegisters();
-	uint32_t x = readNum(4);
+	unsigned int x = readNum(4);
 	setFlags(R[r1] *= *(float*)&x);
 }
 
@@ -38,7 +38,7 @@ void div_rr() {
 
 void div_rc() {
 	readRegisters();
-	uint32_t x = readNum(4);
+	unsigned int x = readNum(4);
 	setFlags(R[r1] /= *(float*)&x);
 }
 
@@ -49,7 +49,7 @@ void pow_rr() {
 
 void pow_rc() {
 	readRegisters();
-	uint32_t x = readNum(4);
+	unsigned int x = readNum(4);
 	R[r1] = pow(R[r1], *(float*)&x);
 }
 
@@ -60,19 +60,8 @@ void cmp_rr() {
 
 void cmp_rc() {
 	readRegisters();
-	uint32_t x = readNum(4);
+	unsigned int x = readNum(4);
 	setFlags(R[r1] - *(float*)&x);
-}
-
-void mod_rr() {
-	readRegisters();
-	setFlags(R[r1] = (uint32_t)R[r1] % (uint32_t)R[r2]);
-}
-
-void mod_rc() {
-	readRegisters();
-	uint32_t x = readNum(4);
-	setFlags(R[r1] = (uint32_t)R[r1] % (uint32_t)(*(float*)&x));
 }
 
 void mod_rr() {

@@ -45,3 +45,10 @@ void draw_screen() {
     lcd.send(HIGH, (uint8_t)readNum(1));
   ip = temp + 4;
 }
+
+void clear_screen() {
+	for(int i = 0 ; i < 504; i++) {
+		screen_buffer[i] = 0;
+		lcd.send(HIGH, 0);
+	}
+}

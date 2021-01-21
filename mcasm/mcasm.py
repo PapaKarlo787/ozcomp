@@ -2,7 +2,6 @@ import re
 import argparse
 import sys
 import os
-from functions import *
 from extensions import *
 
 
@@ -13,7 +12,7 @@ commands = {"add": add, "sub": sub, "mul": mul, "div": div, "mov": mov,
 			"gkey": gkey, "setc": setc, "draw": draw, "data": data,
 			"call": call, "ret": ret, "rnd": rnd, "iprint": print_int,
 			"dd": dd, "movb": movb, "pow": pow_, "point": point,
-			"circle": circle, "line": line}
+			"circle": circle, "line": line, "rect": rectangle, "cls": cls}
 
 
 pattern = re.compile(r"\".*\"|\[|\]|\+|-?[\w\.]+|,|:|;.*|-")

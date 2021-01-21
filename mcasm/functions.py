@@ -61,6 +61,42 @@ def loop(data, l):
 	return bytes(jump(24, data, l))
 
 
+def draw(data, l):
+	return bytes([39])
+
+
+def ret(data, l):
+	return bytes([41])
+
+
+def rnd(data, l):
+	return bytes([42])
+
+
+def gkey(data, l):
+	return bytes([36])
+
+
+def cls(data, l):
+	return bytes([56])
+
+
+def pop(data, l):
+	return push(data, l, 26)
+
+
+def print_int(data, l):
+	return print_(data, l, 43)
+
+
+def call(data, l):
+	return bytes(jump(40, data, l))
+
+
+def point(data, l):
+	return setc(data, l, (51, 50))
+
+
 def mov(data, l):
 	try:
 		return rc(data, 10, 11)
@@ -97,14 +133,6 @@ def push(data, l, k=25):
 	return bytes([k, int(data[0][1:])])
 
 
-def pop(data, l):
-	return push(data, l, 26)
-
-
-def print_int(data, l):
-	return print_(data, l, 43)
-
-
 def print_(data, l, n=29):
 	if re.match(reg_re, data[0]):
 		return bytes([n, int(data[0][1:])])
@@ -128,10 +156,6 @@ def send(data, l):
 		return bytes([33, int(data[0][1:])])
 	x = int(data[0], 16 if "x" in data[0] else 10)
 	return bytes([34, x])
-
-
-def point(data, l):
-	return setc(data, l, (51, 50))
 
 
 def circle(data, l):
@@ -164,10 +188,6 @@ def int_(data, l):
 	raise Exception
 
 
-def gkey(data, l):
-	return bytes([36])
-
-
 def setc(data, l, k=(37, 38)):
 	if data[1] == ",":
 		if re.match(reg_re, data[0]) and re.match(reg_re, data[2]):
@@ -177,22 +197,6 @@ def setc(data, l, k=(37, 38)):
 		if c1 > -1 and c2 > -1:
 			return bytes([k[0], c2, c1])
 	raise Exception
-
-
-def draw(data, l):
-	return bytes([39])
-
-
-def call(data, l):
-	return bytes(jump(40, data, l))
-
-
-def ret(data, l):
-	return bytes([41])
-
-
-def rnd(data, l):
-	return bytes([42])
 
 
 def err_rc(data):

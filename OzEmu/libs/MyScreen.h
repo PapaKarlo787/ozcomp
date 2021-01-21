@@ -16,7 +16,7 @@ private:
 
 public:
 	void begin(){
-		window = new sf::RenderWindow(sf::VideoMode(84, 48), "MacEmu");
+		window = new sf::RenderWindow(sf::VideoMode(84, 48), "OzEmu");
 		window->setSize(sf::Vector2u(420, 240));
 		map = new sf::RectangleShape**[48];
 		for (unsigned int i = 0; i < 48; i++){
