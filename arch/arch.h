@@ -45,12 +45,6 @@ void write(uint32_t poi, uint8_t* data, uint32_t n){
   sd_raw_sync();
 }
 
-void draw_screen() {
-	lcd.setCursor(0, 0);
-	for(uint32_t i = 0; i < 504; i++)
-		lcd.send(HIGH, screen_buffer[i]);
-}
-
 
 #include "ariphmetics.h"
 #include "moves.h"
@@ -83,5 +77,5 @@ void rnd(){
 
 void exec() {
   uint8_t x = read();
-  (*comms[x])();
+  (*(comms[x]))();
 }

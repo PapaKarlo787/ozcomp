@@ -74,14 +74,3 @@ void mod_rc() {
 	uint32_t x = readNum(4);
 	setFlags(R[r1] = (uint32_t)R[r1] % (uint32_t)(*(float*)&x));
 }
-
-void mod_rr() {
-	readRegisters();
-	setFlags(R[r1] = (unsigned int)R[r1] % (unsigned int)R[r2]);
-}
-
-void mod_rc() {
-	readRegisters();
-	unsigned int x = readNum(4);
-	setFlags(R[r1] = (unsigned int)R[r1] % (unsigned int)(*(float*)&x));
-}
