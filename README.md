@@ -1,7 +1,7 @@
 OzComp
 ======
 
-![title](ComputerCase/pic.jpg)
+![title](Keyboard+Case/ComputerCase/pic.jpg)
 
 
 
