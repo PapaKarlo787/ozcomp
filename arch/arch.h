@@ -74,8 +74,3 @@ void rnd(){
 }
 
 #include "instructions.h"
-
-void exec() {
-  uint8_t x = read();
-  (*(comms[x]))();
-}

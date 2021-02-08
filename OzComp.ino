@@ -10,8 +10,11 @@ void setup() {
   keyboard.begin(8, 3);
   randomSeed(analogRead(0));
   lcd.setCursor(0, 0);
-  Serial.begin(9600);
-  while(true) exec();
+  while(true){
+    uint8_t x = read();
+    void (*f) (void) = pgm_read_word(&comms[x]);
+    (*f)();
+  }
 }
 
 void loop() {
