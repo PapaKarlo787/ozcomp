@@ -1,5 +1,5 @@
 void get_key() {
-  R[15] = keyboard.available() ? keyboard.read() : 0;
+  setFlags(R[15] = keyboard.available() ? keyboard.read() : 0);
 }
 
 void print_line() {
