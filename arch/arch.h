@@ -28,7 +28,7 @@ uint32_t readNum(uint8_t n) {
 }
 
 void setFlags(float x) {
-  flags = (flags >> 3) << 3;
+  flags &= 248;
   flags += x > 0 ? 1 : 0;
   flags *= 2;
   flags += x < 0 ? 1 : 0;

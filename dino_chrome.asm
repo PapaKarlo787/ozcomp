@@ -1,5 +1,5 @@
 mov r0, 28
-mov r1, 25
+mov r1, 60
 
 circle 4, 77, 5
 line 74,9,70,13
@@ -9,16 +9,13 @@ next:
 bmp r1, 32, cact
 bmp 10, r0, dino
 draw
-ji q
 a:
 circle 10, 10, 10
 scol 0
 circle 10, 10, 10
 scol 1
 jmp a
-q:
-sub r0, 21
-jmp next
+
 dino:
 dd 20,3
 dd 192,0,0,0,0,0,0,128,192,254,255,253,255,255,127,95,95,95,31,30

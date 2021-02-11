@@ -50,7 +50,6 @@ private:
 	
 	void setFlags(float x) {
 		flags &= 248;
-		std::cout<<(unsigned int)flags<<std::endl;
 		flags += x > 0 ? 1 : 0;
 		flags *= 2;
 		flags += x < 0 ? 1 : 0;
