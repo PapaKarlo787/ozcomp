@@ -44,3 +44,9 @@ void clear_screen() {
 		lcd.send(HIGH, 0);
 	}
 }
+
+void draw_screen() {
+	lcd.setCursor(0, 0);
+	for(unsigned int i = 0; i < 504; i++)
+		lcd.send(HIGH, screen_buffer[i]);
+}

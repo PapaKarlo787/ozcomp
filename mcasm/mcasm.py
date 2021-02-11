@@ -9,10 +9,11 @@ commands = {"add": add, "sub": sub, "mul": mul, "div": div, "mov": mov,
 			"and": and_, "or": or_, "xor": xor, "cmp": cmp_, "int": int_,
 			"jmp": jmp, "loop": loop, "push": push, "pop": pop,
 			"mod": mod, "print": print_, "delay": delay, "send": send,
-			"gkey": gkey, "setc": setc, "draw": draw, "data": data,
+			"gkey": gkey, "scur": setc, "draw": draw, "data": data,
 			"call": call, "ret": ret, "rnd": rnd, "iprint": print_int,
 			"dd": dd, "movb": movb, "pow": pow_, "point": point,
-			"circle": circle, "line": line, "rect": rectangle, "cls": cls}
+			"circle": circle, "line": line, "rect": rect, "cls": cls,
+			"bmp": bmp, "scol": scol}
 
 
 pattern = re.compile(r"\".*\"|\[|\]|\+|-?[\w\.]+|,|:|;.*|-")
@@ -32,7 +33,7 @@ def manage_line(data):
 		if not re.match(label_re, data[0]):
 			raise Exception("Wrong label name")
 		labels[data[0]] = len(data_base)
-	elif re.match("jn?[egl]$", data[0]):
+	elif re.match("jn?[egli]$", data[0]):
 		data_base += jc(data[1:], data[0][1:], len(data_base))
 	elif data[0] == "include" and len(data) == 2 and "\"\"" == data[1][0]+data[1][-1]:
 		nl, _ = (nl, start(data[1][1:-1]))

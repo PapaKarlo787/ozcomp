@@ -39,11 +39,9 @@ void set_cursor_r() {
 }
 
 void draw_screen() {
-  uint32_t temp = ip;
-  ip = readNum(4);
-  for (uint32_t i = 0; i < 504; i++)
-    lcd.send(HIGH, (uint8_t)readNum(1));
-  ip = temp + 4;
+	lcd.setCursor(0, 0);
+	for(uint16_t i = 0; i < 504; i++)
+		lcd.send(HIGH, screen_buffer[i]);
 }
 
 void clear_screen() {

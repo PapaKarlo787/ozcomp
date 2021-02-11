@@ -66,11 +66,11 @@ void cmp_rc() {
 
 void mod_rr() {
 	readRegisters();
-	setFlags(R[r1] = (unsigned int)R[r1] % (unsigned int)R[r2]);
+	setFlags(R[r1] = (int)R[r1] % (int)R[r2]);
 }
 
 void mod_rc() {
 	readRegisters();
 	unsigned int x = readNum(4);
-	setFlags(R[r1] = (unsigned int)R[r1] % (unsigned int)(*(float*)&x));
+	setFlags(R[r1] = (int)R[r1] % (int)(*(float*)&x));
 }

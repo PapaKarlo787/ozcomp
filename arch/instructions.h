@@ -53,7 +53,17 @@ void (*const comms[256]) (void) PROGMEM = {
 	point_cc,
 	circle_r,
 	circle_c,
+	circle_rc,
 	line_r,
 	line_c,
-	clear_screen
+	line_rc,
+	clear_screen,
+	rect_r,
+	rect_c,
+	rect_rc,
+	bmp_rc,
+	bmp_cr,
+	bmp_rr,
+	bmp_cc,
+	scol
 };

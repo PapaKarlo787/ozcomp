@@ -21,18 +21,6 @@ def dd(data, l):
 	return result
 
 
-def rectangle(d, l):
-	print("line "+"".join(d[:4]+d[0:2]+d[-1:]))
-	l1 = line(d[:4]+d[0:2]+d[-1:], 0)
-	print("line "+"".join(d[:4]+d[4:6]+d[2:3]))
-	l2 = line(d[:4]+d[4:6]+d[2:3], 0)
-	print("line "+"".join(d[0:2]+d[-1:]+d[-4:]))
-	l3 = line(d[0:2]+d[-1:]+d[-4:], 0)
-	print("line "+"".join(d[4:6]+d[2:3]+d[-4:]))
-	l4 = line(d[4:6]+d[2:3]+d[-4:], 0)
-	return l1+l2+l3+l4
-
-
 def get_data_element(elem):
 	result = []
 	if re.match(float_re, elem):

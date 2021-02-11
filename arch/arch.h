@@ -3,6 +3,7 @@ uint32_t ip = 0;
 uint32_t sp = 1073741824;
 float R[16];
 uint8_t r1, r2;
+uint8_t color = 255;
 PS2Keyboard keyboard;
 PCD8544 lcd;
 uint8_t screen_buffer[504];
@@ -27,7 +28,7 @@ uint32_t readNum(uint8_t n) {
 }
 
 void setFlags(float x) {
-  flags = 0;
+  flags = (flags >> 3) << 3;
   flags += x > 0 ? 1 : 0;
   flags *= 2;
   flags += x < 0 ? 1 : 0;

@@ -78,7 +78,7 @@ def gkey(data, l):
 
 
 def cls(data, l):
-	return bytes([56])
+	return bytes([58])
 
 
 def pop(data, l):
@@ -91,6 +91,12 @@ def print_int(data, l):
 
 def call(data, l):
 	return bytes(jump(40, data, l))
+
+
+def scol(data, l):
+	if len(data) == 1:
+		return bytes([66, int(data[0])])
+	raise Exception
 
 
 def point(data, l):
@@ -119,7 +125,7 @@ def movb(data, l, k1=46, k2=44, k3=47, k4=45):
 def jc(data, cond, l):
 	bit = 0 if 'n' in cond[0] else 1
 	byte = 0
-	for i in "gle":
+	for i in "igle":
 		byte *= 2
 		byte += bit if i in cond else (bit + 1) % 2
 	result = jump(23, data, l + 1)
@@ -160,26 +166,48 @@ def send(data, l):
 
 def circle(data, l):
 	if len(data) == 5 and data[1] == data[3] and data[3] == ',':
+		result = list(setc(data[2:], l, (52, 53)))
 		if re.match(float_re, data[0]) or re.match(int_re, data[0]):
-			r = int(data[0], 16 if "x" in data[0] else 10)
-			if not (re.match(int_re, data[2]) and re.match(int_re, data[4])):
+			r = int(data[0], 16) if "x" in data[0] else float(data[0])
+			to_bytes(result, IEEE754(r), 1)
+			if result[0] == 52:
+				result[0] = 54
+		elif re.match(reg_re, data[0]):
+			result.insert(1, int(data[0][1:]))
+			if result[0] != 52:
 				raise Exception
-			result = list(map(int, data[2::2]))
-			to_bytes(result, IEEE754(r), 0)
-			print(result)
-			return bytes([53] + result)
-		if re.match(reg_re, data[0]) and re.match(reg_re, data[2]) and re.match(reg_re, data[4]):
-			data = list(map(lambda x: int(x[1:]), data[::2]))
-			return bytes([52, data[0], data[2]*16+data[1]])
-	raise Exception
+		else:
+			raise Exception
+		return bytes(result)
 
 
-def line(data, l):
-	res1 = setc(data[:3], l, (55, 54))
-	res2 = setc(data[-3:], l, (55, 54))
-	if len(data) == 7 and res1[0] == res2[0]:
+def line(data, l, k=(55,56,57)):
+	res1 = setc(data[:3], l, k[:2])
+	res2 = setc(data[-3:], l, k[:2])
+	if res1[0] != res2[0]:
+		res2 = bytes([k[2]]) + res2[1:]
+	if len(data) == 7:
 		return res2+res1[1:]
 	raise Exception
+
+
+def rect(data, l):
+	return line(data, l, (59, 60, 61))
+
+
+def bmp(data, l):
+	if  len(data) < 5 or data[3] != ',' or data[1] != ',':
+		raise Exception
+	try:
+		result = setc(data[:-2], l, (64, 65))
+	except Exception:
+		if re.match(reg_re, data[2]) and int(data[0]) in range(84):
+			result = bytes([63, int(data[0]), int(data[2][1:])])
+		elif re.match(reg_re, data[0]) and int(data[2]) in range(48):
+			result = bytes([62, int(data[0][1:]), int(data[2])])
+		else:
+			raise Exception
+	return result + bytes(jump(0, data[-1:], l + (1 if result[0] == 64 else 2))[1:])
 
 
 def int_(data, l):
@@ -191,11 +219,11 @@ def int_(data, l):
 def setc(data, l, k=(37, 38)):
 	if data[1] == ",":
 		if re.match(reg_re, data[0]) and re.match(reg_re, data[2]):
-			return bytes([k[1], int(data[2][1:]) * 16 + int(data[0][1:])])
+			return bytes([k[0], int(data[2][1:]) * 16 + int(data[0][1:])])
 		c1 = int(data[0], 16 if "0x" == data[0][:2] else 10)
 		c2 = int(data[2], 16 if "0x" == data[2][:2] else 10)
 		if c1 > -1 and c2 > -1:
-			return bytes([k[0], c2, c1])
+			return bytes([k[1], c2, c1])
 	raise Exception
 
 

@@ -40,7 +40,7 @@ void mov_rc() {
 void mov_rmor() {
 	readRegisters();
 	unsigned int temp = ip;
-	ip = readNum(4)+((unsigned int)R[r2]);
+	ip = readNum(4)+((int)R[r2]);
 	unsigned int x = readNum(4);
 	R[r1] = *(float*)&x;
 	ip = temp + 4;
@@ -49,18 +49,18 @@ void mov_rmor() {
 void movb_rmor() {
 	readRegisters();
 	unsigned int temp = ip;
-	ip = readNum(4)+((unsigned int)R[r2]);
+	ip = readNum(4)+((int)R[r2]);
 	R[r1] = readNum(1);
 	ip = temp + 4;
 }
 
 void mov_morr() {
 	readRegisters();
-	write(readNum(4)+((unsigned int)R[r2]), (unsigned char*)&(R[r1]), 4);
+	write(readNum(4)+((int)R[r2]), (unsigned char*)&(R[r1]), 4);
 }
 
 void movb_morr() {
 	readRegisters();
 	char x = (char)R[r1];
-	write(readNum(4)+((unsigned int)R[r2]), (unsigned char*)&(x), 1);
+	write(readNum(4)+((int)R[r2]), (unsigned char*)&(x), 1);
 }
