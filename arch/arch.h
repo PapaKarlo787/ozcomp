@@ -53,6 +53,7 @@ void write(uint32_t poi, uint8_t* data, uint32_t n){
 #include "logics.h"
 #include "jumps_and_stack.h"
 #include "geometry.h"
+#include "bmp.h"
 
 
 void to_int() {
