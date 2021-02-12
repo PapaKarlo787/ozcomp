@@ -51,6 +51,11 @@ void draw_bmp(char x, char y) {
 
 bool set_data(unsigned char data, int i) {
 	unsigned char last = screen_buffer[i];
-	screen_buffer[i] |= data;
+	if (color)
+		screen_buffer[i] |= data;
+	else
+		screen_buffer[i] &= ~data;
+	lcd.setCursor(i % 84, i / 84);
+	lcd.send(HIGH, screen_buffer[i]);
 	return last + data != screen_buffer[i];
 }

@@ -6,15 +6,18 @@ mov r4, 25
 mov r5, 0
 a:
 delay 100
-cls
+scol 0
 bmp r1, 32, cact
 bmp 3, r0, dino
-draw
+scol 1
+sub r1, 3
+sub r0, r2
+bmp r1, 32, cact
+bmp 3, r0, dino
 scur r4, r5
 print score
 iprint r3
-sub r1, 3
-sub r0, r2
+
 cmp r1, -12
 je reload
 cont1:
