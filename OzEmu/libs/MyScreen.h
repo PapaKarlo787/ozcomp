@@ -25,8 +25,10 @@ public:
 				map[i][l] = new sf::RectangleShape(sf::Vector2f(1, 1));
 				map[i][l]->setPosition(l, i);
 				map[i][l]->setFillColor(sf::Color::Black);
+				window->draw(*map[i][l]);
 			}
 		}
+		window->display();
 	}
 
 	void setCursor(unsigned int x, unsigned int y){
@@ -59,8 +61,10 @@ public:
 		unsigned int x = cursor % 84;
 		unsigned int y = cursor / 84 * 8;
 		cursor = (cursor + 1) % 504;
-		for (unsigned int i = 0; i < 8; i++)
+		for (unsigned int i = 0; i < 8; i++){
 			map[y+i][x]->setFillColor((num >> i) & 1 ? sf::Color::White : sf::Color::Black);
-		render();
+			window->draw(*map[y+i][x]);
+		}
+		window->display();
 	}
 };

@@ -74,26 +74,36 @@ void rect_c() {
 	draw_line(x2, y2, x1, y2);
 }
 
-void draw_line(char x1, char y1, char x2, char y2) {
-  const int deltaX = abs(x2 - x1);
-  const int deltaY = abs(y2 - y1);
-  const int signX = x1 < x2 ? 1 : -1;
-  const int signY = y1 < y2 ? 1 : -1;
-  int error = (deltaX - deltaY) * 2;
-  set_point(x2, y2);
-  
-  do {
-    set_point(x1, y1);
-    if (error > -deltaY) {
-      error -= deltaY * 2;
-      x1 += signX;
-    }
-    if (error < deltaX) {
-      error += deltaX * 2;
-      y1 += signY;
-    }
-  } while (pow(x1-x2, 2)+ pow(y1-y2, 2) > 1);
+void draw_line(char x0, char y0, char x1, char y1) {
+	int dx = (x1 > x0) ? (x1 - x0) : (x0 - x1);
+	int dy = (y1 > y0) ? (y1 - y0) : (y0 - y1);
+	int sx = (x1 >= x0) ? (1) : (-1);
+	int sy = (y1 >= y0) ? (1) : (-1);
+	set_point(0, 0);
+	if (dy < dx)
+		_draw_line(x0 + sx, y0, dy, dx, 0, 0, sx, sy);
+	else
+		_draw_line(x0, y0 + sy, dx, dy, sx, sy, 0, 0);
+}
 
+void _draw_line(int x, int y, int dx, int dy, int sx, int sy, int sxx, int syy) {
+	int d = (dx << 1) - dy;
+	int d1 = dx << 1;
+	int d2 = (dx - dy) << 1;
+	for (int i = 1; i <= dy; i++)
+	{
+		if (d > 0)
+		{
+			d += d2;
+			x += sx;
+			y += syy;
+		}
+		else
+			d += d1;
+		set_point(x, y);
+		y += sy;
+		x += sxx;
+	}
 }
 
 void draw_circle(char X1, char Y1, float R) {

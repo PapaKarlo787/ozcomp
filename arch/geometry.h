@@ -7,25 +7,38 @@ void set_point(float x, float y) {
 	lcd.send(HIGH, screen_buffer[n]);
 }
 
-void draw_line(char x1, char y1, char x2, char y2) {
-  uint16_t deltaX = abs(x2 - x1);
-  uint16_t deltaY = abs(y2 - y1);
-  int8_t signX = x1 < x2 ? 1 : -1;
-  int8_t signY = y1 < y2 ? 1 : -1;
-  int16_t error = (deltaX - deltaY) * 2;
-  set_point(x2, y2);
-	while (pow(x1-x2, 2)+ pow(y1-y2, 2) > 1) {
-		set_point(x1, y1);
-		if (error > -deltaY) {
-			error -= deltaY * 2;
-			x1 += signX;
+void draw_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1) {
+	int16_t dx = (x1 > x0) ? (x1 - x0) : (x0 - x1);
+	int16_t dy = (y1 > y0) ? (y1 - y0) : (y0 - y1);
+	int8_t sx = (x1 >= x0) ? (1) : (-1);
+	int8_t sy = (y1 >= y0) ? (1) : (-1);
+	set_point(0, 0);
+	if (dy < dx)
+		_draw_line(x0 + sx, y0, dy, dx, 0, 0, sx, sy);
+	else
+		_draw_line(x0, y0 + sy, dx, dy, sx, sy, 0, 0);
+}
+
+void _draw_line(int16_t x, int16_t y, int16_t dx, int16_t dy, int8_t sx, int8_t sy, int8_t sxx, int8_t syy) {
+	int16_t d = (dx << 1) - dy;
+	int16_t d1 = dx << 1;
+	int16_t d2 = (dx - dy) << 1;
+	for (int i = 1; i <= dy; i++)
+	{
+		if (d > 0)
+		{
+			d += d2;
+			x += sx;
+			y += syy;
 		}
-		if (error < deltaX) {
-			  error += deltaX * 2;
-			  y1 += signY;
-		}
+		else
+			d += d1;
+		set_point(x, y);
+		y += sy;
+		x += sxx;
 	}
 }
+
 
 void draw_circle(int16_t X1, int16_t Y1, float R) {
 	int16_t x = 0;

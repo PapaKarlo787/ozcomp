@@ -5,7 +5,6 @@ mov r3, 0
 mov r4, 25
 mov r5, 0
 a:
-delay 100
 scol 0
 bmp r1, 32, cact
 bmp 3, r0, dino

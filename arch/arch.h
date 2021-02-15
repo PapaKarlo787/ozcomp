@@ -23,7 +23,7 @@ void readRegisters() {
 uint32_t readNum(uint8_t n) {
   uint32_t x = 0;
   for (uint8_t i = 0; i < n; i++)
-    x = x * 256 + read();
+    x += read() << (8 * i);
   return x;
 }
 

@@ -3,7 +3,7 @@
 #include "PS2Keyboard.h"
 #include "MyScreen.h"
 #include <iostream>
-
+using namespace std;
 
 class OzArch {
 public:
@@ -44,7 +44,7 @@ private:
 	int readNum(char n) {
 		int x = 0;
 		for (char i = 0; i < n; i++)
-			x = x * 256 + read();
+			x += read() << (8 * i);
 		return x;
 	}
 	

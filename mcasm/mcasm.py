@@ -49,7 +49,12 @@ def start(fn, visited=[]):
 	with open(fn) as f:
 		for l in f:
 			try:
-				manage_line(pattern.findall(l.lower()))
+				l = l.split("\"")
+				for i in range(len(l)):
+					if not i % 2:
+						l[i] = l[i].lower()
+				l = "\"".join(l)
+				manage_line(pattern.findall(l))
 				nl += 1
 			except Exception as e:
 				msg = str(e) if str(e) else "Wrong line"
@@ -59,11 +64,9 @@ def start(fn, visited=[]):
 def add_labels():
 	global nl, data_base
 	for d in to_rebuild:
-		result = []
 		if d[0] not in labels:
-			nl = d[2]
-			raise Exception("No such label")
-		to_bytes(result, labels[d[0]], 0)
+			raise Exception("No such label - {} (line {})".format(d[0], d[2]))
+		result = to_bytes(labels[d[0]])
 		data_base = data_base[:d[1]] + bytes(result) + data_base[d[1]+4:]
 
 

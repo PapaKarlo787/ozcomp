@@ -31,17 +31,18 @@ def get_data_element(elem):
 		return list(elem[1:-1].encode())
 	else:
 		raise Exception
-	num_to_bytes(result, x, 0)
-	return result
+	return num_to_bytes(x) + result
 
 
 def IEEE754(n) :
     return struct.unpack('I', struct.pack('f', n))[0]
 
 
-def num_to_bytes(result, x, n = 1):
+def num_to_bytes(x):
+	res = []
 	while True:
-		result.insert(n, x % 256)
+		res.append(x % 256)
 		x //= 256
 		if not x:
 			break
+	return res

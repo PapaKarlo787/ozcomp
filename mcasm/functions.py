@@ -151,9 +151,8 @@ def delay(data, l):
 	x = float(int(data[0], 16) if "x" in data[0] else data[0])
 	if x < 0:
 		raise Exception
-	x = IEEE754(x)
 	result = [32]
-	to_bytes(result, x)
+	result += to_bytes(IEEE754(x))
 	return bytes(result)
 
 
@@ -169,7 +168,7 @@ def circle(data, l):
 		result = list(setc(data[2:], l, (52, 53)))
 		if re.match(float_re, data[0]) or re.match(int_re, data[0]):
 			r = int(data[0], 16) if "x" in data[0] else float(data[0])
-			to_bytes(result, IEEE754(r), 1)
+			result += to_bytes(IEEE754(r))
 			if result[0] == 52:
 				result[0] = 54
 		elif re.match(reg_re, data[0]):
@@ -244,22 +243,24 @@ def rc(data, f, s, l=0):
 	else:
 		result = [s, int(data[0][1:])]
 		x = IEEE754(float(int(data[2], 16) if "x" in data[2] else data[2]))
-		to_bytes(result, x, 2)
+		result += to_bytes(x)
 	return bytes(result)
 
 
-def to_bytes(result, x, n = 1):
+def to_bytes(x):
+	result = []
 	for i in range(4):
-		result.insert(n, x % 256)
+		result.append(x % 256)
 		x //= 256
 	if x > 0:
 		raise Exception("Too big number")
+	return result
 
 
 def jump(n, data, l=0):
 	result = [n]
 	if re.match(int_re, data[0]):
-		to_bytes(result, int(data[0], 16 if "x" in data[0] else 10))
+		result += to_bytes(int(data[0], 16 if "x" in data[0] else 10))
 	elif re.match(label_re, data[0]):
 		to_rebuild.append((data[0], l + 1, nl))
 		result += [0] * 4
@@ -286,10 +287,7 @@ def get_mor(data, l=0):
 			to_rebuild.append((data[1], l + 2, nl))
 	elif (len(data) == 5 and data[0] == "[" and data[4] == "]"
 		and data[2] == "+" and re.match(reg_re, data[3])):
-		if re.match(reg_re, data[3]):
-			result = [int(data[3][1:])*16]
-		else:
-			raise Exception("No such register")
+		result = [int(data[3][1:])*16]
 		to_rebuild.append((data[1], l + 2, nl))
 	else:
 		raise Exception
