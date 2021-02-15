@@ -7,12 +7,6 @@ private:
 	sf::RectangleShape*** map;
 	sf::RenderWindow* window;
 	unsigned int cursor = 0;
-	void render(){
-        for (unsigned int i = 0; i < 48; i++)
-			for (unsigned int l = 0; l < 84; l++)
-				window->draw(*map[i][l]);
-        window->display();
-	}
 
 public:
 	void begin(){
