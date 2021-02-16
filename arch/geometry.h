@@ -28,11 +28,11 @@ void _draw_line(int16_t x, int16_t y, int16_t dx, int16_t dy, int8_t sx, int8_t 
 }
 
 void draw_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1) {
-	int16_t dx = (x1 > x0) ? (x1 - x0) : (x0 - x1);
-	int16_t dy = (y1 > y0) ? (y1 - y0) : (y0 - y1);
+	int16_t dx = abs(x1 - x0);
+	int16_t dy = abs(y1 - y0);
 	int8_t sx = (x1 >= x0) ? (1) : (-1);
 	int8_t sy = (y1 >= y0) ? (1) : (-1);
-	set_point(0, 0);
+	set_point(x0, y0);
 	if (dy < dx)
 		_draw_line(x0 + sx, y0, dy, dx, 0, 0, sx, sy);
 	else
