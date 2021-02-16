@@ -126,14 +126,14 @@ void draw_circle(char X1, char Y1, float R) {
 	}
 }
 
-void set_point(float x, float y) {
+void set_point(int x, int y) {
 	if (x > 83 || x < 0 || y > 47 || y < 0)
 		return;
 	int n = (int)(y / 8) * 84 + x;
 	if (color)
-		screen_buffer[n] |= (unsigned char)pow(2, (int)y % 8);
+		screen_buffer[n] |= (1 << y % 8);
 	else
-		screen_buffer[n] &= 255 - (unsigned char)pow(2, (int)y % 8);
+		screen_buffer[n] &= ~(1 << y % 8);
 	lcd.setCursor(x, y/8);
 	lcd.send(HIGH, screen_buffer[n]);
 }

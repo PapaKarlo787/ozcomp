@@ -1,8 +1,11 @@
-void set_point(float x, float y) {
+void set_point(int16_t x, int16_t y) {
 	if (x > 83 || x < 0 || y > 47 || y < 0)
 		return;
 	int n = (uint16_t)(y / 8) * 84 + x;
-	screen_buffer[n] |= (uint8_t)pow(2, (uint16_t)y % 8);
+	if (color)
+		screen_buffer[n] |= (1 << y % 8);
+	else
+		screen_buffer[n] &= ~(1 << y % 8);
 	lcd.setCursor(x, y/8);
 	lcd.send(HIGH, screen_buffer[n]);
 }
@@ -39,7 +42,7 @@ void draw_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1) {
 		_draw_line(x0, y0 + sy, dx, dy, sx, sy, 0, 0);
 }
 
-void draw_circle(int16_t X1, int16_t Y1, float R) {
+void draw_circle(int16_t X1, int16_t Y1, uint16_t R) {
 	int16_t x = 0;
 	int16_t y = R;
 	int16_t delta = 1 - 2 * R;
