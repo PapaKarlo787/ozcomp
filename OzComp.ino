@@ -13,6 +13,6 @@ void setup() {
 }
 
 void loop() {
-  void (*f) (void) = pgm_read_word(&comms[read()]);
+  void (*f) (void) = pgm_read_word(&comms[read_()]);
   (*f)();
 }

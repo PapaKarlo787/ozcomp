@@ -1,4 +1,4 @@
-void (*comms[256]) (void) = {
+void (*const comms[256]) (void) PROGMEM = {
 	add_rr, 
 	add_rc, 
 	sub_rr, 

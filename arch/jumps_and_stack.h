@@ -12,7 +12,7 @@ void jmp_c() {
 
 void call() {
 	uint32_t old_ip = ip + 4;
-	write(sp-=4, (uint8_t*)&ip, 4);
+	write_(sp-=4, (uint8_t*)&ip, 4);
 	ip = readNum(4);
 }
 
@@ -28,7 +28,7 @@ void lp() {
 
 void push() {
 	readRegisters();
-	write(sp -= 4, (unsigned char*)&(R[r1]), 4);
+	write_(sp -= 4, (unsigned char*)&(R[r1]), 4);
 }
 
 void pop() {
