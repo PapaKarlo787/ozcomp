@@ -25,16 +25,16 @@ public:
 		window->display();
 	}
 
-	void setCursor(unsigned int x, unsigned int y){
+	void setCursor(uint8_t x, uint8_t y){
 		x %= 84;
 		y %= 6;
 		cursor = x + y * 84;
 	}
 
-	void write(unsigned char c){
+	void write(uint8_t c){
 		if (c > 127) c = 127;
-		unsigned char* chars = charset[c-32];
-		for (unsigned int i = 0; i < 5; i++)
+		uint8_t* chars = charset[c-32];
+		for (uint8_t i = 0; i < 5; i++)
 			send(0, chars[i]);
 		cursor = (cursor + 1) % 504;
 	}
@@ -45,15 +45,15 @@ public:
 			write(str[i]);
 	}
 	
-	void print(int num){
+	void print(uint32_t num){
 		std::string str = to_string(num);
 		for (int i = 0; i < str.size(); i++)
 			write(str[i]);
 	}
 
-	void send(unsigned int _, unsigned char num){
-		unsigned int x = cursor % 84;
-		unsigned int y = cursor / 84 * 8;
+	void send(uint32_t _, uint8_t num){
+		uint8_t x = cursor % 84;
+		uint8_t y = cursor / 84 * 8;
 		cursor = (cursor + 1) % 504;
 		for (unsigned int i = 0; i < 8; i++){
 			map[y+i][x]->setFillColor((num >> i) & 1 ? sf::Color::White : sf::Color::Black);

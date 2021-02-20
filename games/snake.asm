@@ -38,7 +38,6 @@ mov r3, [heap+r1]
 add r1, 4
 mov r4, [heap+r1]
 add r1, 4
-
 cmp r0, 0
 je draw_left
 cmp r0, 1
@@ -80,7 +79,7 @@ rnd
 mod r13, 10
 delay 300
 jmp start
-
+dd "QWE"
 heap:
 data 0, 40
 dd 4.0

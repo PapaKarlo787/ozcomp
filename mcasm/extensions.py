@@ -1,8 +1,7 @@
 import re
-import struct
-from functions import *
+import nums_to_bytes as ntb
 
-reg_re = "r(\d|1[0-5])$"
+
 float_re = "-?(0\.\d+|[1-9][0-9]*\.\d+)$"
 int_re = "(0|[1-9][0-9]*|0x[0-9a-f]+)$"
 label_re = "([a-z]\w*)$"
@@ -24,25 +23,9 @@ def dd(data, l):
 def get_data_element(elem):
 	result = []
 	if re.match(float_re, elem):
-		x = IEEE754(float(elem))
-	elif re.match(int_re, elem):
-		x = int(elem, 16 if "x" in elem else 10)
-	elif len(elem) > 1 and elem[0] == '\"' and elem[-1] == '\"':
+		return ntb.float_to_bytes(float(elem))
+	if re.match(int_re, elem):
+		return ntb.num_to_bytes(int(elem, 16 if "x" in elem else 10))
+	if len(elem) > 1 and elem[0] == '"' and elem[-1] == '"':
 		return list(elem[1:-1].encode())
-	else:
-		raise Exception
-	return num_to_bytes(x) + result
-
-
-def IEEE754(n) :
-    return struct.unpack('I', struct.pack('f', n))[0]
-
-
-def num_to_bytes(x):
-	res = []
-	while True:
-		res.append(x % 256)
-		x //= 256
-		if not x:
-			break
-	return res
+	raise Exception

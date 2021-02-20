@@ -1,10 +1,11 @@
 mov r0, 28
 mov r1, 84
 mov r2, 0
-mov r3, 0
+mov r3, r2
 mov r4, 25
 mov r5, 0
 a:
+delay 200
 scol 0
 bmp r1, 32, cact
 bmp 3, r0, dino
@@ -14,7 +15,7 @@ sub r0, r2
 bmp r1, 32, cact
 bmp 3, r0, dino
 scur r4, r5
-print score
+lprint score
 iprint r3
 
 cmp r1, -12

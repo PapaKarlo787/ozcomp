@@ -2,6 +2,8 @@ import re
 import argparse
 import sys
 import os
+import nums_to_bytes as ntb
+from functions import *
 from extensions import *
 
 
@@ -13,7 +15,7 @@ commands = {"add": add, "sub": sub, "mul": mul, "div": div, "mov": mov,
 			"call": call, "ret": ret, "rnd": rnd, "iprint": print_int,
 			"dd": dd, "movb": movb, "pow": pow_, "point": point,
 			"circle": circle, "line": line, "rect": rect, "cls": cls,
-			"bmp": bmp, "scol": scol}
+			"bmp": bmp, "scol": scol, "lprint": lprint}
 
 
 pattern = re.compile(r"\".*\"|\[|\]|\+|-?[\w\.]+|,|:|;.*|-")
@@ -55,18 +57,18 @@ def start(fn, visited=[]):
 						l[i] = l[i].lower()
 				l = "\"".join(l)
 				manage_line(pattern.findall(l))
-				nl += 1
+				inc_nl()
 			except Exception as e:
 				msg = str(e) if str(e) else "Wrong line"
-				raise Exception("{}: {} (line {})".format(fn, msg, nl))
+				raise Exception("{}: {} (line {})".format(fn, msg, get_nl()))
 
 
-def add_labels():
+def add_labels(org):
 	global nl, data_base
 	for d in to_rebuild:
 		if d[0] not in labels:
 			raise Exception("No such label - {} (line {})".format(d[0], d[2]))
-		result = to_bytes(labels[d[0]])
+		result = ntb.int_to_bytes(labels[d[0]]+org)
 		data_base = data_base[:d[1]] + bytes(result) + data_base[d[1]+4:]
 
 
@@ -77,14 +79,16 @@ def save(fn):
 
 
 if __name__ == "__main__":
-	try:
+#	try:
 		parser = argparse.ArgumentParser(description='Process some integers.')
 		parser.add_argument("inf", help="input file")
 		parser.add_argument("outf", help="output file")
-		args = parser.parse_args()
-		start(args.inf)
-		add_labels()
-		save(args.outf)
-	except Exception as e:
-		print(e)
-		sys.exit(1)
+		parser.add_argument("org", type=int, default=0,
+							help="open file", nargs='?')
+		cmd = parser.parse_args()
+		start(cmd.inf)
+		add_labels(cmd.org)
+		save(cmd.outf)
+#	except Exception as e:
+#		print(e)
+#		sys.exit(1)

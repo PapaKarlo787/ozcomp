@@ -1,5 +1,4 @@
-line 0,0,83, 47
-mov r0, [e]
+rect 0,0, 10, 10
 ee:
 delay 1000
 jmp ee

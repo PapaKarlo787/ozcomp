@@ -23,7 +23,7 @@ void draw_bmp(int8_t x, int8_t y) {
 		if (i + y > -1 && i + y < 7){
 			for (uint8_t l = 0; l < sx; l++) {
 				if (l + x > -1 && l + x < 84) {
-					uint16_t c = readNum(1) * 256 >> shift;
+					int c = readNum(1) * 256 >> shift;
 					if (i + y > 0)
 						intersected |= set_data(c % 256, start+l-84);
 					if (i + y < 6)
@@ -35,9 +35,9 @@ void draw_bmp(int8_t x, int8_t y) {
 	}
 	ip = t+4;
 	if (intersected)
-		flags |= (int)pow(2, 3);
+		flags |= 8;
 	else
-		flags &= 255 - (int)pow(2, 3);
+		flags &= 247;
 }
 
 void bmp_rc() {
@@ -53,7 +53,7 @@ void bmp_cr() {
 
 void bmp_rr() {
 	readRegisters();
-	draw_bmp(R[r1], R[r2]);	
+	draw_bmp(R[r1], R[r2]);
 }
 
 void bmp_cc() {

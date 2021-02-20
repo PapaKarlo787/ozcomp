@@ -2,6 +2,7 @@
 #include <ctime>
 #include <cmath>
 #include <unistd.h>
+#include <stdint.h>
 #define HIGH 1
 #define LOW 0
 
