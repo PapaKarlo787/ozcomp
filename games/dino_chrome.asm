@@ -7,13 +7,11 @@ mov r5, 0
 a:
 delay 200
 scol 0
-bmp r1, 32, cact
-bmp 3, r0, dino
+call draw_map
 scol 1
 sub r1, 3
 sub r0, r2
-bmp r1, 32, cact
-bmp 3, r0, dino
+call draw_map
 scur r4, r5
 lprint score
 iprint r3
@@ -43,6 +41,10 @@ jmp cont3
 up:
 mov r2, 3
 jmp a
+draw_map:
+bmp r1, 32, cact
+bmp 3, r0, dino
+ret
 dino:
 dd 20,3
 dd 192,0,0,0,0,0,0,128,192,254,255,253,255,255,127,95,95,95,31,30

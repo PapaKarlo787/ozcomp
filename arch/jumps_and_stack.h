@@ -12,7 +12,7 @@ void jmp_c() {
 
 void call() {
 	uint32_t old_ip = ip + 4;
-	write_(sp-=4, (uint8_t*)&ip, 4);
+	write_(sp-=4, (uint8_t*)&old_ip, 4);
 	ip = readNum(4);
 }
 
@@ -28,15 +28,29 @@ void lp() {
 
 void push() {
 	readRegisters();
-	write_(sp -= 4, (unsigned char*)&(R[r1]), 4);
+	write_(sp -= 4, (uint8_t*)&(R[r1]), 4);
 }
 
 void pop() {
 	readRegisters();
-	unsigned int temp = ip;
+	uint32_t temp = ip;
 	ip = sp;
-	unsigned int x = readNum(4);
-	R[r1] = *(float*)&x;
+	R[r1] = readNum(4);
+	ip = temp;
+	sp += 4;
+}
+
+void fpush() {
+	readRegisters();
+	write_(sp -= 4, (uint8_t*)&(Rf[r1]), 4);
+}
+
+void fpop() {
+	readRegisters();
+	uint32_t temp = ip;
+	ip = sp;
+	uint32_t x = readNum(4);
+	Rf[r1] = *(float*)&x;
 	ip = temp;
 	sp += 4;
 }

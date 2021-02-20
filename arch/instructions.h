@@ -91,5 +91,7 @@ void (*const comms[256]) (void) PROGMEM = {
 	fmov_rr,
 	fmov_rc,
 	fmov_rmor,
-	fmov_morr
+	fmov_morr,
+	fpush,
+	fpop
 };

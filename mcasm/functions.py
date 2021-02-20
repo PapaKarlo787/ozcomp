@@ -7,51 +7,86 @@ to_rebuild = []
 data_base = b''
 
 
-def ariphmetics(data, k1, k2):
+def ariphmetics(data, l, k1, k2, f=False):
 	try:
 		return bytes([k1]) + args.rr(data)
 	except Exception:
-		return bytes([k2]) + args.rc(data)
+		return bytes([k2]) + args.rc(data, l, to_rebuild, f)
 
 
 def add(data, l):
-	return ariphmetics(data, 0, 1)
+	return ariphmetics(data, l, 0, 1)
+
+
+def fadd(data, l):
+	return ariphmetics(data, l, 67, 68, True)
 
 
 def sub(data, l):
-	return ariphmetics(data, 2, 3)
+	return ariphmetics(data, l, 2, 3)
+
+
+def fsub(data, l):
+	return ariphmetics(data, l, 69, 70, True)
 
 
 def mul(data, l):
-	return ariphmetics(data, 4, 5)
+	return ariphmetics(data, l, 4, 5)
+
+
+def fmul(data, l):
+	return ariphmetics(data, l, 71, 72, True)
 
 
 def div(data, l):
-	return ariphmetics(data, 6, 7)
+	return ariphmetics(data, l, 6, 7)
+
+
+def fdiv(data, l):
+	return ariphmetics(data, l, 73, 74, True)
 
 
 def pow_(data, l):
-	return ariphmetics(data, 48, 49)
+	return ariphmetics(data, l, 48, 49)
+
+
+def fpow_(data, l):
+	return ariphmetics(data, l, 75, 76, True)
 
 
 def and_(data, l):
-	return ariphmetics(data, 14, 15)
+	return ariphmetics(data, l, 14, 15)
 
 
 def or_(data, l):
-	return ariphmetics(data, 16, 17)
+	return ariphmetics(data, l, 16, 17)
 
 
 def xor(data, l):
-	return ariphmetics(data, 18, 19)
+	return ariphmetics(data, l, 18, 19)
+
+
+def shr(data, l, k1=79, k2=80):
+	try:
+		return bytes([k1]) + args.rr(data)
+	except Exception:
+		return bytes([k2]) + args.rcb(data)
+
+
+def shl(data, l):
+	return shr(data, l, 81, 82)
 
 
 def cmp_(data, l):
-	return ariphmetics(data, 20, 21)
+	return ariphmetics(data, l, 20, 21)
+
+
+def fcmp_(data, l):
+	return ariphmetics(data, l, 77, 78, True)
 
 
 def mod(data, l):
-	return ariphmetics(data, 27, 28)
+	return ariphmetics(data, l, 27, 28)
 
 
 def jmp(data, l):
@@ -94,6 +129,14 @@ def pop(data, l):
 	return push(data, l, 26)
 
 
+def fpush(data, l):
+	return push(data, l, 89)
+
+
+def fpop(data, l):
+	return push(data, l, 90)
+
+
 def print_int(data, l):
 	return print_(data, l, 43)
 
@@ -106,20 +149,24 @@ def point(data, l):
 	return setc(data, l, (51, 50))
 
 
-def mov(data, l):
+def mov(data, l, k1=8, k2=9, k3=10, k4=11, k5=12, k6=13):
 	try:
-		return ariphmetics(data, 10, 11)
+		return ariphmetics(data, l, k3, k4)
 	except Exception:
-		return movb(data, l, 12, 8, 13, 9)
+		return movb(data, l, k1, k2, k5, k6)
 
 
-def movb(data, l, k1=46, k2=44, k3=47, k4=45):
+def fmov(data, l):
+	return mov(data, l, 83, 84, 85, 86, 87, 88)
+
+
+def movb(data, l, k1=44, k2=45, k3=46, k4=47):
 	if args.is_reg(data[0]) and data[1] == ",":
-		r = int(data[0][1:])
-		result = finish_mor(data, k1, k2, r, get_mor(data[2:], l))
+		result = args.get_mor(data[2:], l, k1, k3, to_rebuild)
+		result[0] += int(data[0][1:])
 	elif args.is_reg(data[-1]) and data[-2] == ",":
-		r = int(data[-1][1:])
-		result = finish_mor(data, k3, k4, r, get_mor(data[:-2], l))
+		result = args.get_mor(data[:-2], l, k2, k4, to_rebuild)
+		result[0] += int(data[-1][1:])
 	else:
 		raise Exception
 	return bytes(result)
@@ -205,32 +252,9 @@ def setc(data, l, k=(37, 38)):
 		return bytes([k[1]]) + args.cc(data)
 
 
-def finish_mor(data, k1, k2, r, result):
-	if len(data) == 7:
-		result[0] += r
-		result.insert(0, k1)
-	else:
-		result = [k2, r] + result
-	return result
-
-
-def get_mor(data, l=0):
-	result = []
-	if len(data) == 3 and data[0] == "[" and data[2] == "]":
-		if args.is_reg(data[1]):
-			result = [int(data[1][1:])*16]
-		else:
-			to_rebuild.append((data[1], l + 2, nl))
-	elif (len(data) == 5 and data[0] == "[" and data[4] == "]"
-		and data[2] == "+" and args.is_reg(data[3])):
-		result = [int(data[3][1:])*16]
-		to_rebuild.append((data[1], l + 2, args.nl))
-	else:
-		raise Exception
-	return result + [0] * 4
-
 def inc_nl():
 	args.nl += 1
+
 
 def get_nl():
 	return args.nl

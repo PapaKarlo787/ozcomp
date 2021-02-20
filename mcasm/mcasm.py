@@ -15,7 +15,10 @@ commands = {"add": add, "sub": sub, "mul": mul, "div": div, "mov": mov,
 			"call": call, "ret": ret, "rnd": rnd, "iprint": print_int,
 			"dd": dd, "movb": movb, "pow": pow_, "point": point,
 			"circle": circle, "line": line, "rect": rect, "cls": cls,
-			"bmp": bmp, "scol": scol, "lprint": lprint}
+			"bmp": bmp, "scol": scol, "lprint": lprint, "fmov": fmov,
+			"fpush": fpush, "fpop": fpop, "shr": shr, "shl": shl,
+			"fadd": fadd, "fsub": fsub, "fmul": fmul, "fdiv": fdiv,
+			"fcmp": fcmp_, "fpow": fpow_}
 
 
 pattern = re.compile(r"\".*\"|\[|\]|\+|-?[\w\.]+|,|:|;.*|-")
@@ -68,8 +71,11 @@ def add_labels(org):
 	for d in to_rebuild:
 		if d[0] not in labels:
 			raise Exception("No such label - {} (line {})".format(d[0], d[2]))
-		result = ntb.int_to_bytes(labels[d[0]]+org)
-		data_base = data_base[:d[1]] + bytes(result) + data_base[d[1]+4:]
+		x = list(data_base[d[1]:d[1]+4])
+		for i in range(4):
+			x[i] <<= i * 8
+		result = ntb.int_to_bytes(labels[d[0]]+org+sum(x))
+		data_base = data_base[:d[1]] + result + data_base[d[1]+4:]
 
 
 def save(fn):

@@ -30,20 +30,20 @@ void xor_rc() {
 
 void shr_rr() {
 	readRegisters();
-	setFlags(R[r1] <<= R[r2]);
+	setFlags(R[r1] >>= R[r2]);
 }
 
 void shr_rc() {
 	readRegisters();
-	setFlags(R[r1] <<= readNum(4));
+	setFlags(R[r1] >>= readNum(1));
 }
 
 void shl_rr() {
 	readRegisters();
-	setFlags(R[r1] >>= R[r2]);
+	setFlags(R[r1] <<= R[r2]);
 }
 
 void shl_rc() {
 	readRegisters();
-	setFlags(R[r1] >>= readNum(4));
+	setFlags(R[r1] <<= readNum(1));
 }
