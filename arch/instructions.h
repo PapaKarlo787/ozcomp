@@ -1,4 +1,8 @@
+#ifdef OZEMU
+void (*comms[256]) (void) = {
+#else
 void (*const comms[256]) (void) PROGMEM = {
+#endif
 	add_rr, 
 	add_rc, 
 	sub_rr, 

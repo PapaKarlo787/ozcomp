@@ -5,6 +5,7 @@
 #include <stdint.h>
 #define HIGH 1
 #define LOW 0
+#define OZEMU
 
 unsigned int analogRead(unsigned int _){}
 
