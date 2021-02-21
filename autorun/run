@@ -12,6 +12,6 @@ fi
 python3 mcasm/mcasm.py "$IN" memory
 rm -rf mcasm/__pycache__ 
 if [[ $? == 0 ]]; then
-	g++ -c OzEmu/main.cpp && g++ main.o -lsfml-graphics -lsfml-window -lsfml-system -lncurses -o "$OUT" && "$OUT"
+	g++ -c OzEmu/main.cpp && g++ main.o -lsfml-graphics -lsfml-window -lsfml-system -lncurses -lSDL -o "$OUT" && "$OUT"
 	rm main.o
 fi

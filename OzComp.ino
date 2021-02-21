@@ -5,6 +5,7 @@
 #include "arch/arch.h"
 
 void setup() {
+  pinMode(17, OUTPUT);
   while (!sd_raw_init()) {};
   lcd.begin();
   keyboard.begin(8, 3);
