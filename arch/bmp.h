@@ -23,7 +23,7 @@ void draw_bmp(int8_t x, int8_t y) {
 		if (i + y > -1 && i + y < 7){
 			for (uint8_t l = 0; l < sx; l++) {
 				if (l + x > -1 && l + x < 84) {
-					int c = read_() * 256 >> shift;
+					uint16_t c = (uint16_t)read_() * 256 >> shift;
 					if (i + y > 0)
 						intersected |= set_data(c % 256, start+l-84);
 					if (i + y < 6)
