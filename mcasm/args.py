@@ -3,8 +3,8 @@ import nums_to_bytes as ntb
 
 
 reg_re = "r(\d|1[0-5])$"
-float_re = "-?(0\.\d+|[1-9][0-9]*\.\d+)$"
 int_re = "(0|-?[1-9][0-9]*|0x[0-9a-f]+)$"
+float_re = "-?(0\.\d+|[1-9][0-9]*\.\d+)|" + int_re
 label_re = "([a-z]\w*)$"
 nl = 1
 

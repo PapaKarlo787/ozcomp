@@ -1,14 +1,7 @@
-add r0, 10
-mov r14, 5
+lprint t
 x:
-mul r0, 10
-scur 0, 0
-iprint r0
-delay 1000
-loop x
-ee:
-delay 1000
-jmp ee
-delay 1000
-e:
-dd "EhehehE"
+jmp x
+dd 10
+t:
+times db "h" 28
+df 10.0

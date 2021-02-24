@@ -3,23 +3,25 @@ import argparse
 import sys
 import os
 import nums_to_bytes as ntb
+from args import label_re
 from functions import *
 from extensions import *
-
 
 commands = {"add": add, "sub": sub, "mul": mul, "div": div, "mov": mov,
 			"and": and_, "or": or_, "xor": xor, "cmp": cmp_, "int": int_,
 			"jmp": jmp, "loop": loop, "push": push, "pop": pop,
 			"mod": mod, "print": print_, "delay": delay, "send": send,
-			"gkey": gkey, "scur": setc, "draw": draw, "data": data,
+			"gkey": gkey, "scur": setc, "draw": draw, "long": long_,
 			"call": call, "ret": ret, "rnd": rnd, "iprint": print_int,
 			"dd": dd, "movb": movb, "pow": pow_, "point": point,
 			"circle": circle, "line": line, "rect": rect, "cls": cls,
 			"bmp": bmp, "scol": scol, "lprint": lprint, "fmov": fmov,
 			"fpush": fpush, "fpop": fpop, "shr": shr, "shl": shl,
 			"fadd": fadd, "fsub": fsub, "fmul": fmul, "fdiv": fdiv,
-			"fcmp": fcmp_, "fpow": fpow_, "play": play, "nplay": nplay}
+			"fcmp": fcmp_, "fpow": fpow_, "play": play, "nplay": nplay,
+			"db": db, "df": df}
 
+cmd = commands
 
 pattern = re.compile(r"\".*\"|\[|\]|\+|-?[\w\.]+|,|:|;.*|-")
 
@@ -42,6 +44,8 @@ def manage_line(data):
 		data_base += jc(data[1:], data[0][1:], len(data_base))
 	elif data[0] == "include" and len(data) == 2 and "\"\"" == data[1][0]+data[1][-1]:
 		nl, _ = (nl, start(data[1][1:-1]))
+	elif data[0] == "times":
+		data_base += times(data[1:], len(data_base), commands)
 	else:
 		raise Exception
 
@@ -85,7 +89,7 @@ def save(fn):
 
 
 if __name__ == "__main__":
-#	try:
+	try:
 		parser = argparse.ArgumentParser(description='Process some integers.')
 		parser.add_argument("inf", help="input file")
 		parser.add_argument("outf", help="output file")
@@ -95,6 +99,6 @@ if __name__ == "__main__":
 		start(cmd.inf)
 		add_labels(cmd.org)
 		save(cmd.outf)
-#	except Exception as e:
-#		print(e)
-#		sys.exit(1)
+	except Exception as e:
+		print(e)
+		sys.exit(1)

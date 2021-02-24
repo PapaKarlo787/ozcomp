@@ -33,9 +33,8 @@ public:
 
 	void write(uint8_t c){
 		if (c > 127) c = 127;
-		uint8_t* chars = charset[c-32];
 		for (uint8_t i = 0; i < 5; i++)
-			send(0, chars[i]);
+			send(0, charset[c-32][i]);
 		cursor = (cursor + 1) % 504;
 	}
 
