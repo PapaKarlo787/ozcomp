@@ -22,6 +22,7 @@ void next_play(){
 		noTone(15);
 		tone(15, freq);
 		play_pointer = (play_pointer + 8) % size;
+		start_tone = millis();
 	}
 }
 
