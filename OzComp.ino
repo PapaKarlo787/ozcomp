@@ -16,5 +16,5 @@ void setup() {
 void loop() {
   void (*f) (void) = pgm_read_word(&comms[read_()]);
   (*f)();
-  next_play()
+  next_play();
 }
