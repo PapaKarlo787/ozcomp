@@ -21,5 +21,6 @@ PCD8544 lcd;
 #include "bmp.h"
 #include "fmoves.h"
 #include "other_stuff.h"
+#include "tones.h"
 //end block
 #include "instructions.h"

@@ -63,7 +63,7 @@ void point_rr() {
 }
 
 void point_cc() {
-	set_point(readNum(1), readNum(1));
+	set_point(read_(), read_());
 }
 
 void circle_r() {
@@ -74,23 +74,23 @@ void circle_r() {
 }
 
 void circle_rc() {
-	int16_t r = readNum(1);
+	int16_t r = read_();
 	readRegisters();
 	draw_circle(R[r1], R[r2], r);
 }
 
 void circle_c() {
-	int16_t r = readNum(1);
-	draw_circle(readNum(1), readNum(1), r);
+	int16_t r = read_();
+	draw_circle(read_(), read_(), r);
 }
 
 void line_rc() {
 	readRegisters();
-	draw_line(R[r1], R[r2], readNum(1)+R[r2], readNum(1)+R[r1]);
+	draw_line(R[r1], R[r2], read_()+R[r2], read_()+R[r1]);
 }
 
 void line_c() {
-	draw_line(readNum(1), readNum(1), readNum(1), readNum(1));
+	draw_line(read_(), read_(), read_(), read_());
 }
 
 void line_r() {
@@ -102,8 +102,8 @@ void line_r() {
 }
 
 void rect_rc() {
-	int16_t y = readNum(1);
-	int16_t x = readNum(1);
+	int16_t y = read_();
+	int16_t x = read_();
 	readRegisters();
 	draw_line(R[r1], R[r2], R[r1]+x, R[r2]);
 	draw_line(R[r1], R[r2], R[r1], R[r2]+y);
@@ -123,10 +123,10 @@ void rect_r() {
 }
 
 void rect_c() {
-	int16_t y2 = readNum(1);
-	int16_t x2 = readNum(1);
-	int16_t y1 = readNum(1);
-	int16_t x1 = readNum(1);
+	int16_t y2 = read_();
+	int16_t x2 = read_();
+	int16_t y1 = read_();
+	int16_t x1 = read_();
 	draw_line(x1, y1, x2, y1);
 	draw_line(x1, y1, x1, y2);
 	draw_line(x2, y2, x2, y1);
@@ -134,5 +134,5 @@ void rect_c() {
 }
 
 void scol() {
-	color = readNum(1) ? 255 : 0;
+	color = read_() ? 255 : 0;
 }

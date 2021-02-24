@@ -3,11 +3,9 @@ void get_key() {
 }
 
 void print_line() {
-	uint8_t temp = ip;
-	ip = readNum(4);
-	while (uint8_t c = read_())
+	uint32_t temp = readNum();
+	while (uint8_t c = read_(temp++))
 		lcd.write(c);
-	ip = temp + 4;
 }
 
 void print_num() {
@@ -26,11 +24,11 @@ void snd_r() {
 }
 
 void snd_c() {
-	lcd.send(HIGH, readNum(1));
+	lcd.send(HIGH, read_());
 }
 
 void set_cursor() {
-	lcd.setCursor(readNum(1), readNum(1));
+	lcd.setCursor(read_(), read_());
 }
 
 void set_cursor_r() {

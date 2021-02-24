@@ -13,8 +13,10 @@ int main(){
 	init_beeper();
 	keyboard.begin(8, 3);
 	randomSeed(analogRead(0));
-	while (true)
+	while (true){
 		comms[read_()]();
+		next_play();
+	}
 	endwin();
 	return 0;
 }

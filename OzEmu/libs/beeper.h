@@ -4,13 +4,13 @@
 
 const int AMPLITUDE = 28000;
 const int FREQUENCY = 44100;
-uint16_t freq;
+uint16_t freq_;
 bool toSample;
 uint32_t v;
 
 void tone(uint8_t _, uint16_t _freq)
 {
-    freq = _freq;
+    freq_ = _freq;
     toSample = true;
 }
 
@@ -27,7 +27,7 @@ void audio_callback(void *_beeper, Uint8 *_stream, int _length)
 	if (toSample)
 		while (i < length) {
 			stream[i++] = AMPLITUDE * std::sin(v * M_PI / FREQUENCY);
-			v += freq * 2;
+			v += freq_ * 2;
 		}
 	else
 		while (i < length)

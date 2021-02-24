@@ -5,7 +5,7 @@ void and_rr() {
 
 void and_rc() {
 	readRegisters();
-	setFlags(R[r1] &= readNum(4));
+	setFlags(R[r1] &= readNum());
 }
 
 void or_rr() {
@@ -15,7 +15,7 @@ void or_rr() {
 
 void or_rc() {
 	readRegisters();
-	setFlags(R[r1] |= readNum(4));
+	setFlags(R[r1] |= readNum());
 }
 
 void xor_rr() {
@@ -25,7 +25,7 @@ void xor_rr() {
 
 void xor_rc() {
 	readRegisters();
-	setFlags(R[r1] ^= readNum(4));
+	setFlags(R[r1] ^= readNum());
 }
 
 void shr_rr() {
@@ -35,7 +35,7 @@ void shr_rr() {
 
 void shr_rc() {
 	readRegisters();
-	setFlags(R[r1] >>= readNum(1));
+	setFlags(R[r1] >>= read_());
 }
 
 void shl_rr() {
@@ -45,5 +45,5 @@ void shl_rr() {
 
 void shl_rc() {
 	readRegisters();
-	setFlags(R[r1] <<= readNum(1));
+	setFlags(R[r1] <<= read_());
 }

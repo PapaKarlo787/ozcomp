@@ -5,17 +5,29 @@ uint8_t read_(){
 	return temp[0];
 }
 
+uint8_t read_(uint32_t poi){
+	uint8_t temp[1];
+	sd_raw_read(poi, temp, 1);
+	return temp[0];
+}
+
 void readRegisters() {
 	uint8_t i = read_();
 	r1 = i & 15;
 	r2 = (i & 240) / 16;
 }
 
-uint32_t readNum(uint8_t n) {
-	uint32_t x = 0;
-	for (uint8_t i = 0; i < n; i++)
-		x += ((uint32_t)read_()) << (8 * i);
-	return x;
+uint32_t readNum() {
+	uint8_t temp[4];
+	sd_raw_read(ip, temp, 4);
+	ip+=4;
+	return *((uint32_t*)&temp);
+}
+
+uint32_t readNum(uint32_t poi) {
+	uint8_t temp[4];
+	sd_raw_read(poi, temp, 4);
+	return *((uint32_t*)&temp);
 }
 
 void setFlags(float x) {

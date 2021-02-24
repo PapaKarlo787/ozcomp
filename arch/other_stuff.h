@@ -9,7 +9,7 @@ void del_r() {
 }
 
 void del_c() {
-	delay(readNum(4));
+	delay(readNum());
 }
 
 void rnd(){

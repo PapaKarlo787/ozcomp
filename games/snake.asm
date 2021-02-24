@@ -2,7 +2,7 @@ mov r13, 100
 mov r0, 2
 mov r1, 40
 mov r2, 0
-
+play sound
 start:
 cmp r13, 0
 je left
@@ -79,8 +79,10 @@ rnd
 mod r13, 10
 delay 300
 jmp start
-dd "QWE"
+
 heap:
 data 0, 40
 dd 4.0
 data 0, 8044
+sound:
+dd 2, 0, 0, 0, 1700, 0, 0, 1000, 0, 0, 900, 0, 0, 1000, 0, 0

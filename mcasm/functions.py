@@ -101,6 +101,13 @@ def call(data, l):
 	return args.jump(40, data, l, to_rebuild)
 
 
+def play(data, l):
+	return args.jump(91, data, l, to_rebuild)
+
+
+def nplay(data, l):
+	return bytes([92])
+
 def draw(data, l):
 	return bytes([39])
 
@@ -163,10 +170,10 @@ def fmov(data, l):
 def movb(data, l, k1=44, k2=45, k3=46, k4=47):
 	if args.is_reg(data[0]) and data[1] == ",":
 		result = args.get_mor(data[2:], l, k1, k3, to_rebuild)
-		result[0] += int(data[0][1:])
+		result[1] += int(data[0][1:])
 	elif args.is_reg(data[-1]) and data[-2] == ",":
 		result = args.get_mor(data[:-2], l, k2, k4, to_rebuild)
-		result[0] += int(data[-1][1:])
+		result[1] += int(data[-1][1:])
 	else:
 		raise Exception
 	return bytes(result)

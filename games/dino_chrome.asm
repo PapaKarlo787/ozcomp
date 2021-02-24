@@ -2,18 +2,17 @@ mov r0, 28
 mov r1, 84
 mov r2, 0
 mov r3, r2
-mov r4, 25
-mov r5, 0
+scur 0, 25
+lprint score
 a:
-delay 200
+
 scol 0
 call draw_map
 scol 1
 sub r1, 3
 sub r0, r2
 call draw_map
-scur r4, r5
-lprint score
+scur 0, 67
 iprint r3
 
 cmp r1, -12

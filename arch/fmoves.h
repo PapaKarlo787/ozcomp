@@ -1,15 +1,12 @@
 void fmov_rm() {
 	readRegisters();
-	uint32_t temp = ip;
-	ip = readNum(4);
-	uint32_t x = readNum(4);
+	uint32_t x = readNum(readNum());
 	Rf[r1] = *(float*)&x;
-	ip = temp + 4;
 }
 
 void fmov_mr() {
 	readRegisters();
-	write_(readNum(4), (uint8_t*)&Rf[r1], 4);
+	write_(readNum(), (uint8_t*)&Rf[r1], 4);
 }
 
 void fmov_rr() {
@@ -19,20 +16,17 @@ void fmov_rr() {
 
 void fmov_rc() {
 	readRegisters();
-	uint32_t x = readNum(4);
+	uint32_t x = readNum();
 	Rf[r1] = *(float*)&x;
 }
 
 void fmov_rmor() {
 	readRegisters();
-	uint32_t temp = ip;
-	ip = readNum(4) + R[r2];
-	uint32_t x = readNum(4);
+	uint32_t x = readNum(readNum() + R[r2]);
 	Rf[r1] = *(float*)&x;
-	ip = temp + 4;
 }
 
 void fmov_morr() {
 	readRegisters();
-	write_(readNum(4) + R[r2], (uint8_t*)&Rf[r1], 4);
+	write_(readNum() + R[r2], (uint8_t*)&Rf[r1], 4);
 }
