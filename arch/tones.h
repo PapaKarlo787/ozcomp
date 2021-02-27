@@ -14,7 +14,7 @@ void start_play(uint32_t poi){
 	start_tone = millis();
 }
 
-ISR(TIMER0_A){
+void check_play(){
 	if (is_playing && millis() - start_tone >= duration){
 		uint32_t temp = start_pointer + play_pointer;
 		freq = readNum(temp);
