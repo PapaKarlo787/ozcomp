@@ -47,3 +47,8 @@ void movb_morr() {
 	readRegisters();
 	write_(readNum() + R[r2], (uint8_t*)&R[r1], 1);
 }
+
+void imovf() {
+	readRegisters();
+	R[r1] = (int)Rf[r2];
+}

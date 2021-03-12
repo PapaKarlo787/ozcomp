@@ -10,16 +10,16 @@ from extensions import *
 commands = {"add": add, "sub": sub, "mul": mul, "div": div, "mov": mov,
 			"and": and_, "or": or_, "xor": xor, "cmp": cmp_, "int": int_,
 			"jmp": jmp, "loop": loop, "push": push, "pop": pop,
-			"mod": mod, "print": print_, "delay": delay, "send": send,
+			"mod": mod, "fprint": print_, "delay": delay, "send": send,
 			"gkey": gkey, "scur": setc, "draw": draw, "long": long_,
-			"call": call, "ret": ret, "rnd": rnd, "iprint": print_int,
+			"call": call, "ret": ret, "rnd": rnd, "print": print_int,
 			"dd": dd, "movb": movb, "pow": pow_, "point": point,
 			"circle": circle, "line": line, "rect": rect, "cls": cls,
 			"bmp": bmp, "scol": scol, "lprint": lprint, "fmov": fmov,
 			"fpush": fpush, "fpop": fpop, "shr": shr, "shl": shl,
 			"fadd": fadd, "fsub": fsub, "fmul": fmul, "fdiv": fdiv,
 			"fcmp": fcmp_, "fpow": fpow_, "play": play, "nplay": nplay,
-			"db": db, "df": df}
+			"db": db, "df": df, "icvtf": icvtf, "fcvti": fcvti}
 
 cmd = commands
 

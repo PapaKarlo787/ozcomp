@@ -30,3 +30,8 @@ void fmov_morr() {
 	readRegisters();
 	write_(readNum() + R[r2], (uint8_t*)&Rf[r1], 4);
 }
+
+void fmovi() {
+	readRegisters();
+	Rf[r1] = R[r2];
+}

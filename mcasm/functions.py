@@ -158,9 +158,17 @@ def point(data, l):
 
 def mov(data, l, k1=8, k2=9, k3=10, k4=11, k5=12, k6=13):
 	try:
-		return ariphmetics(data, l, k3, k4)
+		return ariphmetics(data, l, k3, k4, k1 != 8)
 	except Exception:
 		return movb(data, l, k1, k2, k5, k6)
+
+
+def icvtf(data, l):
+	return bytes([93]) + args.rr(data)
+
+
+def fcvti(data, l):
+	return bytes([94]) + args.rr(data)
 
 
 def fmov(data, l):

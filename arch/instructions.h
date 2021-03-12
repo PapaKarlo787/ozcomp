@@ -95,5 +95,7 @@ void (*const comms[256]) (void) PROGMEM = {
 	fpush,
 	fpop,
 	play,
-	nplay
+	nplay,
+	imovf,
+	fmovi
 };

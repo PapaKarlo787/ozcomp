@@ -15,7 +15,7 @@ int main(){
 	randomSeed(analogRead(0));
 	while (true){
 		comms[read_()]();
-		next_play();
+		check_play();
 	}
 	endwin();
 	return 0;
