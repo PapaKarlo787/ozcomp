@@ -10,7 +10,6 @@ void setup() {
   lcd.begin();
   keyboard.begin(8, 3);
   randomSeed(analogRead(0));
-  lcd.setCursor(0, 0);
 }
 
 void loop() {
