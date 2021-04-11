@@ -1,3 +1,4 @@
+cls
 mov r0, 28
 mov r1, 84
 mov r2, 0
@@ -13,6 +14,7 @@ scol 1
 sub r1, 3
 sub r0, r2
 call draw_map
+ji lp
 scur 0, 67
 print r3
 
@@ -46,8 +48,12 @@ cmp r2, 0
 je draw_cact
 bmp 3, r0, dino
 draw_cact:
+delay 50
 bmp r1, 32, cact
 ret
+lp:
+delay 1000
+jmp 0
 dino:
 db 20,3
 db 192,0,0,0,0,0,0,128,192,254,255,253,255,255,127,95,95,95,31,30
