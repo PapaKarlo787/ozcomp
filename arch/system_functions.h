@@ -14,7 +14,7 @@ uint8_t read_(uint32_t poi){
 void readRegisters() {
 	uint8_t i = read_();
 	r1 = i & 15;
-	r2 = (i & 240) / 16;
+	r2 = i >> 4;
 }
 
 uint32_t readNum() {

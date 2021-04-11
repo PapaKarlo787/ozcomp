@@ -7,7 +7,6 @@ lprint score
 bmp 3, r0, dino
 play sound
 a:
-delay 100
 scol 0
 call draw_map
 scol 1
@@ -26,8 +25,8 @@ cont2:
 cmp r0, 4
 je down
 cont3:
-cmp r1, 30
-je up
+gkey
+jne up
 jmp a
 reload:
 mov r1, 84
