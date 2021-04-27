@@ -34,10 +34,7 @@ void draw_bmp(int8_t x, int8_t y) {
 		start += 84;
 	}
 	ip = t+4;
-	if (intersected)
-		flags |= 8;
-	else
-		flags &= 247;
+	flags = intersected ? flags | 8 : flags & 247;
 }
 
 void bmp_rc() {
