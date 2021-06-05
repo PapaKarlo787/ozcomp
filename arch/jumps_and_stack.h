@@ -2,6 +2,16 @@ void jmp() {
 	ip = readNum();
 }
 
+void jmp_r(){
+	readRegisters();
+	ip = R[r1];
+}
+
+void jmp_c_r(){
+	readRegisters();
+	ip = (read_() & flags) != 0 ? R[r1] : ip + 4;
+}
+
 void jmp_c() {
 	ip = (read_() & flags) != 0 ? readNum() : ip + 4;
 }
@@ -12,6 +22,13 @@ void call() {
 	ip = readNum();
 }
 
+void call_r() {
+	uint32_t old_ip = ip + 4;
+	write_(sp-=4, (uint8_t*)&old_ip, 4);
+	readRegisters();
+	ip = R[r1];
+}
+
 void ret() {
 	ip = sp;
 	ip = readNum();
@@ -20,6 +37,11 @@ void ret() {
 
 void lp() {
 	ip = R[14]-- > 0 ? readNum() : ip + 4;
+}
+
+void lp_r() {
+	readRegisters();
+	ip = R[14]-- > 0 ? R[r1] : ip + 4;
 }
 
 void push() {
