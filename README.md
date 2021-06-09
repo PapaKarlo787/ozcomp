@@ -1,4 +1,4 @@
-OzComp
+Comp
 ======
 
 ![title](Keyboard+Case/ComputerCase/pic.jpg)
