@@ -19,7 +19,8 @@ commands = {"add": add, "sub": sub, "mul": mul, "div": div, "mov": mov,
 			"fpush": fpush, "fpop": fpop, "shr": shr, "shl": shl,
 			"fadd": fadd, "fsub": fsub, "fmul": fmul, "fdiv": fdiv,
 			"fcmp": fcmp_, "fpow": fpow_, "play": play, "nplay": nplay,
-			"db": db, "df": df, "icvtf": icvtf, "fcvti": fcvti}
+			"db": db, "df": df, "icvtf": icvtf, "fcvti": fcvti, "dw": dw,
+			"movw": movw}
 
 cmd = commands
 

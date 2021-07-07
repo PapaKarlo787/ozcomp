@@ -15,11 +15,11 @@ def num_to_bytes(n):
 	return bytes(res)
 
 
-def int_to_bytes(n):
+def int_to_bytes(n, k=4):
 	res = []
 	if n < 0:
 		n += 256**4
-	for i in range(4):
+	for i in range(k):
 		res.append(n % 256)
 		n //= 256
 	if n:

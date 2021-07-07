@@ -8,6 +8,12 @@ void movb_rm() {
 	R[r1] = read_(readNum());
 }
 
+void movw_rm() {
+	readRegisters();
+	uint32_t n = readNum();
+	R[r1] = read_(n) + (read_(n+1) << 8);
+}
+
 void mov_mr() {
 	readRegisters();
 	write_(readNum(), (uint8_t*)&R[r1], 4);
@@ -16,6 +22,11 @@ void mov_mr() {
 void movb_mr() {
 	readRegisters();
 	write_(readNum(), (uint8_t*)&R[r1], 1);
+}
+
+void movw_mr() {
+	readRegisters();
+	write_(readNum(), (uint8_t*)&R[r1], 2);
 }
 
 void mov_rr() {
@@ -38,6 +49,12 @@ void movb_rmor() {
 	R[r1] = read_(readNum() + R[r2]);
 }
 
+void movw_rmor() {
+	readRegisters();
+	uint32_t n = readNum();
+	R[r1] = read_(n + R[r2]) + (read_(n + 1 + R[r2]) << 8);
+}
+
 void mov_morr() {
 	readRegisters();
 	write_(readNum() + R[r2], (uint8_t*)&R[r1], 4);
@@ -46,6 +63,11 @@ void mov_morr() {
 void movb_morr() {
 	readRegisters();
 	write_(readNum() + R[r2], (uint8_t*)&R[r1], 1);
+}
+
+void movw_morr() {
+	readRegisters();
+	write_(readNum() + R[r2], (uint8_t*)&R[r1], 2);
 }
 
 void imovf() {

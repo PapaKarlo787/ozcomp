@@ -101,5 +101,9 @@ void (*const comms[256]) (void) PROGMEM = {
 	jmp_r,
 	jmp_c_r,
 	lp_r,
-	call_r
+	call_r,
+	movw_rm,
+	movw_mr,
+	movw_rmor,
+	movw_morr
 };

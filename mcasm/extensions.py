@@ -27,6 +27,12 @@ def _df(e):
 	raise Exception
 
 
+def _dw(e):
+	if re.match(int_re, e):
+		return ntb.int_to_bytes(to_int(e), 2)
+	raise Exception
+
+
 def _dd(e):
 	if re.match(int_re, e):
 		return ntb.int_to_bytes(to_int(e))
@@ -44,6 +50,10 @@ def dd(data, l, f=_dd):
 
 def db(data, l):
 	return dd(data, l, _db)
+
+
+def dw(data, l):
+	return dd(data, l, _dw)
 
 
 def df(data, l):

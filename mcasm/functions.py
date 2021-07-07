@@ -175,6 +175,10 @@ def fmov(data, l):
 	return mov(data, l, 83, 84, 85, 86, 87, 88)
 
 
+def movw(data, l):
+	return movb(data, l, 99, 100, 101, 102)
+
+
 def movb(data, l, k1=44, k2=45, k3=46, k4=47):
 	if args.is_reg(data[0]) and data[1] == ",":
 		result = args.get_mor(data[2:], l, k1, k3, to_rebuild)
