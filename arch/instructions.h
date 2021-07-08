@@ -33,7 +33,7 @@ void (*const comms[256]) (void) PROGMEM = {
 	mod_rr,
 	mod_rc,
 	print_num,
-	print_line,
+	print_line_c,
 	del_r,
 	del_c,
 	snd_r,
@@ -43,7 +43,7 @@ void (*const comms[256]) (void) PROGMEM = {
 	set_cursor_r,
 	set_cursor,
 	draw_screen,
-	call,
+	call_c,
 	ret,
 	rnd,
 	print_int,
@@ -105,5 +105,7 @@ void (*const comms[256]) (void) PROGMEM = {
 	movw_rm,
 	movw_mr,
 	movw_rmor,
-	movw_morr
+	movw_morr,
+	print_line_r,
+	call_r
 };

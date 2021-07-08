@@ -16,10 +16,17 @@ void jmp_c() {
 	ip = (read_() & flags) != 0 ? readNum() : ip + 4;
 }
 
-void call() {
+void call_c() {
 	uint32_t old_ip = ip + 4;
 	write_(sp-=4, (uint8_t*)&old_ip, 4);
 	ip = readNum();
+}
+
+void call_r() {
+	uint32_t old_ip = ip + 4;
+	write_(sp-=4, (uint8_t*)&old_ip, 4);
+	readRegisters();
+	ip = R[r0];
 }
 
 void call_r() {

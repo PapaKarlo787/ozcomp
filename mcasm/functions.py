@@ -98,7 +98,7 @@ def loop(data, l):
 
 
 def call(data, l):
-	return args.jump(40, data, l, to_rebuild)
+	return lprint(data, l, 104, 40)
 
 
 def play(data, l):
@@ -206,8 +206,11 @@ def print_(data, l, n=29):
 	return bytes([n]) + args.r(data)
 
 
-def lprint(data, l):
-	return args.jump(30, data, l, to_rebuild)
+def lprint(data, l, n1=30, n2=103):
+	try:
+		return print_(data, l, n2)
+	except Exception:
+		return args.jump(n1, data, l, to_rebuild)
 
 
 def delay(data, l, k1=31, k2=32):

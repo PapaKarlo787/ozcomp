@@ -2,11 +2,19 @@ void get_key() {
 	setFlags(R[15] = keyboard.available() ? keyboard.read() : 0);
 }
 
-void print_line() {
+void print_line_c() {
 	uint32_t temp = readNum();
 	while (uint8_t c = read_(temp++))
 		lcd.write(c);
 }
+
+void print_line_r() {
+	readRegisters();
+	uint32_t temp = R[r0];
+	while (uint8_t c = read_(temp++))
+		lcd.write(c);
+}
+
 
 void print_num() {
 	readRegisters();
