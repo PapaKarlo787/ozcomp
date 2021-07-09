@@ -107,5 +107,9 @@ void (*const comms[256]) (void) PROGMEM = {
 	movw_rmor,
 	movw_morr,
 	print_line_r,
-	call_r
+	call_r,
+	pushai,
+	popai,
+	pushaf,
+	popaf
 };

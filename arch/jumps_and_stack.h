@@ -26,13 +26,6 @@ void call_r() {
 	uint32_t old_ip = ip + 4;
 	write_(sp-=4, (uint8_t*)&old_ip, 4);
 	readRegisters();
-	ip = R[r0];
-}
-
-void call_r() {
-	uint32_t old_ip = ip + 4;
-	write_(sp-=4, (uint8_t*)&old_ip, 4);
-	readRegisters();
 	ip = R[r1];
 }
 
@@ -62,6 +55,18 @@ void pop() {
 	sp += 4;
 }
 
+void pushai() {
+	for(uint8_t i = 0; i < 16; i++)
+		write_(sp -= 4, (uint8_t*)&(R[i]), 4);
+}
+
+void popai() {
+	for(uint8_t i = 0; i < 16; i++) {
+		R[i] = readNum(sp);
+		sp += 4;
+	}
+}
+
 void fpush() {
 	readRegisters();
 	write_(sp -= 4, (uint8_t*)&(Rf[r1]), 4);
@@ -72,4 +77,16 @@ void fpop() {
 	uint32_t x = readNum(sp);
 	Rf[r1] = *(float*)&x;
 	sp += 4;
+}
+
+void pushaf() {
+	for(uint8_t i = 0; i < 16; i++)
+		write_(sp -= 4, (uint8_t*)&(Rf[i]), 4);
+}
+
+void popaf() {
+	for(uint8_t i = 0; i < 16; i++) {
+		Rf[i] = readNum(sp);
+		sp += 4;
+	}
 }

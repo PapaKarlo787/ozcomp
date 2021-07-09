@@ -20,11 +20,12 @@ commands = {"add": add, "sub": sub, "mul": mul, "div": div, "mov": mov,
 			"fadd": fadd, "fsub": fsub, "fmul": fmul, "fdiv": fdiv,
 			"fcmp": fcmp_, "fpow": fpow_, "play": play, "nplay": nplay,
 			"db": db, "df": df, "icvtf": icvtf, "fcvti": fcvti, "dw": dw,
-			"movw": movw}
+			"movw": movw, "pushai": pushai, "popai": popai, "popaf": popaf,
+			"pushaf": pushaf}
 
 cmd = commands
 
-pattern = re.compile(r"\".*\"|\[|\]|\+|-?[\w\.]+|,|:|;.*|-")
+pattern = re.compile(r"\".*\"|\[|\]|\+|-?[\w\.]+|,|:|;.*|-|\$")
 
 
 def manage_line(data):
@@ -41,10 +42,15 @@ def manage_line(data):
 		if not re.match(label_re, data[0]):
 			raise Exception("Wrong label name")
 		labels[data[0]] = len(data_base)
-	elif re.match("jn?[egli]$", data[0]):
+	elif re.match("jn?e?g?l?i?$", data[0]):
 		data_base += jc(data[1:], data[0][1:], len(data_base))
 	elif data[0] == "include" and len(data) == 2 and "\"\"" == data[1][0]+data[1][-1]:
-		nl, _ = (nl, start(data[1][1:-1]))
+		nl = args.nl
+		try:
+			start(data[1][1:-1])
+		except Exception as e:
+			args.nl = nl+1
+			raise e
 	elif data[0] == "times":
 		data_base += times(data[1:], len(data_base), commands)
 	else:
@@ -52,7 +58,7 @@ def manage_line(data):
 
 
 def start(fn, visited=[]):
-	global nl
+	args.nl = 1
 	if os.path.abspath(fn) in visited:
 		raise Exception("file {} already included".format(fn))
 	visited.append(os.path.abspath(fn))
@@ -65,10 +71,10 @@ def start(fn, visited=[]):
 						l[i] = l[i].lower()
 				l = "\"".join(l)
 				manage_line(pattern.findall(l))
-				inc_nl()
+				args.nl += 1
 			except Exception as e:
 				msg = str(e) if str(e) else "Wrong line"
-				raise Exception("{}: {} (line {})".format(fn, msg, get_nl()))
+				raise Exception("{}: {} (line {})".format(fn, msg, args.nl))
 
 
 def add_labels(org):

@@ -120,6 +120,22 @@ def rnd(data, l):
 	return bytes([42])
 
 
+def pushai(data, l):
+	return bytes([105])
+
+
+def popai(data, l):
+	return bytes([106])
+
+
+def pushaf(data, l):
+	return bytes([107])
+
+
+def popaf(data, l):
+	return bytes([108]) 
+
+
 def gkey(data, l):
 	return bytes([36])
 
@@ -272,11 +288,3 @@ def setc(data, l, k=(37, 38)):
 		return bytes([k[0]]) + args.rr(data)
 	except Exception:
 		return bytes([k[1]]) + args.cc(data)
-
-
-def inc_nl():
-	args.nl += 1
-
-
-def get_nl():
-	return args.nl

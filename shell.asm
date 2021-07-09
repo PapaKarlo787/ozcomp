@@ -13,6 +13,9 @@ mul r1, r2
 add r0, r1
 mov [data_area], r0
 
+include "main.asm"
+
+
 
 
 first_fat:
@@ -26,15 +29,4 @@ dd 0
 cur_dir:
 dd 2
 
-
-get_poi_to_data:
-; r0 - current start cluster
-; r1 - position in file
-mov r2, [data_area]
-push r3
-push r1
-mov r3, [first_fat]
-add r3, r0
-mov r3, [r3]
-pop r1
-pop r3
+include "get_pointer.asm" ; uses r0-r2

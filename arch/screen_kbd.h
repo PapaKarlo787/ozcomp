@@ -10,11 +10,10 @@ void print_line_c() {
 
 void print_line_r() {
 	readRegisters();
-	uint32_t temp = R[r0];
+	uint32_t temp = R[r1];
 	while (uint8_t c = read_(temp++))
 		lcd.write(c);
 }
-
 
 void print_num() {
 	readRegisters();

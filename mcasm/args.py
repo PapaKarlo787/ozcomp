@@ -5,7 +5,7 @@ import nums_to_bytes as ntb
 reg_re = "r(\d|1[0-5])$"
 int_re = "(0|-?[1-9][0-9]*|0x[0-9a-f]+)$"
 float_re = "-?(0\.\d+|[1-9][0-9]*\.\d+)|" + int_re
-label_re = "([a-z]\w*)$"
+label_re = "(\.*[a-z]\w*)$"
 nl = 1
 
 
@@ -78,8 +78,10 @@ def jump(c, data, l, to_rebuild):
 	elif re.match(label_re, data[0]):
 		to_rebuild.append((data[0], l + 1, nl))
 		result += bytes([0] * 4)
+	elif data[0] == "$":
+		result += ntb.int_to_bytes(l)
 	else:
-		raise Exception
+		raise Exception("Wrong pointer")
 	return result
 
 
