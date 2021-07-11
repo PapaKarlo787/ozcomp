@@ -29,7 +29,7 @@ pattern = re.compile(r"\".*\"|\[|\]|\+|-?[\w\.]+|,|:|;.*|-|\$")
 
 
 def manage_line(data):
-	global data_base, addr, nl
+	global data_base, addr
 	if data and data[-1][0] == ";":
 		data.pop()
 	if not data:
@@ -37,12 +37,17 @@ def manage_line(data):
 	if data[0] in commands:
 		data_base += commands[data[0]](data[1:], len(data_base))
 	elif len(data) == 2 and data[1] == ":":
+		if data[0][0] == ".":
+			data[0] = args.last_label + data[0]
+		else:
+			args.last_label = data[0]
 		if data[0] in labels:
 			raise Exception("Label '{}' already presents".format(data[0]))
 		if not re.match(label_re, data[0]):
+			print(data[0])
 			raise Exception("Wrong label name")
 		labels[data[0]] = len(data_base)
-	elif re.match("jn?e?g?l?i?$", data[0]):
+	elif re.match("jn?(e?g?l?i?)*$", data[0]):
 		data_base += jc(data[1:], data[0][1:], len(data_base))
 	elif data[0] == "include" and len(data) == 2 and "\"\"" == data[1][0]+data[1][-1]:
 		nl = args.nl

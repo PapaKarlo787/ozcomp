@@ -5,8 +5,9 @@ import nums_to_bytes as ntb
 reg_re = "r(\d|1[0-5])$"
 int_re = "(0|-?[1-9][0-9]*|0x[0-9a-f]+)$"
 float_re = "-?(0\.\d+|[1-9][0-9]*\.\d+)|" + int_re
-label_re = "(\.*[a-z]\w*)$"
+label_re = "([a-z]\w*\.*[a-z]\w*)$"
 nl = 1
+last_label = ""
 
 
 def is_three(data):
@@ -72,6 +73,8 @@ def c(data):
 
 
 def jump(c, data, l, to_rebuild):
+	if data[0][0] == ".":
+		data[0] = last_label + data[0]
 	result = bytes([c])
 	if re.match(int_re, data[0]):
 		result += ntb.int_to_bytes(to_int(data[0]))

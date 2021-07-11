@@ -9,12 +9,7 @@ jmp main
 current_table:
 times dd 0 24 
 
-get_6_names:
-pushai
-
-popai
-ret
-
+include "get_menu_names.asm"
 
 print_names:
 ret
