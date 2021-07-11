@@ -1,3 +1,4 @@
+#include <Arduino.h>
 // The 7-bit ASCII character set...
 const uint8_t charset[][5] PROGMEM = {
   { 0x00, 0x00, 0x00, 0x00, 0x00 },  // 20 space

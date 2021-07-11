@@ -2,14 +2,17 @@
 #define PCD8544_H
 
 #include <Arduino.h>
-#define pin_sclk = 9;
-#define pin_sdin = 4;
-#define pin_dc = 5;
-#define pin_reset = 7;
-#define pin_sce = 6;
+#define pin_sclk 9
+#define pin_sdin 4
+#define pin_dc 5
+#define pin_reset 7
+#define pin_sce 6
+
 class PCD8544: public Print {
     public:
+        // All the pins can be changed from the default values...
         void begin();
+
         // Set display contrast level (0-127)...
         void setContrast(uint8_t level);
 
@@ -21,8 +24,5 @@ class PCD8544: public Print {
 
         // Send a command or data to the display...
         void send(uint8_t type, uint8_t data);
-
-    private:
-        uint16_t pointer = 0;
 };
 #endif

@@ -1,23 +1,28 @@
 #include "MyScreen.h"
-
-#include <Arduino.h>
-
-#if defined (__XTENSA__)
-#include <pgmspace.h>
-#else
-#include <avr/pgmspace.h>
-#endif
-
-
+#include "charset.cpp"
 #define PCD8544_CMD  LOW
 #define PCD8544_DATA HIGH
 #define width 84
 #define height 48
 
-#include "charset.cpp"
+
 
 void PCD8544::begin()
 {
+	// All pins are outputs (these displays cannot be read)...
+    pinMode(pin_sclk, OUTPUT);
+    pinMode(pin_sdin, OUTPUT);
+    pinMode(pin_dc, OUTPUT);
+    pinMode(pin_reset, OUTPUT);
+    pinMode(pin_sce, OUTPUT);
+
+    // Reset the controller state...
+    digitalWrite(pin_reset, HIGH);
+    digitalWrite(pin_sce, HIGH);
+    digitalWrite(pin_reset, LOW);
+    delay(100);
+    digitalWrite(pin_reset, HIGH);
+
     // Set the LCD parameters...
     this->send(PCD8544_CMD, 0x21);  // extended instruction set control (H=1)
     this->send(PCD8544_CMD, 0x13);  // bias system (1:48)
@@ -25,6 +30,7 @@ void PCD8544::begin()
     this->send(PCD8544_CMD, 0x20);  // extended instruction set control (H=0)
     this->send(PCD8544_CMD, 0x09);  // all display segments on
 
+    // Activate LCD...
     this->send(PCD8544_CMD, 0x08);  // display blank
     this->send(PCD8544_CMD, 0x0c);  // normal mode (0x0d = inverse mode)
     delay(100);
@@ -54,21 +60,22 @@ void PCD8544::setCursor(uint8_t column, uint8_t line)
 
 size_t PCD8544::write(uint8_t chr)
 {
+    // ASCII 7-bit only...
     if (chr >= 0x80 || chr < 0x20)
         chr = ' ';
 
+    // Output one column at a time...
     for (uint8_t i = 0; i < 5; i++)
-        this->send(PCD8544_DATA, charset[chr - ' '][i]);
+        this->send(PCD8544_DATA, pgm_read_word(&charset[chr - ' '][i]));
+
+    // One column between characters...
     this->send(PCD8544_DATA, 0x00);
+
     return 1;
 }
 
 void PCD8544::send(uint8_t type, uint8_t data)
 {
-	if (type == PCD8544_DATA) {
-		screen_buffer[pointer] = data
-		pointer = (pointer + 1) % 504
-	}
     digitalWrite(pin_dc, type);
     digitalWrite(pin_sce, LOW);
     shiftOut(pin_sdin, pin_sclk, MSBFIRST, data);
