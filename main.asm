@@ -1,11 +1,27 @@
-call get_total_files
-call get_6_names
-call print_names
 main:
-	
+	xor r0, r0 ; pointer to line
+	mov r1, r0
+	call get_total_files
+	call get_6_names
+	call print_names
+	.lp
+		gkey
+		cmp r15, 1
+		je .up
+		cmp r15, 2
+		je .down
+		cmp r15, 3
+		jne .lp
 
 
-jmp main
+	jmp .lp
+.up:
+
+	jmp .lp
+.down:
+
+	jmp .lp
+
 
 current_table:
 times db 0 114

@@ -4,7 +4,7 @@ pushai
 	sub r3, r8
 	sub r3, 6
 	add r8, r3
-	push r8
+	icvtf r8, r8
 	mov r0, [cur_dir]
 	xor r1, r1
 	mov r5, r1
@@ -56,4 +56,5 @@ pushai
 	jmp .main_lp
 .total_end:
 popai
+fcvti r8, r8
 ret

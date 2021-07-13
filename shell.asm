@@ -1,12 +1,11 @@
 movw r0, [0xe]
 shl r0, 9
-add r0, 512
 mov [first_fat], r0
 mov r1, [0xd]
 shl r1, 9
 mov [cluster_size], r1
 movb r1, [0x10] 	;number of fats
-movw r2, [0x16] 	;sector per fat
+movw r2, [0x24] 	;sector per fat
 shl r2, 9
 mov [fat_size], r2
 mul r1, r2
