@@ -54,3 +54,21 @@ void draw_screen() {
 	for(uint16_t i = 0; i < 504; i++)
 		lcd.send(HIGH, screen_buffer[i]);
 }
+
+void rpix_c() {
+	readRegisters();
+	if (R[r1] >= 504) return;
+	lcd.setCursor(R[r1] % 84, R[r1] / 84);
+	uint16_t n = R[r1] + read_();
+	for(uint16_t i = R[r1]; i < n; i++)
+		lcd.send(HIGH, screen_buffer[i] ^= 0xff);
+}
+
+void rpix_r() {
+	readRegisters();
+	if (R[r1] >= 504) return;
+	lcd.setCursor(R[r1] % 84, R[r1] / 84);
+	uint16_t n = R[r1] + R[r2];
+	for(uint16_t i = R[r1]; i < n; i++)
+		lcd.send(HIGH, screen_buffer[i] ^= 0xff);
+}

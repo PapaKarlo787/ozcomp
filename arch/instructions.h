@@ -111,5 +111,7 @@ void (*const comms[256]) (void) PROGMEM = {
 	pushai,
 	popai,
 	pushaf,
-	popaf
+	popaf,
+	rpix_r,
+	rpix_c
 };

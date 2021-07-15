@@ -36,12 +36,12 @@ void ret() {
 }
 
 void lp() {
-	ip = R[14]-- > 0 ? readNum() : ip + 4;
+	ip = --R[14] > 0 ? readNum() : ip + 4;
 }
 
 void lp_r() {
 	readRegisters();
-	ip = R[14]-- > 0 ? R[r1] : ip + 4;
+	ip = --R[14] > 0 ? R[r1] : ip + 4;
 }
 
 void push() {
