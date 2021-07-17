@@ -1,4 +1,5 @@
 #include "libs/Arduino.h"
+#include "../arch/gloabal_simle_vars.h"
 #include "libs/sd_raw.h"
 #include "libs/PS2Keyboard.h"
 #include "libs/MyScreen.h"

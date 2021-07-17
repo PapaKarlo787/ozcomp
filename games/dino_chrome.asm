@@ -7,7 +7,7 @@ scur 0, 25
 lprint score
 bmp 3, r0, dino
 play sound
-a:
+aa:
 scol 0
 call draw_map
 scol 1
@@ -29,7 +29,7 @@ je down
 cont3:
 gkey
 jne up
-jmp a
+jmp aa
 reload:
 mov r1, 84
 add r3, 1
@@ -42,7 +42,7 @@ mov r2, -2
 jmp cont3
 up:
 mov r2, 3
-jmp a
+jmp aa
 draw_map:
 cmp r2, 0
 je draw_cact
@@ -52,8 +52,9 @@ delay 50
 bmp r1, 32, cact
 ret
 lp:
+nplay
 delay 1000
-jmp 0
+ret
 dino:
 db 20,3
 db 192,0,0,0,0,0,0,128,192,254,255,253,255,255,127,95,95,95,31,30

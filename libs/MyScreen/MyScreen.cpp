@@ -54,8 +54,11 @@ void PCD8544::setContrast(uint8_t level)
 
 void PCD8544::setCursor(uint8_t column, uint8_t line)
 {
-    this->send(PCD8544_CMD, 0x80 | (column % 84));
-    this->send(PCD8544_CMD, 0x40 | (line % 6));
+	column = (column % 84);
+	line = (line % 6);
+	cursor = line * 86 + column;
+    this->send(PCD8544_CMD, 0x80 | column);
+    this->send(PCD8544_CMD, 0x40 | line);
 }
 
 size_t PCD8544::write(uint8_t chr)
@@ -65,8 +68,10 @@ size_t PCD8544::write(uint8_t chr)
         chr = ' ';
 
     // Output one column at a time...
-    for (uint8_t i = 0; i < 5; i++)
-        this->send(PCD8544_DATA, pgm_read_word(&charset[chr - ' '][i]));
+    for (uint8_t i = 0; i < 5; i++) {
+		screen_buffer[cursor] = pgm_read_word(&charset[chr - ' '][i])
+        this->send(PCD8544_DATA, screen_buffer[cursor]);
+	}
 
     // One column between characters...
     this->send(PCD8544_DATA, 0x00);
@@ -80,4 +85,5 @@ void PCD8544::send(uint8_t type, uint8_t data)
     digitalWrite(pin_sce, LOW);
     shiftOut(pin_sdin, pin_sclk, MSBFIRST, data);
     digitalWrite(pin_sce, HIGH);
+    cursor = (cursor + 1) % 504;
 }

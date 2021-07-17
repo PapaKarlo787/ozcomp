@@ -61,7 +61,7 @@ void pushai() {
 }
 
 void popai() {
-	for(uint8_t i = 0; i < 16; i++) {
+	for(int8_t i = 15; i >= 0; i--) {
 		R[i] = readNum(sp);
 		sp += 4;
 	}
