@@ -3,6 +3,7 @@
 #include <sd_raw.h>
 #include <PS2Keyboard.h>
 #include <MyScreen.h>
+#define screen_buffer lcd.screen_buffer
 #include "arch/arch.h"
 
 void setup() {
