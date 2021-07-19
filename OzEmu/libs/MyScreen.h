@@ -6,9 +6,11 @@ class PCD8544{
 private:
 	sf::RectangleShape*** map;
 	sf::RenderWindow* window;
-	unsigned int cursor = 0;
 
 public:
+	uint16_t cursor = 0;
+	uint8_t screen_buffer[504];
+
 	void begin(){
 		window = new sf::RenderWindow(sf::VideoMode(84, 48), "OzEmu");
 		window->setSize(sf::Vector2u(420, 240));

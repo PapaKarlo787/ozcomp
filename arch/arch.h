@@ -1,6 +1,13 @@
+uint8_t flags;
+uint32_t ip = 0;
+uint32_t sp = 0;
+float Rf[16];
+uint32_t R[16];
+uint8_t r1, r2;
+uint8_t color = 255;
 PS2Keyboard keyboard;
 PCD8544 lcd;
-
+#define screen_buffer lcd.screen_buffer
 #include "system_functions.h"
 //realization of instructions
 #include "float_ariphmetics.h"

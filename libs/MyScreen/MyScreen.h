@@ -9,10 +9,9 @@
 #define pin_sce 6
 
 class PCD8544: public Print {
-	uint16_t cursor = 0;
     public:
+		uint16_t cursor = 0;
 		uint8_t screen_buffer[504];
-		
         // All the pins can be changed from the default values...
         void begin();
 
