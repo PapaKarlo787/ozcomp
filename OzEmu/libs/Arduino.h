@@ -7,10 +7,10 @@
 #define OZEMU
 
 
-uint32_t _start_time = clock()/100;
+uint32_t _start_time = (uint32_t)clock()/100;
 
 uint32_t millis(){
-	return clock()/100 - _start_time;
+	return (uint32_t)clock()/100 - _start_time;
 }
 
 unsigned int analogRead(unsigned int _){}

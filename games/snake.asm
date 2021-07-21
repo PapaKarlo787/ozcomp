@@ -1,3 +1,4 @@
+cls
 mov r13, 100
 mov r0, 2
 mov r1, 40
@@ -81,8 +82,8 @@ delay 300
 jmp start
 
 heap:
-data 0, 40
-dd 4.0
-data 0, 8044
+times dd 0 40
+dd 4
+times dd 0 8044
 sound:
-dd 2, 0, 0, 0, 1700, 0, 0, 1000, 0, 0, 900, 0, 0, 1000, 0, 0
+dd 2, 1700, 1000, 900, 1000

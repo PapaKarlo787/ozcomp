@@ -17,7 +17,7 @@ void sub_rc() {
 	readRegisters();
 	setFlags(R[r1] -= readNum());
 }
-	
+
 void mul_rr() {
 	readRegisters();
 	setFlags(R[r1] *= R[r2]);
