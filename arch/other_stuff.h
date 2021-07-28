@@ -15,3 +15,5 @@ void del_c() {
 void rnd(){
 	R[13] = random(1024);
 }
+
+void nop() { }
