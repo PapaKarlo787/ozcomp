@@ -14,8 +14,7 @@ int main(){
 	keyboard.begin(8, 3);
 	randomSeed(analogRead(0));
 	while (true){
-		uint8_t x = read_();
-		comms[x]();
+		comms[read_()]();
 		check_play();
 	}
 	endwin();
