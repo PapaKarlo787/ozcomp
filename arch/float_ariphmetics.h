@@ -63,3 +63,8 @@ void f_cmp_rc() {
 	uint32_t x = readNum();
 	setFlags(Rf[r1] - *(float*)&x);
 }
+
+void test_f() {
+	readRegisters();
+	setFlags(Rf[r1]);
+}

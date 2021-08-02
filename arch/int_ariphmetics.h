@@ -67,3 +67,8 @@ void mod_rc() {
 	readRegisters();
 	setFlags(R[r1] %= readNum());
 }
+
+void test() {
+	readRegisters();
+	setFlags(R[r1]);
+}

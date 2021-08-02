@@ -49,6 +49,11 @@ void push() {
 	write_(sp -= 4, (uint8_t*)&(R[r1]), 4);
 }
 
+void push_c() {
+	uint32_t x = readNum();
+	write_(sp -= 4, (uint8_t*)&x, 4);
+}
+
 void pop() {
 	readRegisters();
 	R[r1] = readNum(sp);
