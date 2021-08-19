@@ -123,14 +123,7 @@ void rect_r() {
 }
 
 void rect_c() {
-	int16_t y2 = read_();
-	int16_t x2 = read_();
-	int16_t y1 = read_();
-	int16_t x1 = read_();
-	draw_line(x1, y1, x2, y1);
-	draw_line(x1, y1, x1, y2);
-	draw_line(x2, y2, x2, y1);
-	draw_line(x2, y2, x1, y2);
+	ip+=4;
 }
 
 void scol() {

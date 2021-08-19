@@ -45,10 +45,8 @@ void setFlags(uint32_t x) {
 
 void write_(uint8_t* data, uint8_t n){
 	sd_raw_write(ip, data, n);
-	sd_raw_sync();
 }
 
 void write_(uint32_t poi, uint8_t* data, uint8_t n){
 	sd_raw_write(poi, data, n);
-	sd_raw_sync();
 }
