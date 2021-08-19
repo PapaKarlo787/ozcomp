@@ -8,17 +8,6 @@ static volatile uint8_t buffer[BUFFER_SIZE];
 static volatile uint8_t head, tail;
 static uint8_t DataPin;
 
-void PS2Keyboard::gohi(uint8_t pin) {
-	pinMode(pin, INPUT);
-	digitalWrite(pin, HIGH);
-}
-
-void PS2Keyboard::golo(uint8_t pin) {
-	pinMode(pin, OUTPUT);
-	digitalWrite(pin, LOW);
-}
-
-
 void ps2interrupt(void) {
 	static uint8_t bitcount=0;
 	static uint8_t incoming=0;
