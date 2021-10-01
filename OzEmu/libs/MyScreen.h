@@ -1,30 +1,23 @@
-#include <SFML/Graphics.hpp>
+#include <ncurses.h>
 #include <string>
 #include "charset.cpp"
 
 class PCD8544{
 private:
-	sf::RectangleShape*** map;
-	sf::RenderWindow* window;
+	WINDOW *window;
 
 public:
 	uint16_t cursor = 0;
 	uint8_t screen_buffer[504];
 
 	void begin(){
-		window = new sf::RenderWindow(sf::VideoMode(84, 48), "OzEmu");
-		window->setSize(sf::Vector2u(420, 240));
-		map = new sf::RectangleShape**[48];
-		for (unsigned int i = 0; i < 48; i++){
-			map[i] = new sf::RectangleShape*[84];
-			for (unsigned int l = 0; l < 84; l++){
-				map[i][l] = new sf::RectangleShape(sf::Vector2f(1, 1));
-				map[i][l]->setPosition(l, i);
-				map[i][l]->setFillColor(sf::Color::Black);
-				window->draw(*map[i][l]);
-			}
-		}
-		window->display();
+		initscr();
+		start_color();
+		init_pair(1, COLOR_WHITE, COLOR_BLUE);
+		setlocale(LC_ALL, "");
+		window = newwin(48, 84, 0, 0);
+		wbkgd(window, COLOR_PAIR(1));
+		wrefresh(window);
 	}
 
 	void setCursor(uint8_t x, uint8_t y){
@@ -56,10 +49,8 @@ public:
 		uint8_t x = cursor % 84;
 		uint8_t y = cursor / 84 * 8;
 		cursor = (cursor + 1) % 504;
-		for (unsigned int i = 0; i < 8; i++){
-			map[y+i][x]->setFillColor((num >> i) & 1 ? sf::Color::White : sf::Color::Black);
-			window->draw(*map[y+i][x]);
-		}
-		window->display();
+		for (unsigned int i = 0; i < 8; i++)
+			mvwaddch(window, y+i, x, (num >> i) & 1 ? 254 : ' ');
+		wrefresh(window);
 	}
 };

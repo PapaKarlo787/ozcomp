@@ -8,7 +8,7 @@ uint16_t freq_;
 bool toSample;
 uint32_t v;
 
-void tone(uint8_t _, uint16_t _freq)
+void tone(uint8_t _, uint16_t _freq, uint16_t dur)
 {
     freq_ = _freq;
     toSample = true;

@@ -11,12 +11,13 @@ int main(){
 	if (!sd_raw_init()) while(true);
 	lcd.begin();
 	init_beeper();
-	keyboard.begin(8, 3);
+	kbd_begin();
 	randomSeed(analogRead(0));
 	while (true){
 		comms[read_()]();
-		check_play();
 	}
+	//sp
 	endwin();
+	clean_up(0);
 	return 0;
 }
