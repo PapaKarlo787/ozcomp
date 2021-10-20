@@ -1,20 +1,21 @@
+#include <iostream>
 #include "libs/Arduino.h"
 #include "libs/sd_raw.h"
 #include "libs/PS2Keyboard.h"
 #include "libs/MyScreen.h"
 #include "libs/beeper.h"
-#include <iostream>
 using namespace std;
 #include "../arch/arch.h"
 
 int main(){
 	if (!sd_raw_init()) while(true);
 	lcd.begin();
+	keyboard.begin(3, 8); // kbd and lcd order of init is essential
 	init_beeper();
-	kbd_begin();
 	randomSeed(analogRead(0));
 	while (true){
-		comms[read_()]();
+		int x = read_();
+		comms[x]();
 	}
 	//sp
 	endwin();

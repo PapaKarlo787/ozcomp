@@ -22,7 +22,6 @@ int getfd() {
 int fd;
 int oldkbmode;
 struct termios old;
-unsigned char buf[1];
 
 static void clean_up(int x) {
 	if (ioctl(fd, KDSKBMODE, oldkbmode))
@@ -33,6 +32,8 @@ static void clean_up(int x) {
 }
 
 unsigned char get_scan_code() {
+	unsigned char buf[1];
+	buf[0] = 0;
 	int n = read(fd, buf, sizeof(buf));
 	return buf[0];
 }
@@ -41,16 +42,17 @@ int kbd_begin(){
 	struct termios new;
 
 	fd = getfd();
-	/* the program terminates when there is no input for 10 secs */
-	signal(SIGALRM, clean_up);
 	if (ioctl(fd, KDGKBMODE, &oldkbmode))
 		exit(1);
+
+	int flag = 1;
+	ioctl(fd, FIONBIO, &flag);
 	tcgetattr(fd, &old);
 	tcgetattr(fd, &new);
 
 	new.c_lflag &= ~ (ICANON | ECHO | ISIG);
 	new.c_iflag = 0;
-	new.c_cc[VMIN] = sizeof(buf);
+	new.c_cc[VMIN] = 1;
 	new.c_cc[VTIME] = 1;
 
 	tcsetattr(fd, TCSAFLUSH, &new);

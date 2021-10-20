@@ -12,9 +12,10 @@ public:
 
 	void begin(){
 		initscr();
+		noecho();
+		curs_set(0);
 		start_color();
 		init_pair(1, COLOR_WHITE, COLOR_BLUE);
-		setlocale(LC_ALL, "");
 		window = newwin(48, 84, 0, 0);
 		wbkgd(window, COLOR_PAIR(1));
 		wrefresh(window);
@@ -50,7 +51,7 @@ public:
 		uint8_t y = cursor / 84 * 8;
 		cursor = (cursor + 1) % 504;
 		for (unsigned int i = 0; i < 8; i++)
-			mvwaddch(window, y+i, x, (num >> i) & 1 ? 254 : ' ');
+			mvwaddch(window, y+i, x, (num >> i) & 1 ? 219 : ' ');
 		wrefresh(window);
 	}
 };

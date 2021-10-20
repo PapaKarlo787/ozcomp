@@ -3,7 +3,7 @@ mov r0, 28
 mov r1, 84
 mov r2, 0
 mov r3, r2
-scur 0, 25
+scur 25, 0
 lprint score
 bmp 3, r0, dino
 play sound
@@ -15,7 +15,7 @@ sub r1, 3
 sub r0, r2
 call draw_map
 ji lp
-scur 0, 67
+scur 67, 0
 print r3
 
 cmp r1, -12
@@ -28,7 +28,8 @@ cmp r0, 4
 je down
 cont3:
 gkey
-jne up
+cmp r15, 57
+je up
 jmp aa
 reload:
 mov r1, 84
@@ -41,6 +42,8 @@ down:
 mov r2, -2
 jmp cont3
 up:
+cmp r2, -2
+je aa
 mov r2, 3
 jmp aa
 draw_map:
