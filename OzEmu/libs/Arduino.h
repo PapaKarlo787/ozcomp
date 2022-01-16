@@ -26,7 +26,3 @@ void randomSeed(unsigned int _){
 void delay(unsigned int t){
 	usleep(t*1000);
 }
-
-void tone(void (*f)(void)){
-	
-}

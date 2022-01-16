@@ -1,6 +1,6 @@
 void mov_rm() {
 	readRegisters();
-	R[r1] = readNum(readNum());
+	R[r1] = readNum(readNum(), 4);
 }
 
 void movb_rm() {
@@ -41,7 +41,7 @@ void mov_rc() {
 
 void mov_rmor() {
 	readRegisters();
-	R[r1] = readNum(readNum() + R[r2]);
+	R[r1] = readNum(readNum() + R[r2], 4);
 }
 
 void movb_rmor() {
@@ -52,7 +52,7 @@ void movb_rmor() {
 void movw_rmor() {
 	readRegisters();
 	uint32_t n = readNum();
-	R[r1] = read_(n + R[r2]) + (read_(n + 1 + R[r2]) << 8);
+	R[r1] = readNum(n + R[r2], 2);
 }
 
 void mov_morr() {

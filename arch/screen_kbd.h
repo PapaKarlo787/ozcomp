@@ -35,7 +35,8 @@ void snd_c() {
 }
 
 void set_cursor() {
-	lcd.setCursor(read_(), read_());
+	uint8_t x = read_();
+	lcd.setCursor(x, read_());
 }
 
 void set_cursor_r() {

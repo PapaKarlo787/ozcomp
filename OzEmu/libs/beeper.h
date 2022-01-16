@@ -1,49 +1,39 @@
-#include <SDL/SDL.h>
-#include <SDL/SDL_audio.h>
-#include <cmath>
+#include <fstream>
+#include <thread>
 
-const int AMPLITUDE = 28000;
-const int FREQUENCY = 44100;
-uint16_t freq_;
-bool toSample;
-uint32_t v;
 
-void tone(uint8_t _, uint16_t _freq, uint16_t dur)
-{
-    freq_ = _freq;
-    toSample = true;
+ofstream music_pipe("pipe");
+thread beep_thr;
+bool is_plaing = false;
+
+void _next_tone(){
+	is_plaing = false;
 }
 
-void noTone(uint8_t _)
-{
-    toSample = false;
+void (*next_tone)(void) = *_next_tone;
+
+void beep(uint16_t freq, uint16_t dur){
+	for (int i = 0; i < dur * 88; ++i) {
+		if (!is_plaing)
+			return;
+		int16_t a = i % (44100 / freq) > (44100 / freq / 2) ? 32000 : -32000;
+		music_pipe.write((const char *)&a, sizeof(a));
+	}
+	next_tone();
 }
 
-void audio_callback(void *_beeper, Uint8 *_stream, int _length)
-{
-    Sint16 *stream = (Sint16*) _stream;
-    int length = _length / 2;
-    int i = 0;
-	if (toSample)
-		while (i < length) {
-			stream[i++] = AMPLITUDE * std::sin(v * M_PI / FREQUENCY);
-			v += freq_ * 2;
-		}
-	else
-		while (i < length)
-			stream[i++] = 0;
+void tone(uint8_t _, uint16_t freq, uint16_t dur) {
+	beep_thr = thread([](uint16_t x, uint16_t y) { beep(x, y); }, freq, dur);
+	beep_thr.detach();
+	is_plaing = true;
 }
 
-void init_beeper()
-{
-    SDL_Init(SDL_INIT_AUDIO);
-    SDL_AudioSpec desiredSpec;
-    desiredSpec.freq = FREQUENCY;
-    desiredSpec.format = AUDIO_S16SYS;
-    desiredSpec.channels = 1;
-    desiredSpec.samples = 2048;
-    desiredSpec.callback = audio_callback;
-    SDL_AudioSpec obtainedSpec;
-    SDL_OpenAudio(&desiredSpec, &obtainedSpec);
-    SDL_PauseAudio(0);
+void tone(void (*f)(void)) {
+    next_tone = *f;
+	next_tone();
+}
+
+void noTone(uint8_t _) {
+    next_tone = *_next_tone;
+    next_tone();
 }

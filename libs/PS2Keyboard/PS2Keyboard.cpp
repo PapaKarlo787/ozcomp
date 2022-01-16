@@ -23,17 +23,16 @@ void ps2interrupt(void) {
 	}
 	prev_ms = now_ms;
 	n = bitcount - 1;
-	if (n <= 7) {
+	if (n < 8) {
 		incoming |= (val << n);
 	}
 	bitcount++;
 	if (bitcount == 11) {
-		uint8_t i = head + 1;
-		if (i == BUFFER_SIZE) i = 0;
-		if (i != tail && incoming != 240) {
-			buffer[i] = incoming;
-			head = i;
+		if (incoming == 1) {
+			
 		}
+		buffer[head] = incoming;
+		head = (head+1) % BUFFER_SIZE;
 		bitcount = 0;
 		incoming = 0;
 	}
@@ -45,8 +44,9 @@ bool PS2Keyboard::available() {
 
 uint8_t PS2Keyboard::read() {
 	if (tail == head) return 0;
+	uint8_t res = buffer[tail];
 	if (++tail >= BUFFER_SIZE) tail = 0;
-	return buffer[tail];
+	return res;
 }
 
 void PS2Keyboard::begin(uint8_t dataPin){

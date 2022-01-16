@@ -24,9 +24,9 @@ uint32_t readNum() {
 	return *((uint32_t*)&temp);
 }
 
-uint32_t readNum(uint32_t poi) {
-	uint8_t temp[4];
-	sd_raw_read(poi, temp, 4);
+uint32_t readNum(uint32_t poi, uint8_t n) {
+	uint8_t temp[4] = {0, 0, 0, 0};
+	sd_raw_read(poi, temp, n);
 	return *((uint32_t*)&temp);
 }
 

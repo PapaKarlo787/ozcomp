@@ -1,6 +1,6 @@
 void fmov_rm() {
 	readRegisters();
-	uint32_t x = readNum(readNum());
+	uint32_t x = readNum(readNum(), 4);
 	Rf[r1] = *(float*)&x;
 }
 
@@ -22,7 +22,7 @@ void fmov_rc() {
 
 void fmov_rmor() {
 	readRegisters();
-	uint32_t x = readNum(readNum() + R[r2]);
+	uint32_t x = readNum(readNum() + R[r2], 4);
 	Rf[r1] = *(float*)&x;
 }
 

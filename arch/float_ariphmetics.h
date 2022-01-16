@@ -1,3 +1,5 @@
+#include <cmath>
+
 void f_add_rr() {
 	readRegisters();
 	setFlags(Rf[r1] += Rf[r2]);

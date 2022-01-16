@@ -56,7 +56,7 @@ void push_c() {
 
 void pop() {
 	readRegisters();
-	R[r1] = readNum(sp);
+	R[r1] = readNum(sp, 4);
 	sp += 4;
 }
 
@@ -67,7 +67,7 @@ void pushai() {
 
 void popai() {
 	for(int8_t i = 15; i >= 0; i--) {
-		R[i] = readNum(sp);
+		R[i] = readNum(sp, 4);
 		sp += 4;
 	}
 }
@@ -79,7 +79,7 @@ void fpush() {
 
 void fpop() {
 	readRegisters();
-	uint32_t x = readNum(sp);
+	uint32_t x = readNum(sp, 4);
 	Rf[r1] = *(float*)&x;
 	sp += 4;
 }
@@ -91,7 +91,7 @@ void pushaf() {
 
 void popaf() {
 	for(uint8_t i = 0; i < 16; i++) {
-		Rf[i] = readNum(sp);
+		Rf[i] = readNum(sp, 4);
 		sp += 4;
 	}
 }

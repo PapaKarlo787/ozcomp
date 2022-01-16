@@ -23,7 +23,7 @@ int fd;
 int oldkbmode;
 struct termios old;
 
-static void clean_up(int x) {
+void clean_up() {
 	if (ioctl(fd, KDSKBMODE, oldkbmode))
 		exit(1);
 	tcsetattr(fd, 0, &old);
