@@ -8,6 +8,8 @@ using namespace std;
 #include "../arch/arch.h"
 
 int main(){
+	cout << "This emulator not supported under X Window System.\nwait for 3 seconds or break..." << endl;
+	delay(3000);
 	if (!sd_raw_init()) while(true);
 	lcd.begin();
 	keyboard.begin(3, 8); // kbd and lcd order of init is essential

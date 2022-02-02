@@ -8,7 +8,7 @@ void setup() {
   pinMode(17, OUTPUT);
   while (!sd_raw_init()) {};
   lcd.begin();
-  keyboard.begin(8);
+  keyboard.begin();
   randomSeed(analogRead(0));
   sp = sd_raw_get_size();
 }

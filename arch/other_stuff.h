@@ -29,3 +29,22 @@ void mzer_c() {
 	for (uint32_t i = readNum(); i > 0; i--)
 		write_(poi+i-1, new uint8_t {0}, 1);
 }
+
+void set_time() {
+	readRegisters();
+	uint8_t r3 = read_();
+}
+
+void get_time() {
+	readRegisters();
+	uint8_t r3 = read_();
+}
+
+void mls(){
+	R[12] = millis();
+}
+
+
+void mcs(){
+	R[12] = micros();
+}

@@ -4,6 +4,7 @@
 
 #define BUFFER_SIZE 20
 #define ps2clk 3
+#define DataPin 8
 static volatile uint8_t buffer[BUFFER_SIZE];
 static volatile uint8_t head, tail;
 static uint8_t DataPin;
@@ -49,12 +50,7 @@ uint8_t PS2Keyboard::read() {
 	return res;
 }
 
-void PS2Keyboard::begin(uint8_t dataPin){
-  PS2 k(3, dataPin);
-  k.write(0xf0);
-  k.read();
-  k.write(3);
-  DataPin = dataPin;
+void PS2Keyboard::begin(){
   pinMode(ps2clk, INPUT_PULLUP);
   pinMode(dataPin, INPUT_PULLUP);
   head = 0;
