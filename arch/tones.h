@@ -12,7 +12,7 @@ void play(){
 	uint32_t poi = readNum();
 	start_pointer = poi+4;
 	play_pointer = 0;
-	size = readNum(poi, 4) << 3;
+	size = readNum(poi, 4) << 2;
 	tone(next_play);
 }
 
