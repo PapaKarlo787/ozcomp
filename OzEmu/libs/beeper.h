@@ -1,5 +1,6 @@
 #include <fstream>
 #include <thread>
+#include <cstdlib>
 
 
 ofstream music_pipe("pipe");
@@ -14,10 +15,12 @@ void (*next_tone)(void) = *_next_tone;
 
 void beep(uint16_t freq, int32_t dur){
 	for (int i = 0; (dur ? (i < dur * 88) : true); ++i) {
-		if (!is_plaing)
+		if (!is_plaing) {
 			return;
+		}
 		int16_t a = i % (44100 / freq) > (44100 / freq / 2) ? 32000 : -32000;
 		music_pipe.write((const char *)&a, sizeof(a));
+		music_pipe.flush();
 	}
 	thread(next_tone).detach();
 }
