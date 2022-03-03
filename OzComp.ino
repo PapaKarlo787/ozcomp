@@ -2,15 +2,17 @@
 #include <sd_raw.h>
 #include <PS2Keyboard.h>
 #include <MyScreen.h>
-#include "arch/arch.h"
+#include "arch\arch.h"
 
 void setup() {
-  pinMode(17, OUTPUT);
   while (!sd_raw_init()) {};
   lcd.begin();
+  Serial.begin(115200);
   keyboard.begin();
   randomSeed(analogRead(0));
-  sp = sd_raw_get_size();
+  sd_raw_info info;
+  sd_raw_get_info(&info);
+  sp = info.capacity;
 }
 
 void loop() {

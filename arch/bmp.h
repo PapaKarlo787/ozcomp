@@ -1,6 +1,6 @@
 bool set_data(uint8_t data, uint16_t i) {
 	uint8_t last = screen_buffer[i];
-	if (color)
+	if (color & 128)
 		screen_buffer[i] |= data;
 	else
 		screen_buffer[i] &= ~data;
