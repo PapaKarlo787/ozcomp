@@ -4,7 +4,6 @@ using namespace std;
 #include "libs/sd_raw.h"
 #include "libs/MyScreen.h" // kbd and lcd order of init is essential
 #include "libs/PS2Keyboard.h"
-#include "libs/beeper.h"
 #include "../arch/arch.h"
 
 int main(){

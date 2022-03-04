@@ -8,7 +8,7 @@ void next_play(){
 	tone(15, freq, readNum(play_pointer+start_pointer+2, 2));
 	play_pointer = (play_pointer + 4) % size;
 	uint8_t note = freq > 27 ? (int8_t)(log(freq / 27.5) / log(1.05946309436)) % 12 : 12;
-	note = pgm_read_byte(&cols[note]);
+	note = pgm_read_byte(cols[note]);
 	analogWrite(Rp, (note % 3) * 511);
 	analogWrite(Gp, (note / 3 % 3) * 511);
 	analogWrite(Bp, (note / 9 % 3) * 511);
