@@ -1,3 +1,4 @@
+#ifdef OZEMU
 using namespace std;
 #include <iostream>
 #include "libs/Arduino.h"
@@ -20,3 +21,4 @@ int main(){
 	//sp
 	return 0;
 }
+#endif
