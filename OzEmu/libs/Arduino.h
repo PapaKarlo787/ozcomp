@@ -7,6 +7,7 @@
 #define OZEMU
 #define PROGMEM
 
+
 uint32_t millis(){
 	return (uint32_t)clock();
 }
@@ -15,9 +16,9 @@ uint32_t micros(){
 	return (uint32_t)clock();
 }
 
-unsigned int analogRead(uint8_t _){}
-unsigned int analogWrite(uint8_t _, uint16_t __){}
-unsigned int pgm_read_byte(uint16_t _){}
+uint32_t analogRead(uint32_t _){return 0;}
+void analogWrite(uint8_t _, uint32_t __){return;}
+uint8_t pgm_read_byte(uint32_t _){return 0;}
 
 unsigned int random(unsigned int max){
 	return rand() % max;
@@ -30,6 +31,3 @@ void randomSeed(unsigned int _){
 void delay(unsigned int t){
 	usleep(t*1000);
 }
-
-
-#include "beeper.h"

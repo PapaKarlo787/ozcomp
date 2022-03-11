@@ -4,7 +4,7 @@
 
 #define BUFFER_SIZE 20
 #define ps2clk 3
-#define dataPin 8
+#define DataPin 8
 static volatile uint8_t buffer[BUFFER_SIZE];
 static volatile uint8_t head, tail;
 static uint8_t DataPin;

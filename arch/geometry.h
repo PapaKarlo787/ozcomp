@@ -2,7 +2,7 @@ void set_point(int16_t x, int16_t y) {
 	if (x > 83 || x < 0 || y > 47 || y < 0)
 		return;
 	uint16_t n = y / 8 * 84 + x;
-	if (color & 128)
+	if (color)
 		screen_buffer[n] |= (1 << y % 8);
 	else
 		screen_buffer[n] &= ~(1 << y % 8);
@@ -134,5 +134,5 @@ void rect_c() {
 }
 
 void scol() {
-	color = read_();
+	color = read_() ? 255 : 0;
 }

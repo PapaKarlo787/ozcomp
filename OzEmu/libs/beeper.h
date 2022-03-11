@@ -1,25 +1,24 @@
 #include <fstream>
 #include <thread>
-#include <cstdlib>
 
 
-ofstream music_dev("/dev/ttyUSB0");
+ofstream music_pipe("pipe");
 thread beep_thr = thread([]() { });
 bool is_plaing = false;
 
 void _next_tone(){
 	is_plaing = false;
-	uint32_t v = 0;
-	music_dev.write((const char*)&v, sizeof(v));
 }
 
 void (*next_tone)(void) = *_next_tone;
 
-void beep(uint16_t freq, uint16_t dur){
-	music_dev.write((const char*)&freq, sizeof(freq));
-	music_dev.write((const char*)&dur, sizeof(dur));
-	if (dur) delay(dur);
-	else while (is_plaing);
+void beep(uint16_t freq, int32_t dur){
+	for (int i = 0; (dur ? (i < dur * 88) : true); ++i) {
+		if (!is_plaing)
+			return;
+		int16_t a = i % (44100 / freq) > (44100 / freq / 2) ? 32000 : -32000;
+		music_pipe.write((const char *)&a, sizeof(a));
+	}
 	thread(next_tone).detach();
 }
 

@@ -48,16 +48,3 @@ void mls(){
 void mcs(){
 	R[12] = micros();
 }
-
-void rgb_c(){
-	analogWrite(Rp, read_());
-	analogWrite(Gp, read_());
-	analogWrite(Bp, read_());
-}
-
-void rgb_r(){
-	readRegisters();
-	analogWrite(Rp, R[r1]);
-	analogWrite(Gp, R[r2]);
-	analogWrite(Bp, R[read_()]);
-}
