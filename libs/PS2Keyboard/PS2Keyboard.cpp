@@ -4,10 +4,9 @@
 
 #define BUFFER_SIZE 20
 #define ps2clk 3
-#define DataPin 8
+#define dataPin 8
 static volatile uint8_t buffer[BUFFER_SIZE];
 static volatile uint8_t head, tail;
-static uint8_t DataPin;
 
 void ps2interrupt(void) {
 	static uint8_t bitcount=0;
@@ -16,7 +15,7 @@ void ps2interrupt(void) {
 	uint32_t now_ms;
 	uint8_t n, val;
 
-	val = digitalRead(DataPin);
+	val = digitalRead(dataPin);
 	now_ms = millis();
 	if (now_ms - prev_ms > 250) {
 		bitcount = 0;
