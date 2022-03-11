@@ -1,4 +1,6 @@
-#include <cmath>
+#ifdef OZEMU
+  #include <cmath>
+#endif
 
 void f_add_rr() {
 	readRegisters();
