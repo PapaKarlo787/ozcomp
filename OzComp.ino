@@ -2,7 +2,7 @@
 #include <sd_raw.h>
 #include <PS2Keyboard.h>
 #include <MyScreen.h>
-#include "arch\arch.h"
+#include "arch/arch.h"
 
 void setup() {
   while (!sd_raw_init()) {};

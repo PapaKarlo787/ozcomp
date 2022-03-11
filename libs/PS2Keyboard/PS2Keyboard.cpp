@@ -1,5 +1,4 @@
-#include "Arduino.h" 
-#include "ps2.h"
+#include "Arduino.h"
 #include "PS2Keyboard.h"
 
 #define BUFFER_SIZE 20
