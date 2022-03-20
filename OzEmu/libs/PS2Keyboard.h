@@ -17,6 +17,7 @@ private:
 				if (x == 1) {
 					endwin();
 					clean_up();
+					beeper.close();
 				}
 				(kbd->buffer)[kbd->head] = x;
 				kbd->head = (kbd->head + 1) % BUFFER_SIZE;

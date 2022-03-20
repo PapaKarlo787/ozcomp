@@ -1,41 +1,47 @@
-#include <fstream>
-#include <thread>
-#include <cstdlib>
+#include <SDL2/SDL.h>  
 
 
-ofstream music_dev("/dev/ttyUSB0");
-thread beep_thr = thread([]() { });
-bool is_plaing = false;
+// This class is a singleton, which is bad practice. However, this makes the
+// implementation more straightforward.
+class Beeper
+{
+public:
+    static void open(); // Open the audio device
+    static void close(); // Close the audio device
 
-void _next_tone(){
-	is_plaing = false;
-	uint32_t v = 0;
-	music_dev.write((const char*)&v, sizeof(v));
-}
+    static void setFrequency(double frequency); // Units: Hz
+    static void setVolume(double volume); // Range: 0.0 .. 1.0
 
-void (*next_tone)(void) = *_next_tone;
+    static void play();
+    static void stop();
 
-void beep(uint16_t freq, uint16_t dur){
-	music_dev.write((const char*)&freq, sizeof(freq));
-	music_dev.write((const char*)&dur, sizeof(dur));
-	if (dur) delay(dur);
-	else while (is_plaing);
-	thread(next_tone).detach();
-}
+    static SDL_AudioSpec m_obtainedSpec;
 
-void tone(uint8_t _, uint16_t freq, uint16_t dur) {
-	is_plaing = false;
-	beep_thr.join();
-	is_plaing = true;
-	beep_thr = thread([](uint16_t x, uint16_t y) { beep(x, y); }, freq, dur);
-}
+private:
+    static SDL_AudioDeviceID m_audioDevice;
+    static double m_frequency; // Units: Hz
+    static double m_volume; // Range: 0.0 .. 1.0
 
-void tone(void (*f)(void)) {
-    next_tone = *f;
-	next_tone();
-}
+    // The current playback position, according to `getData()` and
+    // `audioCallback()`. Units: samples
+    static int m_pos;
 
-void noTone(uint8_t _) {
-    next_tone = *_next_tone;
-    next_tone();
-}
+    // Pointer to function for offset calculate. Differs between different
+    // audio formats.
+    static int (*m_calculateOffset)(int sample, int channel);
+
+    // Pointer to function for writing data. Differs between different audio
+    // formats.
+    static void (*m_writeData)(uint8_t* ptr, double data);
+
+    // Called by `audioCallback` to generate audio data.
+    static double getData();
+
+    // This is function is called repeatedly by SDL2 to send data to the audio
+    // device.
+    static void audioCallback(
+        void* userdata,
+        uint8_t* stream,
+        int len
+    );
+};

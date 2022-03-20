@@ -4,10 +4,12 @@ using namespace std;
 #include "libs/sd_raw.h"
 #include "libs/MyScreen.h" // kbd and lcd order of init is essential
 #include "libs/PS2Keyboard.h"
-#include "libs/beeper.h"
 #include "../arch/arch.h"
 
 int main(){
+	SDL_Init(SDL_INIT_AUDIO);
+	beeper.open();
+	beeper.setVolume(1.0);
 	cout << "This emulator not supported under X Window System.\nwait for 3 seconds or break..." << endl;
 	delay(3000);
 	if (!sd_raw_init()) while(true);
@@ -19,5 +21,6 @@ int main(){
 		comms[x]();
 	}
 	//sp
+	SDL_Quit();
 	return 0;
 }
