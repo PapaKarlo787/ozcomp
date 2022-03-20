@@ -65,8 +65,9 @@ double Beeper::getData() {
     double pos = m_pos;
     double angular_freq = (1.0 / period) * 2.0 * M_PI;
     double amplitude = m_volume;
+    double sin_ = sin(pos * angular_freq) > 0 ? 1 : 0;
 
-    return sin(pos * angular_freq) * amplitude;
+    return sin_ * amplitude;
 }
 
 void Beeper::audioCallback(
