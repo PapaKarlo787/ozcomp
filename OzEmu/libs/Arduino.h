@@ -9,13 +9,14 @@
 #define OZEMU
 #define PROGMEM
 Beeper beeper;
+thread beep_thr = thread([]() { });
 
 uint32_t millis(){
-	return (uint32_t)clock();
+	return (uint32_t)(clock() / (CLOCKS_PER_SEC/1000));
 }
 
 uint32_t micros(){
-	return (uint32_t)clock();
+	return (uint32_t)(clock() / (CLOCKS_PER_SEC/1000000));
 }
 
 uint32_t analogRead(uint32_t _){return 0;}
@@ -31,7 +32,7 @@ void randomSeed(unsigned int _){
 }
 
 void delay(unsigned int t){
-	usleep(t*1000);
+	usleep(t * 1000);
 }
 
 void _next_tone(){
@@ -42,13 +43,14 @@ void (*next_tone)(void) = *_next_tone;
 
 void beep(uint16_t freq, int32_t dur){
 	beeper.setFrequency(freq);
-	usleep(1000*dur);
+	usleep(1000 * dur);
 	if (dur) thread(next_tone).detach();
 }
 
 void tone(uint8_t _, uint16_t freq, uint16_t dur) {
 	beeper.play();
-	thread([](uint16_t x, uint16_t y) { beep(x, y); }, freq, dur).detach();
+	beep_thr.join();
+	beep_thr = thread(beep, freq, dur);
 }
 
 void tone(void (*f)(void)) {
