@@ -10,6 +10,7 @@ uint8_t r1, r2;
 uint8_t color = 255;
 PS2Keyboard keyboard;
 PCD8544 lcd;
+iarduino_RTC time;
 #define screen_buffer lcd.screen_buffer
 #include "system_functions.h"
 //realization of instructions

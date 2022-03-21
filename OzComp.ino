@@ -2,7 +2,9 @@
 #include <sd_raw.h>
 #include <PS2Keyboard.h>
 #include <MyScreen.h>
+#include <iarduino_RTC.h>
 #include "arch/arch.h"
+
 
 void setup() {
   while (!sd_raw_init()) {};
