@@ -50,7 +50,6 @@ void writeData_f32(uint8_t* ptr, double data) {
 // Generate audio data. This is how the waveform is generated.
 
 double Beeper::getData() {
-<<<<<<< HEAD
 	if (m_frequency) {
 		double sampleRate = (double)(m_obtainedSpec.freq);
 
@@ -72,26 +71,6 @@ double Beeper::getData() {
 		return sin_ * amplitude;
 	}
 	return 0;
-=======
-    double sampleRate = (double)(m_obtainedSpec.freq);
-
-    // Units: samples
-    double period = sampleRate / m_frequency;
-
-    // Reset m_pos when it reaches the start of a period so it doesn't run off
-    // to infinity (though this won't happen unless you are playing sound for a
-    // very long time)
-    if (m_pos % (int)period == 0) {
-        m_pos = 0;
-    }
-
-    double pos = m_pos;
-    double angular_freq = (1.0 / period) * 2.0 * M_PI;
-    double amplitude = m_volume;
-    double sin_ = sin(pos * angular_freq) > 0 ? 1 : 0;
-
-    return sin_ * amplitude;
->>>>>>> fcba2199c95059b7b7a259c8a34d73c27adb1795
 }
 
 void Beeper::audioCallback(
