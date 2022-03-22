@@ -68,6 +68,7 @@ volatile long timer2_toggle_count;
 volatile uint8_t *timer2_pin_port;
 volatile uint8_t timer2_pin_mask;
 volatile uint8_t tonePin;
+volatile uint8_t nonzerofreq;
 
 #if defined(TIMSK3)
 volatile long timer3_toggle_count;
@@ -240,6 +241,7 @@ static int8_t toneBegin(uint8_t _pin)
 
 void tone(uint8_t _pin, unsigned int frequency, unsigned long duration)
 {
+  nonzerofreq = frequency > 20;
   uint8_t prescalarbits = 0b001;
   long toggle_count = 0;
   uint32_t ocr = 0;
@@ -556,7 +558,8 @@ ISR(TIMER2_COMPA_vect)
   if (timer2_toggle_count != 0)
   {
     // toggle the pin
-    *timer2_pin_port ^= timer2_pin_mask;
+    if (nonzerofreq)
+	  *timer2_pin_port ^= timer2_pin_mask;
 
     if (timer2_toggle_count > 0)
       timer2_toggle_count--;
