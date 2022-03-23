@@ -32,7 +32,7 @@ void randomSeed(unsigned int _){
 }
 
 void delay(unsigned int t){
-	usleep(t * 1000);
+	usleep(t * 2000);
 }
 
 void _next_tone(){

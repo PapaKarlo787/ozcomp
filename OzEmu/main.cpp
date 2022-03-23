@@ -16,10 +16,10 @@ int main(){
 	delay(3000);
 	if (!sd_raw_init()) while(true);
 	lcd.begin();
-	time.begin();
+	timeUnix.begin();
 	keyboard.begin(3, 8); // kbd and lcd order of init is essential
 	randomSeed(analogRead(0));
-	sp = 2048 * 1024 * 1024;
+	sp = 1 << 31;
 	while (true){
 		int x = read_();
 		comms[x]();

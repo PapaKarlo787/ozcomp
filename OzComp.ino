@@ -20,7 +20,7 @@ void setup() {
   lcd.begin();
   Serial.begin(115200);
   keyboard.begin();
-  time.begin();
+  timeUnix.begin();
   randomSeed(analogRead(0));
   sd_raw_info info;
   sd_raw_get_info(&info);

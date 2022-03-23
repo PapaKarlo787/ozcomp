@@ -32,11 +32,11 @@ void mzer_c() {
 
 void set_time() {
 	readRegisters();
-	time.settimeUnix(R[read_()]);
+	timeUnix.settimeUnix(R[read_()]);
 }
 
 void get_time() {
-	R[read_()] = time.gettimeUnix();
+	R[read_()] = timeUnix.gettimeUnix();
 }
 
 void mls(){
