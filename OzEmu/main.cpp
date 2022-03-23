@@ -19,11 +19,12 @@ int main(){
 	time.begin();
 	keyboard.begin(3, 8); // kbd and lcd order of init is essential
 	randomSeed(analogRead(0));
+	sp = 2048 * 1024 * 1024;
 	while (true){
 		int x = read_();
 		comms[x]();
+		fill_mbuffer();
 	}
-	//sp
 	SDL_Quit();
 	return 0;
 }

@@ -32,18 +32,16 @@ void mzer_c() {
 
 void set_time() {
 	readRegisters();
-	uint8_t r3 = read_();
+	time.settimeUnix(R[read_()]);
 }
 
 void get_time() {
-	readRegisters();
-	uint8_t r3 = read_();
+	R[read_()] = time.gettimeUnix();
 }
 
 void mls(){
 	R[12] = millis();
 }
-
 
 void mcs(){
 	R[12] = micros();

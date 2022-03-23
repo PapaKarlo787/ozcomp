@@ -1,7 +1,7 @@
 #define Rp 15
 #define Gp 18
 #define Bp 19
-uint8_t flags;
+uint32_t flags;
 uint32_t ip = 0;
 uint32_t sp = 0;
 float Rf[16];
@@ -10,7 +10,7 @@ uint8_t r1, r2;
 uint8_t color = 255;
 PS2Keyboard keyboard;
 PCD8544 lcd;
-iarduino_RTC time(RTC_DS1302, 2, 16, 14);
+iarduino_RTC time(RTC_DS1302);
 #define screen_buffer lcd.screen_buffer
 #include "system_functions.h"
 //realization of instructions
