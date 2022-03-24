@@ -48,6 +48,7 @@ void	iarduino_RTC::funcWriteTime(){
 //		Расчёт времени без обращения к модулю:
 void	iarduino_RTC::funcCalculationTime(void){
 			uint32_t i=(millis()-valRequest) / 1000;														//	Определяем количество секунд					(прошедших после последнего обращения к модулю)
+			valRequest = millis();
 			Unix += i;																						//  Получаем количество секунд прошедших с начала эпохи Unix
 			settimeUnix(Unix, false);
 }
