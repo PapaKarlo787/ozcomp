@@ -32,6 +32,8 @@ void next_play(){
 		analogWrite(Bp, (note / 9 % 3) * 511);
 	}
 #endif
+	if (freq == 65535)
+		noTone();
 }
 
 void play(){
