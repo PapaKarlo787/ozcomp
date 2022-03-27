@@ -1,6 +1,6 @@
 bool set_data(uint8_t data, uint16_t i) {
 	uint8_t last = screen_buffer[i];
-	if (color)
+	if (flags & (1 << 16))
 		screen_buffer[i] |= data;
 	else
 		screen_buffer[i] &= ~data;
@@ -34,7 +34,8 @@ void draw_bmp(int8_t x, int8_t y) {
 		start += 84;
 	}
 	ip = t+4;
-	flags = intersected ? 8 : 0;
+	flags &= ~8;
+	flags |= intersected ? 8 : 0;
 }
 
 void bmp_rc() {

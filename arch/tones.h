@@ -23,12 +23,14 @@ void next_play(){
 	mhead = (mhead + 1) % MBS;
 	uint16_t freq = sig & 0xffff;
 	tone(17, freq, sig >> 16);
-#ifndef V1	
-	uint8_t note = freq > 27 ? (int8_t)(log(freq / 27.5) / log(1.05946309436)) % 12 : 12;
-	note = pgm_read_byte(cols[note]);
-	analogWrite(Rp, (note % 3) * 511);
-	analogWrite(Gp, (note / 3 % 3) * 511);
-	analogWrite(Bp, (note / 9 % 3) * 511);
+#ifndef V1
+	if (flags & (1 << 17)) {
+		uint8_t note = freq > 27 ? (int8_t)(log(freq / 27.5) / log(1.05946309436)) % 12 : 12;
+		note = pgm_read_byte(cols[note]);
+		analogWrite(Rp, (note % 3) * 511);
+		analogWrite(Gp, (note / 3 % 3) * 511);
+		analogWrite(Bp, (note / 9 % 3) * 511);
+	}
 #endif
 }
 

@@ -31,14 +31,16 @@ uint32_t readNum(uint32_t poi, uint8_t n = 4) {
 }
 
 void setFlags(float x) {
-	flags = (x > 0 ? 1 : 0) << 6;
+	flags &= ~112;
+	flags += (x > 0 ? 1 : 0) << 6;
 	flags += (x < 0 ? 1 : 0) << 5;
 	flags += (x == 0 ? 1 : 0) << 4;
 }
 
 void setFlags(uint32_t x) {
 	int32_t y = x;
-	flags = (y > 0 ? 1 : 0) << 2;
+	flags &= ~7;
+	flags += (y > 0 ? 1 : 0) << 2;
 	flags += (y < 0 ? 1 : 0) << 1;
 	flags += y == 0 ? 1 : 0;
 }

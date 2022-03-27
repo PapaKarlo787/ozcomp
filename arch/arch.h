@@ -1,13 +1,13 @@
 #define Rp 15
 #define Gp 18
 #define Bp 19
-uint32_t flags;
+uint32_t flags = 1 << 16;
 uint32_t ip = 0;
 uint32_t sp = 0;
+uint8_t* mouse[4];
 float Rf[16];
 uint32_t R[16];
 uint8_t r1, r2;
-uint8_t color = 255;
 PS2Keyboard keyboard;
 PCD8544 lcd;
 iarduino_RTC timeUnix;
