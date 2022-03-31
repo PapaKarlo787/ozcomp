@@ -33,7 +33,7 @@ void next_play(){
 	}
 #endif
 	if (freq == 0xffff)
-		noTone();
+		noTone(17);
 }
 
 void play(){
