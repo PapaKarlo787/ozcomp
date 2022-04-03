@@ -30,7 +30,7 @@ public:
 	void write(uint8_t c){
 		if (c > 127) c = 127;
 		for (uint8_t i = 0; i < 5; i++)
-			send(0, screen_buffer[cursor] = charset[c-32][i]);
+			send(0, screen_buffer[cursor] = charset[c][i]);
 		send(0, screen_buffer[cursor] = 0);
 	}
 
