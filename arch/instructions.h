@@ -124,7 +124,7 @@ void (*const comms[256]) (void) PROGMEM = {
 	mcs,
 	rgb_r,
 	rgb_c,
-	nop,
+	get_mice,
 	nop,
 	nop,
 	nop,
