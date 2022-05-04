@@ -15,12 +15,14 @@ class PS2
 	public:
 		PS2(uint8_t clk, uint8_t data);
 		void write(uint8_t data);
-		uint8_t read(void);
+		uint8_t read();
+		bool detected();
 	private:
-		uint8_t _ps2clk;
-		uint8_t _ps2data;
 		void golo(uint8_t pin);
 		void gohi(uint8_t pin);
+		uint8_t _ps2clk;
+		uint8_t _ps2data;
+		uint8_t was_det;
 };
 
 #endif /* ps2_h */

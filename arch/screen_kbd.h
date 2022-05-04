@@ -1,6 +1,7 @@
 void get_key() {
 	keyboard.write(0);
 	setFlags(R[15] = keyboard.read());
+	delay(10);
 }
 
 void get_mice() {

@@ -51,7 +51,7 @@ void PS2::write(uint8_t data)
 	golo(_ps2clk);
 	delayMicroseconds(300);
 	golo(_ps2data);
-	delayMicroseconds(10);
+	delayMicroseconds(150);
 	gohi(_ps2clk);	// start bit
 	/* wait for device to take control of clock */
 	while (digitalRead(_ps2clk) == HIGH) ;	// this loop intentionally left blank
@@ -73,57 +73,43 @@ void PS2::write(uint8_t data)
 	while (digitalRead(_ps2clk) == HIGH) ;
 	// stop bit
 	gohi(_ps2data);
-	delayMicroseconds(50);
+	while (digitalRead(_ps2clk) == LOW) ;
 	while (digitalRead(_ps2clk) == HIGH) ;
 	// mode switch
 	while ((digitalRead(_ps2clk) == LOW) || (digitalRead(_ps2data) == LOW)) ;
 	// hold up incoming data
-	golo(_ps2clk);
+	golo(_ps2clk);	// hold incoming data
 }
 
+
+bool PS2::detected() {
+	return (was_det = !digitalRead(_ps2clk));
+}
 
 /*
  * read a byte of data from the ps2 device.  Ignores parity.
  */
-uint8_t PS2::read(void)
-{
+uint8_t PS2::read() {
 	uint8_t data = 0x00;
-	uint8_t i;
-	uint8_t bit = 0x01;
 
 	// start clock
-	gohi(_ps2clk);
-	gohi(_ps2data);
-	delayMicroseconds(50);
-	while (digitalRead(_ps2clk) == HIGH)
-		;
-	delayMicroseconds(5);	// not sure why.
-	while (digitalRead(_ps2clk) == LOW)
-		;	// eat start bit
-	for (i=0; i < 8; i++)
-	{
-		while (digitalRead(_ps2clk) == HIGH)
-			;
-		if (digitalRead(_ps2data) == HIGH)
-		{
-			data = data | bit;
-		}
-		while (digitalRead(_ps2clk) == LOW)
-			;
-		bit = bit << 1;
+	if (!was_det) {
+		gohi(_ps2clk);
+		gohi(_ps2data);
+		while (digitalRead(_ps2clk) == HIGH);
+	}
+	was_det = 0;
+	while (digitalRead(_ps2clk) == LOW);	// eat start bit
+	for (uint8_t i = 0; i < 8; i++) {
+		while (digitalRead(_ps2clk) == HIGH) ;
+		data |= digitalRead(_ps2data) << i;
+		while (digitalRead(_ps2clk) == LOW) ;
 	}
 	// eat parity bit, ignore it.
-	while (digitalRead(_ps2clk) == HIGH)
-		;
-	while (digitalRead(_ps2clk) == LOW)
-		;
+	while (digitalRead(_ps2clk) == HIGH);
+	while (digitalRead(_ps2clk) == LOW);
 	// eat stop bit
-	while (digitalRead(_ps2clk) == HIGH)
-		;
-	while (digitalRead(_ps2clk) == LOW)
-		;
-	golo(_ps2clk);	// hold incoming data
-
+	while (digitalRead(_ps2clk) == HIGH);
+	while (digitalRead(_ps2clk) == LOW);
 	return data;
 }
-

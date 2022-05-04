@@ -8,9 +8,9 @@
 
 
 void setup() {
+  Serial.begin(9600);
   while (!sd_raw_init()) {};
   lcd.begin();
-  Serial.begin(115200);
   timeUnix.begin();
   randomSeed(analogRead(0));
   sd_raw_info info;

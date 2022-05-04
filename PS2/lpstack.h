@@ -1,8 +1,8 @@
 class Lpstack {
+public:
 	uint8_t* data;
 	uint16_t head, tail, size;
 
-public:
 	Lpstack(uint16_t size_) {
 		data = new uint8_t[size_];
 		head = tail = 0;
@@ -26,4 +26,8 @@ public:
 		inc(head);
 		return res;
 	}
+
+ uint8_t empty() {
+     return head == tail;
+ }
 };
