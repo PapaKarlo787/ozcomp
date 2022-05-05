@@ -30,15 +30,15 @@ void setup() {
   uint8_t data[] = {0xE8, 3, 0xE6, 0xF3, 40, 0xF4};
   for (uint8_t i : data) {
     mice.write(i);
-    Serial.println(mice.read());
+    mice.read();
   }
   
   kbd.write(0xF0);
-  Serial.println(kbd.read());
+  kbd.read();
   kbd.write(0x01);
-  Serial.println(kbd.read());
+  kbd.read();
   kbd.write(0xF8);
-  Serial.println(kbd.read());
+  kbd.read();
 }
 
 void readKbd() {
@@ -65,7 +65,7 @@ void readIR(decode_results results) {
 }
 
 void checkJoystick(){
-  uint8_t res = PORTB & 31;
+  uint8_t res = PINB & 31;
   if (res^31) jst.push(res);
 }
 
