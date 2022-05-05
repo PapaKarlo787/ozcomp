@@ -3,7 +3,7 @@ using namespace std;
 #include "libs/Arduino.h"
 #include "libs/sd_raw.h"
 #include "libs/MyScreen.h" // kbd and lcd order of init is essential
-#include "libs/PS2Keyboard.h"
+#include "libs/ps2.h"
 #include "libs/RTC.h"
 #include "../arch/arch.h"
 
@@ -17,7 +17,7 @@ int main(){
 	if (!sd_raw_init()) while(true);
 	lcd.begin();
 	timeUnix.begin();
-	keyboard.begin(3, 8); // kbd and lcd order of init is essential
+	keyboard.begin(); // kbd and lcd order of init is essential!!!!!!!
 	randomSeed(analogRead(0));
 	sp = 1 << 31;
 	while (true){

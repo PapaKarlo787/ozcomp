@@ -5,13 +5,12 @@
 #include <linux/kd.h>
 #include <sys/ioctl.h>
 #include <stdlib.h>
-
+#include <fcntl.h>
 static int is_a_console(int fd) {
 	char arg = 0;
 	return (ioctl(fd, KDGKBTYPE, &arg) == 0
 		&& ((arg == KB_101) || (arg == KB_84)));
 }
-
 int getfd() {
 	for (int fd = 0; fd < 3; fd++)
 		if (is_a_console(fd))
@@ -19,7 +18,7 @@ int getfd() {
 	exit(1);
 }
 
-int fdk;
+int fdk, fdm;
 int oldkbmode;
 struct termios old;
 
@@ -50,7 +49,7 @@ int kbd_begin(){
 	struct termios new;
 
 	fdk = getfd();
-	fdm = open("/dev/input/mice", O_RDONLY);
+	fdm = open("/dev/input/mice", O_RDONLY | O_NONBLOCK);
 	if (ioctl(fdk, KDGKBMODE, &oldkbmode))
 		exit(1);
 

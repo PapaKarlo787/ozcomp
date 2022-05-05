@@ -1,17 +1,3 @@
-void get_key() {
-	keyboard.write(0);
-	setFlags(R[15] = keyboard.read());
-	delay(10);
-}
-
-void get_mice() {
-	keyboard.write(1);
-	R[15] = 0;
-	for (uint8_t i = 0; i < 3; i++)
-		R[15] += keyboard.read() << (i << 3);
-	setFlags(R[15]);
-}
-
 void print_line_c() {
 	uint32_t temp = readNum();
 	while (uint8_t c = read_(temp++))
