@@ -47,3 +47,13 @@ void shl_rc() {
 	readRegisters();
 	setFlags(R[r1] <<= read_());
 }
+
+void test_rr() {
+	readRegisters();
+	setFlags(R[r1] & R[r2]);
+}
+
+void test_rc() {
+	readRegisters();
+	setFlags(R[r1] & read_());
+}

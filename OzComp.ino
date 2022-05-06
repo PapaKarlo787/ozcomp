@@ -9,10 +9,7 @@
 
 void setup() {
   Serial.begin(9600);
-  while (!sd_raw_init()) {};
-  lcd.begin();
-  timeUnix.begin();
-  randomSeed(analogRead(0));
+  begin();
   sd_raw_info info;
   sd_raw_get_info(&info);
   sp = info.capacity;

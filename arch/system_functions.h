@@ -52,3 +52,11 @@ void write_(uint8_t* data, uint8_t n){
 void write_(uint32_t poi, uint8_t* data, uint8_t n){
 	sd_raw_write(poi, data, n);
 }
+
+void begin() {
+	while (!sd_raw_init()) {};
+	lcd.begin();
+	timeUnix.begin();
+	flags |= (1 << 16);
+	randomSeed(analogRead(0));
+}

@@ -59,3 +59,11 @@ void rgb_r(){
 	analogWrite(Gp, R[r2]);
 	analogWrite(Bp, R[read_()]);
 }
+
+void load_data(){
+	R[11] = *(uint32_t*)&screen_buffer[read_()*4];
+}
+
+void store_data(){
+	*(uint32_t*)&screen_buffer[read_()*4] = R[11];
+}

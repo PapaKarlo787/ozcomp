@@ -11,7 +11,7 @@
 class PCD8544: public Print {
     public:
 		uint16_t cursor = 0;
-		uint8_t screen_buffer[504];
+		uint8_t screen_buffer[516];
         // All the pins can be changed from the default values...
         void begin();
 
