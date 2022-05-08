@@ -2,12 +2,14 @@ void set_point(int16_t x, int16_t y) {
 	if (x > 83 || x < 0 || y > 47 || y < 0)
 		return;
 	uint16_t n = y / 8 * 84 + x;
+	uint8_t tmp = screen_buffer[n]; 
 	if (flags & (1 << 16))
 		screen_buffer[n] |= (1 << y % 8);
 	else
 		screen_buffer[n] &= ~(1 << y % 8);
 	lcd.setCursor(x, y/8);
 	lcd.send(HIGH, screen_buffer[n]);
+	flags = tmp == screen_buffer[n] ? flags | 8 : flags & ~8;
 }
 
 void _draw_line(int16_t x, int16_t y, uint16_t dx, uint16_t dy, int8_t sx, int8_t sy, int8_t sxx, int8_t syy) {

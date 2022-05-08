@@ -18,7 +18,8 @@ int main(){
 	keyboard.begin(); // kbd and lcd order of init is essential!!!!!!!
 	sp = 1 << 31;
 	while (true){
-		comms[read_()]();
+		uint8_t x = read_();
+		comms[x]();
 		fill_mbuffer();
 	}
 	SDL_Quit();

@@ -55,5 +55,5 @@ void test_rr() {
 
 void test_rc() {
 	readRegisters();
-	setFlags(R[r1] & read_());
+	setFlags(R[r1] & readNum());
 }

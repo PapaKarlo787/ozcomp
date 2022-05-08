@@ -8,7 +8,7 @@ private:
 
 public:
 	uint16_t cursor = 0;
-	uint8_t screen_buffer[504];
+	uint8_t screen_buffer[516];
 
 	void begin(){
 		initscr();

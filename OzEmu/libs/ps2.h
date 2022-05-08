@@ -33,8 +33,8 @@ public:
 		if (dev < 0) return 0;
 		uint8_t res = devs[dev]();
 		bool kbd_exit = dev == 0 && res == 1;
-		bool mice_exit = dev == 1 && count == 3 && (res & 7) == 7
-		if (kbd_exit || mice_exit) {
+		bool mice_exit = dev == 1 && count == 3 && (res & 7) == 7;
+		if (kbd_exit) {
 			endwin();
 			clean_up();
 			beeper.close();
