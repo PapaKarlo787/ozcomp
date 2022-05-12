@@ -9,7 +9,8 @@ void set_point(int16_t x, int16_t y) {
 		screen_buffer[n] &= ~(1 << y % 8);
 	lcd.setCursor(x, y/8);
 	lcd.send(HIGH, screen_buffer[n]);
-	flags = tmp == screen_buffer[n] ? flags | 8 : flags & ~8;
+	flags &= 0xffff0000;
+	setFlags(tmp == screen_buffer[n]);
 }
 
 void _draw_line(int16_t x, int16_t y, uint16_t dx, uint16_t dy, int8_t sx, int8_t sy, int8_t sxx, int8_t syy) {

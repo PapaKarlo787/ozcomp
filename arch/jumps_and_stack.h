@@ -13,8 +13,8 @@ void jmp_c_r(){
 }
 
 void jmp_c() {
-	uint8_t x = read_();
-	ip = (x & flags) != 0 ? readNum() : ip + 4;
+	uint32_t x = read_();
+	ip = (x & flags) ? readNum() : ip+4;
 	flags &= ~((uint32_t)x);
 }
 

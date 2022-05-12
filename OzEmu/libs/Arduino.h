@@ -48,8 +48,8 @@ void beep(uint16_t freq, int32_t dur){
 }
 
 void tone(uint8_t _, uint16_t freq, uint16_t dur) {
-	beeper.play();
 	beep_thr.join();
+	beeper.play();
 	beep_thr = thread(beep, freq, dur);
 }
 
