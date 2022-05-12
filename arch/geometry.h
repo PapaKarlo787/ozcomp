@@ -9,7 +9,6 @@ void set_point(int16_t x, int16_t y) {
 		screen_buffer[n] &= ~(1 << y % 8);
 	lcd.setCursor(x, y/8);
 	lcd.send(HIGH, screen_buffer[n]);
-	flags &= 0xffff0000;
 	setFlags(tmp == screen_buffer[n]);
 }
 
