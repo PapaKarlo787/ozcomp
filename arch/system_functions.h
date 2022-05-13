@@ -62,6 +62,13 @@ void begin() {
 	while (!sd_raw_init()) {};
 	lcd.begin();
 	timeUnix.begin();
-	flags |= (1 << 16);
+	flags = 0x10000;
 	randomSeed(analogRead(0));
+}
+
+void setColored(uint8_t i, uint8_t data) {
+	if ((flags >> 16) & 1)
+		screen_buffer[i] |= data;
+	else
+		screen_buffer[i] &= ~data;
 }

@@ -1,10 +1,10 @@
+#define V1
 #include <Arduino.h>
 #include <sd_raw.h>
 #include <ps2.h>
 #include <MyScreen.h>
 #include <iarduino_RTC.h>
 #include "arch/arch.h"
-#define V2
 
 
 void setup() {

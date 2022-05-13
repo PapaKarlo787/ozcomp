@@ -69,7 +69,7 @@ void (*const comms[256]) (void) PROGMEM = {
 	bmp_cr,
 	bmp_rr,
 	bmp_cc,
-	scol,
+	nop,
 	f_add_rr,
 	f_add_rc,
 	f_sub_rr,

@@ -1,12 +1,13 @@
 #define Rp 15
 #define Gp 18
 #define Bp 19
-#define ip (*(uint32_t*)&screen_buffer[504])
-#define sp (*(uint32_t*)&screen_buffer[508])
-#define flags (*(uint32_t*)&screen_buffer[512])
+#define ip S[0]
+#define sp S[1]
+#define flags S[2]
 #define screen_buffer lcd.screen_buffer
 float Rf[16];
 uint32_t R[16];
+uint32_t S[16];
 uint8_t r1, r2;
 PS2 keyboard(3, 8);
 PCD8544 lcd;

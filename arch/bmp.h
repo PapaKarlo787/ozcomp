@@ -1,9 +1,6 @@
 bool set_data(uint8_t data, uint16_t i) {
 	uint8_t last = screen_buffer[i];
-	if (flags & (1 << 16))
-		screen_buffer[i] |= data;
-	else
-		screen_buffer[i] &= ~data;
+	setColored(i, data);
 	lcd.setCursor(i % 84, i / 84);
 	lcd.send(HIGH, screen_buffer[i]);
 	return last + data != screen_buffer[i];

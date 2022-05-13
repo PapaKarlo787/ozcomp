@@ -3,10 +3,7 @@ void set_point(int16_t x, int16_t y) {
 		return;
 	uint16_t n = y / 8 * 84 + x;
 	uint8_t tmp = screen_buffer[n]; 
-	if (flags & (1 << 16))
-		screen_buffer[n] |= (1 << y % 8);
-	else
-		screen_buffer[n] &= ~(1 << y % 8);
+	setColored(n, 1 << y % 8);
 	lcd.setCursor(x, y/8);
 	lcd.send(HIGH, screen_buffer[n]);
 	setFlags(tmp == screen_buffer[n]);
@@ -133,9 +130,4 @@ void rect_c() {
 	draw_line(x1, y1, x1, y2);
 	draw_line(x2, y2, x2, y1);
 	draw_line(x2, y2, x1, y2);
-}
-
-void scol() {
-	flags &= ~(1 << 16);
-	flags |= (read_() ? 1 : 0) << 16;
 }
