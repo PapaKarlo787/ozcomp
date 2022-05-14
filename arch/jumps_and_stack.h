@@ -92,8 +92,9 @@ void pushaf() {
 }
 
 void popaf() {
-	for(uint8_t i = 0; i < 16; i++) {
-		Rf[i] = readNum(sp, 4);
+	for(int8_t i = 15; i >= 0; i--) {
+		uint32_t x = readNum(sp, 4);
+		Rf[i] = *(float*)&x;
 		sp += 4;
 	}
 }

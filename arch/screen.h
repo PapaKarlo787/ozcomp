@@ -69,3 +69,8 @@ void rpix_r() {
 	for(uint16_t i = R[r1]; i < n; i++)
 		lcd.send(HIGH, screen_buffer[i] ^= 0xff);
 }
+
+void scond() {
+	flags &= 0xffff;
+	flags |= ((uint16_t)read_()) << 16;
+}

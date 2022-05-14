@@ -2,7 +2,7 @@ void set_point(int16_t x, int16_t y) {
 	if (x > 83 || x < 0 || y > 47 || y < 0)
 		return;
 	uint16_t n = y / 8 * 84 + x;
-	uint8_t tmp = screen_buffer[n]; 
+	uint8_t tmp = screen_buffer[n];
 	setColored(n, 1 << y % 8);
 	lcd.setCursor(x, y/8);
 	lcd.send(HIGH, screen_buffer[n]);

@@ -66,7 +66,7 @@ void begin() {
 	randomSeed(analogRead(0));
 }
 
-void setColored(uint8_t i, uint8_t data) {
+void setColored(uint16_t i, uint8_t data) {
 	if ((flags >> 16) & 1)
 		screen_buffer[i] |= data;
 	else
