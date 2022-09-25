@@ -14,6 +14,11 @@ void sd_raw_write(unsigned int ip, unsigned char* data, unsigned int count){
 		fs << data[i];
 }
 
+uint8_t sd_raw_copy_sector(uint32_t from, uint32_t to) {
+	uint8_t d[512];
+	sd_raw_read(from, d, 512);
+	sd_raw_write(to, d, 512);
+}
 
 bool sd_raw_init(){
 	fs.open("memory");

@@ -702,6 +702,38 @@ uint8_t sd_raw_write(uint32_t offset, const uint8_t* buffer, uint16_t length)
 #endif
 }
 
+uint8_t sd_raw_copy_sector(uint32_t from, uint32_t to) {
+	uint8_t _;
+	sd_raw_read(from, &_, 1);
+	/* address card */
+	select_card();
+
+	/* send single block request */
+	if(sd_raw_send_command_r1(CMD_WRITE_SINGLE_BLOCK, to))
+	{
+		unselect_card();
+		return 0;
+	}
+
+	/* send start byte */
+	sd_raw_send_byte(0xfe);
+
+	/* write byte block */
+	uint8_t* cache = raw_block;
+	for(uint16_t i = 0; i < 512; ++i)
+		sd_raw_send_byte(*cache++);
+
+	/* write dummy crc16 */
+	sd_raw_send_byte(0xff);
+	sd_raw_send_byte(0xff);
+
+	/* wait while card is busy */
+	while(sd_raw_rec_byte() != 0xff);
+	sd_raw_rec_byte();
+
+	/* deaddress card */
+	unselect_card();
+}
 /**
  * \ingroup sd_raw
  * Writes a continuous data stream obtained from a callback function.

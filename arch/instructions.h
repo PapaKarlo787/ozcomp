@@ -131,7 +131,7 @@ void (*const comms[256]) (void) PROGMEM = {
 	test_rc,
 	load_reg,
 	store_reg,
-	nop,
+	mcp,
 	nop,
 	nop,
 	nop,

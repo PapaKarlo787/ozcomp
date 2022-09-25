@@ -1,5 +1,6 @@
 #include <ncurses.h>
 #include <string>
+#include <sys/ioctl.h>
 #include "charset.cpp"
 
 class PCD8544{
@@ -10,13 +11,22 @@ public:
 	uint16_t cursor = 0;
 	uint8_t screen_buffer[504];
 
-	void begin(){
+	void begin() {
+		struct winsize size;
+		uint16_t x, y;
+		if (ioctl(0, TIOCGWINSZ, (char *) &size) < 0) {
+			x = 0;
+			y = 0;
+		} else {
+			x = (size.ws_col - 84) >> 1;
+			y = (size.ws_row - 48) >> 1;
+		}
 		initscr();
 		noecho();
 		curs_set(0);
 		start_color();
 		init_pair(1, COLOR_WHITE, COLOR_BLUE);
-		window = newwin(48, 84, 0, 0);
+		window = newwin(48, 84, y, x);
 		wbkgd(window, COLOR_PAIR(1));
 		wrefresh(window);
 	}
