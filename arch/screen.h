@@ -72,5 +72,5 @@ void rpix_r() {
 
 void scond() {
 	flags &= 0xffff;
-	flags |= ((uint16_t)read_()) << 16;
+	flags |= ((uint32_t)read_()) << 16;
 }
