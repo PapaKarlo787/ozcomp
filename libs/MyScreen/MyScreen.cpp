@@ -70,15 +70,16 @@ size_t PCD8544::write(uint8_t chr)
 	}
 
     // One column between characters...
-    this->send(PCD8544_DATA, 0x00);
+    this->send(PCD8544_DATA, screen_buffer[cursor] = 0x00);
     return 1;
 }
 
 void PCD8544::send(uint8_t type, uint8_t data)
 {
-    digitalWrite(pin_dc, type);
-    digitalWrite(pin_sce, LOW);
+    PORTD &= ~(0b11 << pin_dc);
+    PORTD |= type << pin_dc;
     shiftOut(pin_sdin, pin_sclk, MSBFIRST, data);
-    digitalWrite(pin_sce, HIGH);
-    cursor = (cursor + 1) % 504;
+    PORTD |= 1 << pin_sce;
+    if (type)
+		cursor = (cursor + 1) % 504;
 }
