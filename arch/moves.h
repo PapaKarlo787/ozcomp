@@ -1,32 +1,34 @@
+// most common address [const+Ra+Rb*x] where x in {1, 2, 4}
+// mask = xxyy
+// xx - size of tranfering data 
+//		(11 means that Ra not includes in address and index "a" contains
+//							size of transfering data, otherwise 1 << xx)
+// yy - scale of Rb
+//		(11 means that x = 0, otherwise 1 << yy)
+
+uint32_t mov(uint8_t mask, uint8_t* s) {
+	readRegisters();
+	uint8_t x = (mask & 3 == 3) ? 0 : (1 << (mask & 3));
+	mask >>= 2;
+	if (s)
+		*s = (mask == 3) ? r1 : (1 << mask);
+	return readNum() + (mask == 3 ? 0 : R[r1]) + R[r2]*x;
+}
+
 void mov_rm() {
 	readRegisters();
-	R[r1] = readNum(readNum(), 4);
-}
-
-void movb_rm() {
-	readRegisters();
-	R[r1] = read_(readNum());
-}
-
-void movw_rm() {
-	readRegisters();
-	uint32_t n = readNum();
-	R[r1] = read_(n) + (read_(n+1) << 8);
+	uint8_t x = r1;
+	uint8_t s;
+	uint32_t addr = mov(r2, &s);
+	R[x] = readNum(addr, s);
 }
 
 void mov_mr() {
 	readRegisters();
-	write_(readNum(), (uint8_t*)&R[r1], 4);
-}
-
-void movb_mr() {
-	readRegisters();
-	write_(readNum(), (uint8_t*)&R[r1], 1);
-}
-
-void movw_mr() {
-	readRegisters();
-	write_(readNum(), (uint8_t*)&R[r1], 2);
+	uint8_t x = r1;
+	uint8_t s;
+	uint32_t addr = mov(r2, &s);
+	write_(addr, (uint8_t*)&R[x], s);
 }
 
 void mov_rr() {
@@ -39,38 +41,12 @@ void mov_rc() {
 	R[r1] = readNum();
 }
 
-void mov_rmor() {
-	readRegisters();
-	R[r1] = readNum(readNum() + R[r2], 4);
-}
-
-void movb_rmor() {
-	readRegisters();
-	R[r1] = read_(readNum() + R[r2]);
-}
-
-void movw_rmor() {
-	readRegisters();
-	uint32_t n = readNum();
-	R[r1] = readNum(n + R[r2], 2);
-}
-
-void mov_morr() {
-	readRegisters();
-	write_(readNum() + R[r2], (uint8_t*)&R[r1], 4);
-}
-
-void movb_morr() {
-	readRegisters();
-	write_(readNum() + R[r2], (uint8_t*)&R[r1], 1);
-}
-
-void movw_morr() {
-	readRegisters();
-	write_(readNum() + R[r2], (uint8_t*)&R[r1], 2);
-}
-
 void imovf() {
 	readRegisters();
 	R[r1] = (int)Rf[r2];
+}
+
+void lea() {
+	readRegisters();
+	R[r1] = mov(r2, 0);
 }
