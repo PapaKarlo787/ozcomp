@@ -11,7 +11,7 @@ uint32_t mov(uint8_t mask, uint8_t* s) {
 	uint8_t x = (mask & 3 == 3) ? 0 : (1 << (mask & 3));
 	mask >>= 2;
 	if (s)
-		*s = (mask == 3) ? r1 : (1 << mask);
+		*s = 1 << ((mask == 3) ? r1 : mask);
 	return readNum() + (mask == 3 ? 0 : R[r1]) + R[r2]*x;
 }
 
