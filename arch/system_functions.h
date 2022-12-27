@@ -69,7 +69,7 @@ void begin() {
 	kbd.read();
 	kbd.begin();
 	timeUnix.begin();
-	flags = 0x10000;
+	flags = 0x30000;
 	// High flags
 	// 0)	color
 	// 1)	sound rgb
