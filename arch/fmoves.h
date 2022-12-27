@@ -19,6 +19,7 @@ void fmov_rc() {
 	uint32_t x = readNum();
 	Rf[r1] = *(float*)&x;
 }
+
 void fmovi() {
 	readRegisters();
 	Rf[r1] = R[r2];

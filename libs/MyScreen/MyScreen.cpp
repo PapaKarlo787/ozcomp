@@ -5,8 +5,6 @@
 #define width 84
 #define height 48
 
-
-
 void PCD8544::begin()
 {
 	// All pins are outputs (these displays cannot be read)...
@@ -65,12 +63,11 @@ size_t PCD8544::write(uint8_t chr)
 {
     // Output one column at a time...
     for (uint8_t i = 0; i < 5; i++) {
-		screen_buffer[cursor] = pgm_read_word(&charset[chr][i]);
         this->send(PCD8544_DATA, screen_buffer[cursor]);
 	}
 
     // One column between characters...
-    this->send(PCD8544_DATA, screen_buffer[cursor] = 0x00);
+    this->send(PCD8544_DATA, 0x00);
     return 1;
 }
 

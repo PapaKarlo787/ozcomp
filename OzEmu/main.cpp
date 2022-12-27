@@ -15,7 +15,6 @@ int main(){
 	cout << "Clocs per second " << CLOCKS_PER_SEC << endl;
 	delay(1500);
 	begin();
-	keyboard.begin(); // kbd and lcd order of init is essential!!!!!!!
 	sp = 1 << 31;
 	while (true){
 		uint8_t x = read_();

@@ -61,8 +61,12 @@ void write_(uint32_t poi, uint8_t* data, uint8_t n){
 void begin() {
 	while (!sd_raw_init()) {};
 	lcd.begin();
+	kbd.begin();
 	timeUnix.begin();
 	flags = 0x10000;
+	// High flags
+	// 0)	color
+	// 1)	sound rgb
 	randomSeed(analogRead(0));
 }
 

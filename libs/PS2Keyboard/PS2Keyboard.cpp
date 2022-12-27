@@ -37,11 +37,19 @@ void ps2interrupt(void) {
 	}
 }
 
-bool PS2Keyboard::available() {
-	return tail != head;
+void gohi(uint8_t pin)
+{
+	pinMode(pin, INPUT);
+	digitalWrite(pin, HIGH);
 }
 
-uint8_t PS2Keyboard::read() {
+void golo(uint8_t pin)
+{
+	pinMode(pin, OUTPUT);
+	digitalWrite(pin, LOW);
+}
+
+uint8_t PS2Keyboard::take() {
 	if (tail == head) return 0;
 	uint8_t res = buffer[tail];
 	if (++tail >= BUFFER_SIZE) tail = 0;
@@ -49,11 +57,75 @@ uint8_t PS2Keyboard::read() {
 }
 
 void PS2Keyboard::begin(){
-  pinMode(ps2clk, INPUT_PULLUP);
-  pinMode(dataPin, INPUT_PULLUP);
-  head = 0;
-  tail = 0;
-  attachInterrupt(1, ps2interrupt, FALLING);
+	pinMode(ps2clk, INPUT_PULLUP);
+	pinMode(dataPin, INPUT_PULLUP);
+	head = 0;
+	tail = 0;
+}
+
+void PS2Keyboard::write(uint8_t data)
+{
+	uint8_t parity = 1;
+	gohi(dataPin);
+	gohi(ps2clk);
+	delayMicroseconds(300);
+	golo(ps2clk);
+	delayMicroseconds(300);
+	golo(dataPin);
+	delayMicroseconds(150);
+	gohi(ps2clk);	// start bit
+	/* wait for device to take control of clock */
+	while (digitalRead(ps2clk) == HIGH) ;	// this loop intentionally left blank
+	// clear to send data
+	
+	for (uint8_t i=0; i < 8; i++)
+	{
+		digitalWrite(dataPin, data & 0x01);
+		// wait for clock
+		while (digitalRead(ps2clk) == LOW) ;
+		while (digitalRead(ps2clk) == HIGH) ;
+		parity ^= (data & 0x01);
+		data >>= 1;
+	}
+	// parity bit
+	digitalWrite(dataPin, parity);
+	// clock cycle - like ack.
+	while (digitalRead(ps2clk) == LOW) ;
+	while (digitalRead(ps2clk) == HIGH) ;
+	// stop bit
+	gohi(dataPin);
+	while (digitalRead(ps2clk) == LOW) ;
+	while (digitalRead(ps2clk) == HIGH) ;
+	// mode switch
+	while ((digitalRead(ps2clk) == LOW) || (digitalRead(dataPin) == LOW)) ;
+	// hold up incoming data
+	golo(ps2clk);	// hold incoming data
+}
+
+/*
+ * read a byte of data from the ps2 device.  Ignores parity.
+ */
+uint8_t PS2Keyboard::read() {
+	uint8_t data = 0x00;
+
+	// start clock
+	gohi(ps2clk);
+	gohi(dataPin);
+	while (digitalRead(ps2clk) == HIGH);
+
+	while (digitalRead(ps2clk) == LOW);	// eat start bit
+	for (uint8_t i = 0; i < 8; i++) {
+		while (digitalRead(ps2clk) == HIGH) ;
+		data |= digitalRead(dataPin) << i;
+		while (digitalRead(ps2clk) == LOW) ;
+	}
+	// eat parity bit, ignore it.
+	while (digitalRead(ps2clk) == HIGH);
+	while (digitalRead(ps2clk) == LOW);
+	// eat stop bit
+	while (digitalRead(ps2clk) == HIGH);
+	while (digitalRead(ps2clk) == LOW);
+	return data;
 }
 
 PS2Keyboard::PS2Keyboard() { }

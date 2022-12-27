@@ -9,7 +9,7 @@ float Rf[16];
 uint32_t R[16];
 uint32_t S[16];
 uint8_t r1, r2;
-PS2 keyboard(3, 8);
+PS2Keyboard kbd;
 PCD8544 lcd;
 iarduino_RTC timeUnix;
 #include "system_functions.h"
