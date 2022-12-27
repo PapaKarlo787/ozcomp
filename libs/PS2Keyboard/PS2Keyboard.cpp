@@ -59,6 +59,7 @@ uint8_t PS2Keyboard::take() {
 void PS2Keyboard::begin(){
 	pinMode(ps2clk, INPUT_PULLUP);
 	pinMode(dataPin, INPUT_PULLUP);
+	attachInterrupt(1, ps2interrupt, FALLING);
 	head = 0;
 	tail = 0;
 }

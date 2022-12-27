@@ -61,6 +61,12 @@ void write_(uint32_t poi, uint8_t* data, uint8_t n){
 void begin() {
 	while (!sd_raw_init()) {};
 	lcd.begin();
+	kbd.write(0xF0); //Установить Scan Code
+	kbd.read();
+	kbd.write(0x01); //...3
+	kbd.read();
+	kbd.write(0xF8); // Режим make/release
+	kbd.read();
 	kbd.begin();
 	timeUnix.begin();
 	flags = 0x10000;
