@@ -71,6 +71,9 @@ void rpix_r() {
 }
 
 void scond() {
-	flags &= 0xffff;
-	flags |= ((uint32_t)read_()) << 16;
+	flags |= (uint32_t)1 << (read_()+16);
+}
+
+void rcond() {
+	flags &= ~((uint32_t)1 << read_()+16);
 }

@@ -8,7 +8,7 @@ uint8_t mtail;
 uint32_t mbuffer[MBS];
 const uint8_t cols[] PROGMEM = { 7, 18, 15, 20, 2, 8, 21, 6, 19, 11, 24, 5, 26 };
 
-void fill_mbuffer(){
+void fill_mbuffer() {
 	if (!start_pointer) return;
 	while((mtail-mhead+1) % MBS){
 		mbuffer[mtail] = readNum(play_pointer+start_pointer);
@@ -24,11 +24,13 @@ void next_play(){
 	uint16_t freq = sig & 0xffff;
 	tone(17, freq, sig >> 16);
 #ifndef V1
-	uint8_t note = freq > 27 ? ((int8_t)(log(freq / 27.5) / log(1.05946309436))) % 12 : 12;
-	note = pgm_read_byte(cols[note]);
-	analogWrite(Rp, (note % 3) * 511);
-	analogWrite(Gp, (note / 3 % 3) * 511);
-	analogWrite(Bp, (note / 9 % 3) * 511);
+	if (flags & ((uint32_t)1 << 17)) {
+		uint8_t note = freq > 27 ? ((int8_t)(log(freq / 27.5) / log(1.05946309436))) % 12 : 12;
+		note = pgm_read_byte(cols[note]);
+		analogWrite(Rp, (note % 3) * 511);
+		analogWrite(Gp, (note / 3 % 3) * 511);
+		analogWrite(Bp, (note / 9 % 3) * 511);
+	}
 #endif
 	if (freq == 0xffff)
 		noTone(17);
