@@ -28,7 +28,7 @@ void ps2interrupt(void) {
 	bitcount++;
 	if (bitcount == 11) {
 		if (incoming == 1) {
-			
+			asm volatile("jmp 0x00");
 		}
 		buffer[head] = incoming;
 		head = (head+1) % BUFFER_SIZE;
