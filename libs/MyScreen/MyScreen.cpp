@@ -1,8 +1,7 @@
 #include "MyScreen.h"
 #include "charset.cpp"
 
-void PCD8544::begin()
-{
+void PCD8544::begin() {
 	// All pins are outputs (these displays cannot be read)...
     pinMode(pin_sclk, OUTPUT);
     pinMode(pin_sdin, OUTPUT);
@@ -34,8 +33,7 @@ void PCD8544::begin()
     this->send(PCD8544_CMD, 0x40);
 }
 
-void PCD8544::setContrast(uint8_t level)
-{
+void PCD8544::setContrast(uint8_t level) {
     // The PCD8544 datasheet specifies a maximum Vop of 8.5V for safe
     // operation in low temperatures, which limits the contrast level.
     if (level > 90)
@@ -46,17 +44,15 @@ void PCD8544::setContrast(uint8_t level)
     this->send(PCD8544_CMD, 0x20);  // extended instruction set control (H=0)
 }
 
-void PCD8544::setCursor(uint8_t column, uint8_t line)
-{
+void PCD8544::setCursor(uint8_t column, uint8_t line) {
 	column = (column % width);
 	line = (line % 6);
-	cursor = line * width + column;
+	cursor = (cursor & 0xfe00) + line * width + column;
     this->send(PCD8544_CMD, 0x80 | column);
     this->send(PCD8544_CMD, 0x40 | line);
 }
 
-size_t PCD8544::write(uint8_t chr)
-{
+size_t PCD8544::write(uint8_t chr) {
     // Output one column at a time...
     for (uint8_t i = 0; i < 5; i++) {
 		screen_buffer[cursor & 511] = pgm_read_word(&charset[chr][i]);
@@ -68,8 +64,7 @@ size_t PCD8544::write(uint8_t chr)
     return 1;
 }
 
-void PCD8544::send(uint8_t type, uint8_t data)
-{
+void PCD8544::send(uint8_t type, uint8_t data) {
     PORTD &= ~(0b11 << pin_dc);
     PORTD |= type << pin_dc;
     shiftOut(pin_sdin, pin_sclk, MSBFIRST, data);
@@ -157,17 +152,23 @@ bool PCD8544::draw_bmp(int8_t x, int8_t y, uint8_t (*reader) (), uint32_t* poi) 
 		if (i + y > -1 && i + y < 7){
 			for (uint8_t l = 0; l < sx; l++) {
 				if (l + x > -1 && l + x < width) {
-					uint16_t c = (uint16_t)reader() * 256 >> shift;
+					uint16_t c = (uint16_t)reader() << (8 - shift);
 					if (i + y > 0)
-						intersected |= set_data(c % 256, start+l-width);
+						intersected |= set_data(c & 0xff, start+l-width);
 					if (i + y < 6)
-						intersected |= set_data((c / 256) % 256, start+l);
+						intersected |= set_data(c >> 8, start+l);
 				} else (*poi)++;
 			}
 		} else (*poi) += sx;
 		start += width;
 	}
 	return intersected;
+}
+
+
+void PCD8544::setColor(uint8_t c){
+	cursor &= 511;
+	cursor |= c << 9;
 }
 
 void PCD8544::setColored(uint16_t i, uint8_t data) {

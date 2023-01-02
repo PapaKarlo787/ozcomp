@@ -3,13 +3,17 @@
 #include <sys/ioctl.h>
 #include "charset.cpp"
 
+#define width 84
+#define height 48
+#define bufsize 504
+
 class PCD8544{
 private:
 	WINDOW *window;
 
 public:
-	uint16_t cursor = 0;
-	uint8_t screen_buffer[504];
+	uint16_t cursor = 512;
+	uint8_t screen_buffer[bufsize];
 
 	void begin() {
 		struct winsize size;
@@ -34,14 +38,19 @@ public:
 	void setCursor(uint8_t x, uint8_t y){
 		x %= 84;
 		y %= 6;
-		cursor = x + y * 84;
+		cursor = (cursor & 0xfe00) + x + y * 84;
+	}
+	
+	void setColor(uint8_t c){
+		cursor &= 511;
+		cursor |= c << 9;
 	}
 
 	void write(uint8_t c){
 		if (c > 127) c = 127;
 		for (uint8_t i = 0; i < 5; i++)
-			send(0, screen_buffer[cursor] = charset[c][i]);
-		send(0, screen_buffer[cursor] = 0);
+			send(0, charset[c][i]);
+		send(0, 0);
 	}
 
 	void print(float num){
@@ -57,9 +66,10 @@ public:
 	}
 
 	void send(uint32_t _, uint8_t num){
-		uint8_t x = cursor % 84;
-		uint8_t y = cursor / 84 * 8;
-		cursor = (cursor + 1) % 504;
+		uint8_t x = (cursor & 511) % 84;
+		uint8_t y = (cursor & 511) / 84 * 8;
+		screen_buffer[cursor & 511] = num;
+		cursor = (cursor & 0xfe00) + ((cursor & 0x1ff) + 1) % bufsize;
 		for (unsigned int i = 0; i < 8; i++)
 			mvwaddch(window, y+i, x, (num >> i) & 1 ? 219 : ' ');
 		wrefresh(window);
@@ -143,11 +153,11 @@ public:
 			if (i + y > -1 && i + y < 7){
 				for (uint8_t l = 0; l < sx; l++) {
 					if (l + x > -1 && l + x < width) {
-						uint16_t c = (uint16_t)reader() * 256 >> shift;
+						uint16_t c = (uint16_t)reader() << (8 - shift);
 						if (i + y > 0)
-							intersected |= set_data(c % 256, start+l-width);
+							intersected |= set_data(c & 0xff, start+l-width);
 						if (i + y < 6)
-							intersected |= set_data((c / 256) % 256, start+l);
+							intersected |= set_data(c >> 8, start+l);
 					} else (*poi)++;
 				}
 			} else (*poi) += sx;
@@ -169,7 +179,7 @@ public:
 			send(HIGH, 0);
 	}
 
-	void reverse(uint8_t from, uint8_t to) {
+	void reverse(uint16_t from, uint16_t to) {
 		if (from >= bufsize) return;
 		setCursor(from % width, from / width);
 		for(uint16_t i = from; i < to; i++)

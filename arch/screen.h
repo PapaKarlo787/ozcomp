@@ -55,9 +55,13 @@ void rpix_r() {
 }
 
 void scond() {
-	flags |= (uint32_t)1 << (read_()+16);
+	uint8_t	x = read_();
+	flags |= (uint32_t)1 << (x+16);
+	if (!x) lcd.setColor(1);
 }
 
 void rcond() {
-	flags &= ~((uint32_t)1 << read_()+16);
+	uint8_t	x = read_();
+	flags &= ~((uint32_t)1 << (x+16));
+	if (!x) lcd.setColor(0);
 }
