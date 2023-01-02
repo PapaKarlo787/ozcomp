@@ -55,12 +55,11 @@ void PCD8544::setCursor(uint8_t column, uint8_t line) {
 size_t PCD8544::write(uint8_t chr) {
     // Output one column at a time...
     for (uint8_t i = 0; i < 5; i++) {
-		screen_buffer[cursor & 511] = pgm_read_word(&charset[chr][i]);
-        this->send(PCD8544_DATA, screen_buffer[cursor & 511]);
+        this->send(PCD8544_DATA, pgm_read_word(&charset[chr][i]));
 	}
 
     // One column between characters...
-    this->send(PCD8544_DATA, screen_buffer[cursor & 511] = 0x00);
+    this->send(PCD8544_DATA, 0x00);
     return 1;
 }
 
@@ -69,9 +68,10 @@ void PCD8544::send(uint8_t type, uint8_t data) {
     PORTD |= type << pin_dc;
     shiftOut(pin_sdin, pin_sclk, MSBFIRST, data);
     PORTD |= 1 << pin_sce;
-    screen_buffer[cursor & 511] = data;
-    if (type)
+    if (type) {
+		screen_buffer[cursor & 511] = data;
 		cursor = (cursor & 0xfe00) + ((cursor & 0x1ff) + 1) % bufsize;
+	}
 }
 
 bool PCD8544::set_point(int16_t x, int16_t y) {
@@ -79,8 +79,8 @@ bool PCD8544::set_point(int16_t x, int16_t y) {
 		return 0;
 	uint16_t n = y / 8 * width + x;
 	uint8_t tmp = screen_buffer[n];
-	setColored(n, 1 << y % 8);
-	setCursor(x, y/8);
+	setColored(n, 1 << (y & 7));
+	setCursor(x, y>>3);
 	send(HIGH, screen_buffer[n]);
 	return tmp == screen_buffer[n];
 }
@@ -184,7 +184,7 @@ void PCD8544::clear() {
 		send(HIGH, 0);
 }
 
-void PCD8544::reverse(uint8_t from, uint8_t to) {
+void PCD8544::reverse(uint16_t from, uint16_t to) {
 	if (from >= bufsize) return;
 	setCursor(from % width, from / width);
 	for(uint16_t i = from; i < to; i++)

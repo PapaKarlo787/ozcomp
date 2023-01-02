@@ -74,4 +74,7 @@ void begin() {
 	// 0)	color
 	// 1)	sound rgb
 	randomSeed(analogRead(0));
+#ifdef V1
+	analogWrite(15, 0);
+#endif
 }

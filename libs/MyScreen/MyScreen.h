@@ -42,7 +42,7 @@ class PCD8544: public Print {
 		
 		void clear();
 		
-		void reverse(uint8_t from, uint8_t to);
+		void reverse(uint16_t from, uint16_t to);
 			
 		void setColor(uint8_t c);
 
