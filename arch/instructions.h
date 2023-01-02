@@ -42,7 +42,7 @@ void (*const comms[256]) (void) PROGMEM = {
 	get_key,
 	set_cursor_r,
 	set_cursor,
-	draw_screen,
+	nop,
 	call_c,
 	ret,
 	rnd,

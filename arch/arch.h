@@ -4,7 +4,6 @@
 #define ip S[0]
 #define sp S[1]
 #define flags S[2]
-#define screen_buffer lcd.screen_buffer
 float Rf[16];
 uint32_t R[16];
 uint32_t S[16];

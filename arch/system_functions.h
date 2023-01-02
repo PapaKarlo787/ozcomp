@@ -75,10 +75,3 @@ void begin() {
 	// 1)	sound rgb
 	randomSeed(analogRead(0));
 }
-
-void setColored(uint16_t i, uint8_t data) {
-	if ((flags >> 16) & 1)
-		screen_buffer[i] |= data;
-	else
-		screen_buffer[i] &= ~data;
-}
