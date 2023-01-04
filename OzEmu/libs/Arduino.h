@@ -21,7 +21,7 @@ uint32_t micros(){
 
 uint32_t analogRead(uint32_t _){return 0;}
 void analogWrite(uint8_t _, uint32_t __){return;}
-uint8_t pgm_read_byte(uint32_t _){return 0;}
+uint8_t pgm_read_byte(const uint8_t* _){return 0;}
 
 unsigned int random(unsigned int max){
 	return rand() % max;

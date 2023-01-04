@@ -191,3 +191,7 @@ void PCD8544::reverse(uint16_t from, uint16_t to) {
 		send(HIGH, ~screen_buffer[i]);
 }
 
+void PCD8544::reverse() {
+	send(LOW, 13);
+}
+

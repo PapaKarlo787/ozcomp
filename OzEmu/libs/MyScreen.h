@@ -10,6 +10,7 @@
 class PCD8544{
 private:
 	WINDOW *window;
+	uint8_t reversed = 0;
 
 public:
 	uint16_t cursor = 512;
@@ -71,7 +72,7 @@ public:
 		screen_buffer[cursor & 511] = num;
 		cursor = (cursor & 0xfe00) + ((cursor & 0x1ff) + 1) % bufsize;
 		for (unsigned int i = 0; i < 8; i++)
-			mvwaddch(window, y+i, x, (num >> i) & 1 ? 219 : ' ');
+			mvwaddch(window, y+i, x, ((num >> i) ^ reversed) & 1 ? 219 : ' ');
 		wrefresh(window);
 	}
 
@@ -184,5 +185,11 @@ public:
 		setCursor(from % width, from / width);
 		for(uint16_t i = from; i < to; i++)
 			send(HIGH, ~screen_buffer[i]);
+	}
+
+	void reverse() {
+		reversed ^= 0xff;
+		for (uint16_t i = 0; i < bufsize; i++)
+			send(HIGH, screen_buffer[cursor & 511]);
 	}
 };

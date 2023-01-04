@@ -65,3 +65,7 @@ void rcond() {
 	flags &= ~((uint32_t)1 << (x+16));
 	if (!x) lcd.setColor(0);
 }
+
+void rev() {
+	lcd.reverse();
+}
