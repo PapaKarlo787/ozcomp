@@ -8870,6 +8870,283 @@
           ]
         },
         {
+          "name": "Arduino Mbed OS Edge Boards",
+          "architecture": "mbed_edge",
+          "version": "3.5.4",
+          "category": "Arduino",
+          "url": "http://downloads.arduino.cc/cores/staging/ArduinoCore-mbed-edge-3.5.4.tar.bz2",
+          "archiveFileName": "ArduinoCore-mbed-edge-3.5.4.tar.bz2",
+          "checksum": "SHA-256:674bad48c7ca2fc1584b9b8ddc354ce15484f4e40517f99cedd8a694bd25d3a5",
+          "size": "5362927",
+          "help": {
+            "online": "https://github.com/arduino/ArduinoCore-mbed/issues"
+          },
+          "boards": [
+            {
+              "name": "Arduino Edge Control"
+            }
+          ],
+          "toolsDependencies": [
+            {
+              "packager": "arduino",
+              "name": "openocd",
+              "version": "0.11.0-arduino2"
+            },
+            {
+              "packager": "arduino",
+              "name": "arm-none-eabi-gcc",
+              "version": "7-2017q4"
+            },
+            {
+              "packager": "arduino",
+              "name": "bossac",
+              "version": "1.9.1-arduino2"
+            },
+            {
+              "packager": "arduino",
+              "version": "0.10.0-arduino1",
+              "name": "dfu-util"
+            },
+            {
+              "packager": "arduino",
+              "version": "1.0.6",
+              "name": "rp2040tools"
+            }
+          ]
+        },
+        {
+          "name": "Arduino Mbed OS Nano Boards",
+          "architecture": "mbed_nano",
+          "version": "3.5.4",
+          "category": "Arduino",
+          "url": "http://downloads.arduino.cc/cores/staging/ArduinoCore-mbed-nano-3.5.4.tar.bz2",
+          "archiveFileName": "ArduinoCore-mbed-nano-3.5.4.tar.bz2",
+          "checksum": "SHA-256:2e5a088f33ca7b2876ddb666d54ce28ca2df7a22198fcf22228ce5120cbce56c",
+          "size": "6663546",
+          "help": {
+            "online": "https://github.com/arduino/ArduinoCore-mbed/issues"
+          },
+          "boards": [
+            {
+              "name": "Arduino Nano 33 BLE"
+            },
+            {
+              "name": "Arduino Nano 33 BLE Sense"
+            },
+            {
+              "name": "Arduino Nano RP2040 Connect"
+            }
+          ],
+          "toolsDependencies": [
+            {
+              "packager": "arduino",
+              "name": "openocd",
+              "version": "0.11.0-arduino2"
+            },
+            {
+              "packager": "arduino",
+              "name": "arm-none-eabi-gcc",
+              "version": "7-2017q4"
+            },
+            {
+              "packager": "arduino",
+              "name": "bossac",
+              "version": "1.9.1-arduino2"
+            },
+            {
+              "packager": "arduino",
+              "version": "0.10.0-arduino1",
+              "name": "dfu-util"
+            },
+            {
+              "packager": "arduino",
+              "version": "1.0.6",
+              "name": "rp2040tools"
+            }
+          ]
+        },
+        {
+          "name": "Arduino Mbed OS Portenta Boards",
+          "architecture": "mbed_portenta",
+          "version": "3.5.4",
+          "category": "Arduino",
+          "url": "http://downloads.arduino.cc/cores/staging/ArduinoCore-mbed-portenta-3.5.4.tar.bz2",
+          "archiveFileName": "ArduinoCore-mbed-portenta-3.5.4.tar.bz2",
+          "checksum": "SHA-256:638d1c4468fc18e730a0aec0c5014766948d428814e2d64c569919055fb611ab",
+          "size": "21095807",
+          "help": {
+            "online": "https://github.com/arduino/ArduinoCore-mbed/issues"
+          },
+          "boards": [
+            {
+              "name": "Arduino Portenta H7"
+            },
+            {
+              "name": "Arduino Portenta X8"
+            }
+          ],
+          "toolsDependencies": [
+            {
+              "packager": "arduino",
+              "name": "openocd",
+              "version": "0.11.0-arduino2"
+            },
+            {
+              "packager": "arduino",
+              "name": "arm-none-eabi-gcc",
+              "version": "7-2017q4"
+            },
+            {
+              "packager": "arduino",
+              "version": "0.10.0-arduino1",
+              "name": "dfu-util"
+            },
+            {
+              "packager": "arduino",
+              "version": "1.8.0-arduino.2",
+              "name": "imgtool"
+            },
+            {
+              "packager": "arduino",
+              "version": "32.0.0",
+              "name": "adb"
+            }
+          ]
+        },
+        {
+          "name": "Arduino Mbed OS RP2040 Boards",
+          "architecture": "mbed_rp2040",
+          "version": "3.5.4",
+          "category": "Arduino",
+          "url": "http://downloads.arduino.cc/cores/staging/ArduinoCore-mbed-RP2040-3.5.4.tar.bz2",
+          "archiveFileName": "ArduinoCore-mbed-RP2040-3.5.4.tar.bz2",
+          "checksum": "SHA-256:a3c8e4047d541c20dbf0001c1adb75ebc7c5fd38663b654304efa9c08bfdd8a7",
+          "size": "4194333",
+          "help": {
+            "online": "https://github.com/arduino/ArduinoCore-mbed/issues"
+          },
+          "boards": [
+            {
+              "name": "Raspberry Pi Pico"
+            }
+          ],
+          "toolsDependencies": [
+            {
+              "packager": "arduino",
+              "name": "openocd",
+              "version": "0.11.0-arduino2"
+            },
+            {
+              "packager": "arduino",
+              "name": "arm-none-eabi-gcc",
+              "version": "7-2017q4"
+            },
+            {
+              "packager": "arduino",
+              "name": "bossac",
+              "version": "1.9.1-arduino2"
+            },
+            {
+              "packager": "arduino",
+              "version": "0.10.0-arduino1",
+              "name": "dfu-util"
+            },
+            {
+              "packager": "arduino",
+              "version": "1.0.6",
+              "name": "rp2040tools"
+            }
+          ]
+        },
+        {
+          "name": "Arduino Mbed OS Nicla Boards",
+          "architecture": "mbed_nicla",
+          "version": "3.5.4",
+          "category": "Arduino",
+          "url": "http://downloads.arduino.cc/cores/staging/ArduinoCore-mbed-nicla-3.5.4.tar.bz2",
+          "archiveFileName": "ArduinoCore-mbed-nicla-3.5.4.tar.bz2",
+          "checksum": "SHA-256:7c2683284071fe64dec9f9ebb6bbe8a57814a35eeee103ea74baf93ca42411a4",
+          "size": "16710227",
+          "help": {
+            "online": "https://github.com/arduino/ArduinoCore-mbed/issues"
+          },
+          "boards": [
+            {
+              "name": "Nicla Sense ME"
+            },
+            {
+              "name": "Nicla Vision"
+            }
+          ],
+          "toolsDependencies": [
+            {
+              "packager": "arduino",
+              "name": "openocd",
+              "version": "0.11.0-arduino2"
+            },
+            {
+              "packager": "arduino",
+              "name": "arm-none-eabi-gcc",
+              "version": "7-2017q4"
+            },
+            {
+              "packager": "arduino",
+              "name": "bossac",
+              "version": "1.9.1-arduino2"
+            },
+            {
+              "packager": "arduino",
+              "version": "0.10.0-arduino1",
+              "name": "dfu-util"
+            },
+            {
+              "packager": "arduino",
+              "version": "1.0.6",
+              "name": "rp2040tools"
+            }
+          ]
+        },
+        {
+          "name": "Arduino Mbed OS Opta Boards",
+          "architecture": "mbed_opta",
+          "version": "3.5.4",
+          "category": "Arduino",
+          "url": "http://downloads.arduino.cc/cores/staging/ArduinoCore-mbed-opta-3.5.4.tar.bz2",
+          "archiveFileName": "ArduinoCore-mbed-opta-3.5.4.tar.bz2",
+          "checksum": "SHA-256:d1ba15f3f3dd3f088c267fccefb7f330e4db30e6e13ef16e9173c0542b9163de",
+          "size": "13981845",
+          "help": {
+            "online": "https://github.com/arduino/ArduinoCore-mbed/issues"
+          },
+          "boards": [
+            {
+              "name": "Arduino Finder Opta"
+            }
+          ],
+          "toolsDependencies": [
+            {
+              "packager": "arduino",
+              "name": "openocd",
+              "version": "0.11.0-arduino2"
+            },
+            {
+              "packager": "arduino",
+              "name": "arm-none-eabi-gcc",
+              "version": "7-2017q4"
+            },
+            {
+              "packager": "arduino",
+              "version": "0.10.0-arduino1",
+              "name": "dfu-util"
+            },
+            {
+              "packager": "arduino",
+              "version": "1.8.0-arduino.2",
+              "name": "imgtool"
+            }
+          ]
+        },
+        {
           "name": "Arduino NRF52 Boards",
           "architecture": "nrf52",
           "version": "1.0.0",
@@ -14674,6 +14951,61 @@
           ]
         },
         {
+          "name": "serial-discovery",
+          "version": "1.3.3",
+          "systems": [
+            {
+              "host": "i686-pc-linux-gnu",
+              "archiveFileName": "serial-discovery_v1.3.3_Linux_32bit.tar.gz",
+              "url": "https://downloads.arduino.cc/discovery/serial-discovery/serial-discovery_v1.3.3_Linux_32bit.tar.gz",
+              "size": 1609379,
+              "checksum": "SHA-256:c23440a440d3f31674548b7d15b1c0818acdc7cfcdc2d8e537e86f3574f9e946"
+            },
+            {
+              "host": "x86_64-pc-linux-gnu",
+              "archiveFileName": "serial-discovery_v1.3.3_Linux_64bit.tar.gz",
+              "url": "https://downloads.arduino.cc/discovery/serial-discovery/serial-discovery_v1.3.3_Linux_64bit.tar.gz",
+              "size": 1652976,
+              "checksum": "SHA-256:a2b6a4a91328c6b870af5027eb098715a3c409abe3ad224a346ce31dfa6411bb"
+            },
+            {
+              "host": "i686-mingw32",
+              "archiveFileName": "serial-discovery_v1.3.3_Windows_32bit.zip",
+              "url": "https://downloads.arduino.cc/discovery/serial-discovery/serial-discovery_v1.3.3_Windows_32bit.zip",
+              "size": 1830594,
+              "checksum": "SHA-256:e298987ef2f42d511271e6eaaaa8d17470ffa10ab98078cc4e19883e4955e875"
+            },
+            {
+              "host": "x86_64-mingw32",
+              "archiveFileName": "serial-discovery_v1.3.3_Windows_64bit.zip",
+              "url": "https://downloads.arduino.cc/discovery/serial-discovery/serial-discovery_v1.3.3_Windows_64bit.zip",
+              "size": 1862209,
+              "checksum": "SHA-256:32dfcfd9aed393a1e047ff4dfd727e76ce4762adee2a4079c57142a3f35facd1"
+            },
+            {
+              "host": "x86_64-apple-darwin",
+              "archiveFileName": "serial-discovery_v1.3.3_macOS_64bit.tar.gz",
+              "url": "https://downloads.arduino.cc/discovery/serial-discovery/serial-discovery_v1.3.3_macOS_64bit.tar.gz",
+              "size": 1699756,
+              "checksum": "SHA-256:31c8051c077254e633c3dc23eeaa569b404fab9f69b829eb05c24baba454466b"
+            },
+            {
+              "host": "arm-linux-gnueabihf",
+              "archiveFileName": "serial-discovery_v1.3.3_Linux_ARMv6.tar.gz",
+              "url": "https://downloads.arduino.cc/discovery/serial-discovery/serial-discovery_v1.3.3_Linux_ARMv6.tar.gz",
+              "size": 1552724,
+              "checksum": "SHA-256:7e7d78f7af31b6c1c5fb78c8fd18c6fe6396bdeacb8736bfd86b3726557f6f93"
+            },
+            {
+              "host": "arm64-linux-gnueabihf",
+              "archiveFileName": "serial-discovery_v1.3.3_Linux_ARM64.tar.gz",
+              "url": "https://downloads.arduino.cc/discovery/serial-discovery/serial-discovery_v1.3.3_Linux_ARM64.tar.gz",
+              "size": 1553452,
+              "checksum": "SHA-256:4a849a6cc57de939c5b65921aec852e49a2945a6e727c503df1cbb33772c68c9"
+            }
+          ]
+        },
+        {
           "name": "mdns-discovery",
           "version": "1.0.6",
           "systems": [
@@ -14730,61 +15062,6 @@
         },
         {
           "name": "serial-monitor",
-          "version": "0.10.0",
-          "systems": [
-            {
-              "host": "i686-pc-linux-gnu",
-              "archiveFileName": "serial-monitor_v0.10.0_Linux_32bit.tar.gz",
-              "url": "https://downloads.arduino.cc/monitor/serial-monitor/serial-monitor_v0.10.0_Linux_32bit.tar.gz",
-              "size": 1933674,
-              "checksum": "SHA-256:6a43e7adeea8a5cf8dc9d9e29c517c0e50473ed0ca12bdec71aacd1d4d6dfb55"
-            },
-            {
-              "host": "x86_64-pc-linux-gnu",
-              "archiveFileName": "serial-monitor_v0.10.0_Linux_64bit.tar.gz",
-              "url": "https://downloads.arduino.cc/monitor/serial-monitor/serial-monitor_v0.10.0_Linux_64bit.tar.gz",
-              "size": 1982657,
-              "checksum": "SHA-256:14c26e3fbe372d5d49423a359f77e759bb04d5257f5abebe978b425e99899230"
-            },
-            {
-              "host": "i686-mingw32",
-              "archiveFileName": "serial-monitor_v0.10.0_Windows_32bit.zip",
-              "url": "https://downloads.arduino.cc/monitor/serial-monitor/serial-monitor_v0.10.0_Windows_32bit.zip",
-              "size": 1962322,
-              "checksum": "SHA-256:829665a8a2785f75c208f17d5727d7a7b430b2d21066320ccd71fd9edd81621b"
-            },
-            {
-              "host": "x86_64-mingw32",
-              "archiveFileName": "serial-monitor_v0.10.0_Windows_64bit.zip",
-              "url": "https://downloads.arduino.cc/monitor/serial-monitor/serial-monitor_v0.10.0_Windows_64bit.zip",
-              "size": 1992824,
-              "checksum": "SHA-256:475d37bafb4162e1262d865c2a96d284c93e13c9b69824b6f98b82e99927f1ff"
-            },
-            {
-              "host": "x86_64-apple-darwin",
-              "archiveFileName": "serial-monitor_v0.10.0_macOS_64bit.tar.gz",
-              "url": "https://downloads.arduino.cc/monitor/serial-monitor/serial-monitor_v0.10.0_macOS_64bit.tar.gz",
-              "size": 1880624,
-              "checksum": "SHA-256:ff66a542f3019b763e0e9c0c39147d92aa0b9a88e9abf293c5307052ce29ad5f"
-            },
-            {
-              "host": "arm-linux-gnueabihf",
-              "archiveFileName": "serial-monitor_v0.10.0_Linux_ARMv6.tar.gz",
-              "url": "https://downloads.arduino.cc/monitor/serial-monitor/serial-monitor_v0.10.0_Linux_ARMv6.tar.gz",
-              "size": 1864090,
-              "checksum": "SHA-256:5d70865edcfef27d4f532f5ae9a3663f2c82b9cfd03cec3c140bb3b8174794e1"
-            },
-            {
-              "host": "arm64-linux-gnueabihf",
-              "archiveFileName": "serial-monitor_v0.10.0_Linux_ARM64.tar.gz",
-              "url": "https://downloads.arduino.cc/monitor/serial-monitor/serial-monitor_v0.10.0_Linux_ARM64.tar.gz",
-              "size": 1865509,
-              "checksum": "SHA-256:63ebf7ed642b0c03f77822876531a59aaea47415abd5b54e90c2f50e80b74cde"
-            }
-          ]
-        },
-        {
-          "name": "serial-monitor",
           "version": "0.11.0",
           "systems": [
             {
@@ -14835,6 +15112,61 @@
               "url": "https://downloads.arduino.cc/monitor/serial-monitor/serial-monitor_v0.11.0_Linux_ARM64.tar.gz",
               "size": 1866547,
               "checksum": "SHA-256:b2770d76722de8adf680da287a37e2dc2128f0430283935646e705da0c15e04c"
+            }
+          ]
+        },
+        {
+          "name": "serial-monitor",
+          "version": "0.12.0",
+          "systems": [
+            {
+              "host": "i686-pc-linux-gnu",
+              "archiveFileName": "serial-monitor_v0.12.0_Linux_32bit.tar.gz",
+              "url": "https://downloads.arduino.cc/monitor/serial-monitor/serial-monitor_v0.12.0_Linux_32bit.tar.gz",
+              "size": 1934394,
+              "checksum": "SHA-256:f18534d1d2ea14652313ca1446be7534f0631b5f809700321f29ec480a1390f7"
+            },
+            {
+              "host": "x86_64-pc-linux-gnu",
+              "archiveFileName": "serial-monitor_v0.12.0_Linux_64bit.tar.gz",
+              "url": "https://downloads.arduino.cc/monitor/serial-monitor/serial-monitor_v0.12.0_Linux_64bit.tar.gz",
+              "size": 1983898,
+              "checksum": "SHA-256:1e138a76448e5518261fac970e2a5d25b6a5ddd983a0150e4d1ea910f4f35bf0"
+            },
+            {
+              "host": "i686-mingw32",
+              "archiveFileName": "serial-monitor_v0.12.0_Windows_32bit.zip",
+              "url": "https://downloads.arduino.cc/monitor/serial-monitor/serial-monitor_v0.12.0_Windows_32bit.zip",
+              "size": 1961809,
+              "checksum": "SHA-256:2ffb8fcefe5268ca8439f5a84a333d75d5e428e511d418f9984c669ea58c7d30"
+            },
+            {
+              "host": "x86_64-mingw32",
+              "archiveFileName": "serial-monitor_v0.12.0_Windows_64bit.zip",
+              "url": "https://downloads.arduino.cc/monitor/serial-monitor/serial-monitor_v0.12.0_Windows_64bit.zip",
+              "size": 1992025,
+              "checksum": "SHA-256:91c9d424c28ad4ef8c82e825593214efc238bf2098e944a7e89203bf2820f772"
+            },
+            {
+              "host": "x86_64-apple-darwin",
+              "archiveFileName": "serial-monitor_v0.12.0_macOS_64bit.tar.gz",
+              "url": "https://downloads.arduino.cc/monitor/serial-monitor/serial-monitor_v0.12.0_macOS_64bit.tar.gz",
+              "size": 1881420,
+              "checksum": "SHA-256:49739e06b31a2c612f08f7169d8be5f2a7a7217a924309b06fa3f25414be1dca"
+            },
+            {
+              "host": "arm-linux-gnueabihf",
+              "archiveFileName": "serial-monitor_v0.12.0_Linux_ARMv6.tar.gz",
+              "url": "https://downloads.arduino.cc/monitor/serial-monitor/serial-monitor_v0.12.0_Linux_ARMv6.tar.gz",
+              "size": 1865868,
+              "checksum": "SHA-256:9130f75c2f48c3aadfb3290a453f448dfa708007de26900d1bda81555403c1b6"
+            },
+            {
+              "host": "arm64-linux-gnueabihf",
+              "archiveFileName": "serial-monitor_v0.12.0_Linux_ARM64.tar.gz",
+              "url": "https://downloads.arduino.cc/monitor/serial-monitor/serial-monitor_v0.12.0_Linux_ARM64.tar.gz",
+              "size": 1865881,
+              "checksum": "SHA-256:93f0be57463169e7c79739d9d56c28e3892d4696803752269660b6a1cae5acf2"
             }
           ]
         }

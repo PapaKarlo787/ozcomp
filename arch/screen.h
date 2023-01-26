@@ -67,5 +67,5 @@ void rcond() {
 }
 
 void rev() {
-	lcd.reverse();
+	lcd.reverse(0, 504);
 }
