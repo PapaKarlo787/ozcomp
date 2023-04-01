@@ -9,9 +9,7 @@
 
 void setup() {
   Serial.begin(9600);
-  analogWrite(A1, 800);
   begin();
-  analogWrite(A1, 0);
   sd_raw_info info;
   sd_raw_get_info(&info);
   sp = info.capacity;

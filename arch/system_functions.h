@@ -59,7 +59,9 @@ void write_(uint32_t poi, uint8_t* data, uint8_t n){
 }
 
 void begin() {
+	analogWrite(A1, 1000);
 	while (!sd_raw_init()) {};
+	analogWrite(A1, 500);
 	lcd.begin();
 	kbd.write(0xF0); //Установить Scan Code
 	kbd.read();
@@ -74,6 +76,7 @@ void begin() {
 	// 0)	color
 	// 1)	sound rgb
 	randomSeed(analogRead(0));
+	analogWrite(A1, 0);
 #ifdef V1
 	analogWrite(15, 0);
 #endif
