@@ -57,6 +57,12 @@ uint8_t PS2Keyboard::take() {
 }
 
 void PS2Keyboard::begin(){
+	write(0xF0); //Установить Scan Code
+	read();
+	write(0x01); //...3
+	read();
+	write(0xF8); // Режим make/release
+	read();
 	pinMode(ps2clk, INPUT_PULLUP);
 	pinMode(dataPin, INPUT_PULLUP);
 	attachInterrupt(1, ps2interrupt, FALLING);

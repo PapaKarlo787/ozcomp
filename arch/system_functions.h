@@ -59,16 +59,11 @@ void write_(uint32_t poi, uint8_t* data, uint8_t n){
 }
 
 void begin() {
-	analogWrite(A1, 1000);
+	analogWrite(A4, 1000);
 	while (!sd_raw_init()) {};
-	analogWrite(A1, 500);
+	analogWrite(A4, 0);
 	lcd.begin();
-	kbd.write(0xF0); //Установить Scan Code
-	kbd.read();
-	kbd.write(0x01); //...3
-	kbd.read();
-	kbd.write(0xF8); // Режим make/release
-	kbd.read();
+	analogWrite(A1, 1000);
 	kbd.begin();
 	timeUnix.begin();
 	flags = 0x30000;
@@ -77,7 +72,4 @@ void begin() {
 	// 1)	sound rgb
 	randomSeed(analogRead(0));
 	analogWrite(A1, 0);
-#ifdef V1
-	analogWrite(15, 0);
-#endif
 }
