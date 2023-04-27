@@ -7,6 +7,7 @@
 #define HIGH 1
 #define LOW 0
 #define A1 15
+#define A4 18
 #define OZEMU
 #define PROGMEM
 Beeper beeper;
