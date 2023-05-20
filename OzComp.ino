@@ -1,4 +1,5 @@
 #define V2
+#define SCR_T 0xb8
 #include <Arduino.h>
 #include <sd_raw.h>
 #include <PS2Keyboard.h>
