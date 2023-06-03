@@ -19,13 +19,8 @@ void PCD8544::begin() {
     // Set the LCD parameters...
     this->send(PCD8544_CMD, 0x21);  // extended instruction set control (H=1)
     this->send(PCD8544_CMD, 0x13);  // bias system (1:48)
-#ifdef SCR_T
-    this->send(PCD8544_CMD, SCR_T);  // default Vop (3.06 + 66 * 0.06 = 7V)
-#esle
-    this->send(PCD8544_CMD, 0xb2);  // default Vop (3.06 + 66 * 0.06 = 7V)
-#endif
-    this->send(PCD8544_CMD, 0x06);  // bias system (1:48)
-    this->send(PCD8544_CMD, 0x20);  // extended instruction	set control (H=0)
+    this->send(PCD8544_CMD, 0xc2);  // default Vop (3.06 + 66 * 0.06 = 7V); other ver 0xb8
+    this->send(PCD8544_CMD, 0x20);  // extended instruction set control (H=0)
     this->send(PCD8544_CMD, 0x09);  // all display segments on
 
     // Activate LCD...
