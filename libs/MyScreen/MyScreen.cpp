@@ -165,6 +165,15 @@ bool PCD8544::draw_bmp(int8_t x, int8_t y, uint8_t (*reader) (), uint32_t* poi) 
 	return intersected;
 }
 
+void PCD8544::rst(){
+	setCursor(0, 0);
+	for(uint16_t i = 0; i < bufsize; i++) {
+		PORTD &= ~(0b11 << pin_dc);
+		PORTD |= 1 << pin_dc;
+		shiftOut(pin_sdin, pin_sclk, MSBFIRST, screen_buffer[i]);
+		PORTD |= 1 << pin_sce;
+	}
+}
 
 void PCD8544::setColor(uint8_t c){
 	cursor &= 511;

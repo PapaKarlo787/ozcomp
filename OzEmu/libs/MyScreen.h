@@ -174,6 +174,17 @@ public:
 			screen_buffer[i] &= ~data;
 	}
 
+	void rst() {
+		setCursor(0, 0);
+		for(uint16_t i = 0; i < bufsize; i++) {
+			uint8_t x = (i & 511) % 84;
+			uint8_t y = (i & 511) / 84 * 8;
+			for (unsigned int l = 0; l < 8; l++)
+				mvwaddch(window, y+l, x, ((screen_buffer[i] >> l) ^ reversed) & 1 ? 219 : ' ');
+		}
+		wrefresh(window);
+	}
+
 	void clear() {
 		setCursor(0, 0);
 		for(uint16_t i = 0; i < bufsize; i++)

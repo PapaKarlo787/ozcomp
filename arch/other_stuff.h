@@ -74,3 +74,15 @@ void mcp() {
 	readRegisters();
 	sd_raw_copy_sector(R[r2], R[r1]);
 }
+
+void scond() {
+	uint8_t	x = read_();
+	flags |= (uint32_t)1 << (x+16);
+	if (!x) lcd.setColor(1);
+}
+
+void rcond() {
+	uint8_t	x = read_();
+	flags &= ~((uint32_t)1 << (x+16));
+	if (!x) lcd.setColor(0);
+}
