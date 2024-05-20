@@ -511,7 +511,7 @@ void tone(void (*f)(void)) {
 	next_tone();
 }
 
-void tone(uint8_t pin, uint16_t* ntp){
+void auto_tone(uint8_t pin, uint16_t* ntp){
 	next_tone = *auto_next_tone;
 	auto_next_tone_pointer = ntp;
 	auto_next_tone_pin = pin;
