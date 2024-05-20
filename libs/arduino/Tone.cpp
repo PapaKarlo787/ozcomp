@@ -485,12 +485,37 @@ void _next_tone(){
     *timer2_pin_port &= ~(timer2_pin_mask);  // keep pin low after stop
 }
 
+uint16_t* auto_next_tone_pointer;
+uint16_t* auto_next_tone_pin;
+uint16_t auto_next_tone_index;
+
+void auto_next_tone(){
+    // need to call noTone() so that the tone_pins[] entry is reset, so the
+    // timer gets initialized next time we call tone().
+    // XXX: this assumes timer 2 is always the first one used.
+    switch (auto_next_tone_pointer[auto_next_tone_index]) {
+		case -1: noTone(auto_next_tone_pin); break;
+		case -2: auto_next_tone_index = 0; break;
+	}
+	tone(auto_next_tone_pin, auto_next_tone_pointer[auto_next_tone_index], auto_next_tone_pointer[auto_next_tone_index + 1]);
+	auto_next_tone_index += 2;
+}
+
+
 
 void (*next_tone)(void) = *_next_tone;
 
 
 void tone(void (*f)(void)) {
 	next_tone = *f;
+	next_tone();
+}
+
+void tone(uint8_t pin, uint16_t* ntp){
+	next_tone = *auto_next_tone;
+	auto_next_tone_pointer = ntp;
+	auto_next_tone_pin = pin;
+	auto_next_tone_index = 0;
 	next_tone();
 }
 
