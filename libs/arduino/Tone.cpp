@@ -485,7 +485,7 @@ void _next_tone(){
     *timer2_pin_port &= ~(timer2_pin_mask);  // keep pin low after stop
 }
 
-uint16_t* auto_next_tone_pointer;
+const int16_t* auto_next_tone_pointer;
 uint8_t auto_next_tone_pin;
 uint16_t auto_next_tone_index;
 
@@ -511,7 +511,7 @@ void tone(void (*f)(void)) {
 	next_tone();
 }
 
-void auto_tone(uint8_t pin, uint16_t* ntp){
+void auto_tone(uint8_t pin, const int16_t* ntp){
 	next_tone = *auto_next_tone;
 	auto_next_tone_pointer = ntp;
 	auto_next_tone_pin = pin;
