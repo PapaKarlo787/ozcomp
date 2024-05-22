@@ -486,8 +486,8 @@ void _next_tone(){
 }
 
 uint16_t* auto_next_tone_pointer;
-uint16_t* auto_next_tone_pin;
-uint8_t auto_next_tone_index;
+uint8_t auto_next_tone_pin;
+uint16_t auto_next_tone_index;
 
 void auto_next_tone(){
     // need to call noTone() so that the tone_pins[] entry is reset, so the
