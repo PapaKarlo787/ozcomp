@@ -493,11 +493,11 @@ void auto_next_tone(){
     // need to call noTone() so that the tone_pins[] entry is reset, so the
     // timer gets initialized next time we call tone().
     // XXX: this assumes timer 2 is always the first one used.
-    switch (auto_next_tone_pointer[auto_next_tone_index]) {
-		case -1: noTone(auto_next_tone_pin); break;
+    switch (pgm_read_word(auto_next_tone_pointer + auto_next_tone_index)) {
+		case -1: noTone(auto_next_tone_pin); return;
 		case -2: auto_next_tone_index = 0; break;
 	}
-	tone(auto_next_tone_pin, auto_next_tone_pointer[auto_next_tone_index], auto_next_tone_pointer[auto_next_tone_index + 1]);
+	tone(auto_next_tone_pin, pgm_read_word(auto_next_tone_pointer + auto_next_tone_index), pgm_read_word(auto_next_tone_pointer + auto_next_tone_index + 1));
 	auto_next_tone_index += 2;
 }
 
