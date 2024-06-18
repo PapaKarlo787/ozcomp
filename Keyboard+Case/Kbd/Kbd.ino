@@ -1,62 +1,99 @@
-#include <Keyboard.h>
-static unsigned long timer = 0;
-char key;
-char pkey;
-const int P[] = {8,9,15,14,16,10,A0,A1,A2,A3};
-const int M[] = {2,3,4,5,6,7};
-const char k6x6 [2][6][6] = {
-  {
-    {'z', 'c', 'b', 'm', 'p', '6'},
-    {'a', 'd', 'g', 'j', 'l', '5'},
-    {'q', 'e', 't', 'u', '0', '4'},
-    {'w', 'r', 'y', 'i', '9', '3'},
-    {'s', 'f', 'h', 'k', '8', '2'},
-    {'x', 'v', 'n', 'o', '7', '1'},
-  },
-  {
-    {'Z', 'C', 'B', 'M', 'P', '^'},
-    {'A', 'D', 'G', 'J', 'l', '%'},
-    {'Q', 'E', 'T', 'U', ')', '$'},
-    {'W', 'R', 'Y', 'I', '(', '#'},
-    {'S', 'F', 'H', 'K', '*', '@'},
-    {'X', 'V', 'N', 'O', '&', '!'},
-  }
+#include <ps2dev.h>
+
+PS2dev kbd(14, 13);
+const PROGMEM int P[] = {15, 16, 2, 3, 4, 5, 6, 7}; // пины строк
+const PROGMEM int M[] = {8, 9, 10, 11, 12};   // пины столбцов
+const PROGMEM char R [5][8] = {      // символы на клавиатуре
+  {'Q', 'W', 'A', 'S', 'Z', 'X', 0x02, 0x03}, // shift, ctrl
+  {'E', 'R', 'D', 'F', 'C', 'V', 0x04, 0x05}, // alt, apple
+  {'T', 'Y', 'G', 'H', 'B', 'N', 0x20, 0x07}, // space, lamp
+  {'U', 'I', 'J', 'K', 'M', ',', 0x14, 0x13}, // ralt, rctrl
+  {'O', 'P', 'L', '`', '.', '/', 0x12, 0x0A}  // rshift, enter
 };
 
-char GetKey4x4() {
-  if (!digitalRead(A0)) return KEY_BACKSPACE;
-  if (!digitalRead(A1)) return KEY_RETURN;
-  if (!digitalRead(A3)) return ' ';
-  char key = 0;
-  char k = digitalRead(A2) ? 0 : 1;
-  for (byte p = 0; p < 6; p++) {
-    digitalWrite(P[p], LOW);
-    for (byte m = 0; m < 6; m++) {
-      if (!digitalRead(M[m])) {
-        key = k6x6[k][p][m];
-      }
-    }
-    digitalWrite(P[p], HIGH);
-  }
-  return key;
-}
+const PROGMEM char B [5][8] = {      // символы на клавиатуре
+  {'q', 'w', 'a', 's', 'z', 'x', 0x02, 0x03},
+  {'e', 'r', 'd', 'f', 'c', 'v', 0x04, 0x05},
+  {'t', 'y', 'g', 'h', 'b', 'n', 0x20, 0x07},
+  {'u', 'i', 'j', 'k', 'm', '<', 0x14, 0x13},
+  {'o', 'p', 'l', '~', '>', '?', 0x12, 0x0A}
+};
+
+const PROGMEM char G [5][8] = {      // символы на клавиатуре
+  {0x01, 0x15, '1', '2',  '[',  ']', 0x02, 0x03}, 
+  {0x16, 0x17, '3', '4', '\\',  ';', 0x04, 0x05},
+  {0x18, 0x19, '5', '6', '\'',  '-', 0x20, 0x07},
+  {0x1A, 0x1B, '7', '8',  '=', 0x7F, 0x14, 0x13}, // del
+  {0x1C, 0x1D, '9', '0', 0x0B, 0x0C, 0x12, 0x0A}  // p_up, p_dn
+};
+
+const PROGMEM char K [5][8] = {      // символы на клавиатуре
+  {0x09, 0x00,  '!',  '@',  '{',  '}', 0x02, 0x03}, // tab
+  {0x00, 0x00,  '#',  '$',  '|',  ':', 0x04, 0x05},
+  {0x00, 0x00,  '%',  '^',  '"',  '_', 0x20, 0x07},
+  {0x00,  '(',  '&',  '*',  '+', 0x0E, 0x14, 0x13}, // left
+  { ')', 0x08, 0x0D, 0x06, 0x0F, 0x10, 0x12, 0x0A}  // backspace, up, printscr, down, right
+};
+
+uint64_t old_keys = 0;
+uint8_t leds;
+char last_key = 0;
+uint32_t time = 0;
+uint8_t rep_time = 0;
 
 void setup() {
-  for (int i = 0; i < 10; i++) {
-    pinMode(P[i], OUTPUT);
-    if (i < 6) pinMode(M[i], INPUT_PULLUP);
-    digitalWrite(P[i], HIGH);
+  for (int i = 0; i < 8; i++) {  // выставляем пины строк на выход, столбцов на вход
+    pinMode(pgm_read_byte(&P[i]), OUTPUT);
+    digitalWrite(pgm_read_byte(&P[i]), HIGH);
   }
-  Keyboard.begin();
-  Serial.begin(9600);
+  for (int i = 0; i < 5; i++) {  // выставляем пины строк на выход, столбцов на вход
+    pinMode(pgm_read_byte(&M[i]), INPUT_PULLUP);
+  }
 }
 
 void loop() {
-  delay(100);
-  key = GetKey4x4();
-  if (key != 0) {
-    pkey = key;
-    if (key != -1)
-      Keyboard.print(key);
+  if (millis() - time > 50) {
+    uint64_t cur_keys = GetKey();             // опрашиваем клавиатуру
+    uint64_t changes = old_keys ^ cur_keys;
+    for (byte p = 0; p < 8; p++) {
+      for (byte m = 0; m < 5; m++) {
+        uint64_t bit = ((uint64_t)1 << ((m << 3) + p)); 
+        if (changes & bit)
+          if (cur_keys & bit) {
+            rep_time = 11;
+            last_key = pgm_read_byte(&R[m][p]);
+            kbd.write(last_key);
+          }
+          else {
+            if (last_key == pgm_read_byte(&R[m][p]))
+              last_key = 0;
+            kbd.write(pgm_read_byte(&R[m][p]) | 0x80);
+          }
+      }
+    }
+    time = millis();
+    old_keys = cur_keys;
+    if (last_key) {
+      rep_time--;
+      if (!rep_time) {
+        rep_time = 2;
+        kbd.write(last_key);
+      }
+    }
   }
+  kbd.keyboard_handle(&leds);
+}
+
+uint64_t GetKey() {
+  uint64_t res = 0;
+  for (byte p = 0; p < 8; p++) {    // последовательно выставляем по одной строке в LOW
+    digitalWrite(pgm_read_byte(&P[p]), LOW);
+    for (byte m = 0; m < 5; m++) {  // и считываем столбцы вылавнивая где LOW происходит
+      if (!digitalRead(pgm_read_byte(&M[m]))) {
+        res |= (uint64_t)1 << ((m << 3) + p);             // считываем соотвествующий символ для комбинации столбца и строки
+      }
+    }
+    digitalWrite(pgm_read_byte(&P[p]), HIGH);       // возвращем строку в HIGH и крутим дальше
+  }
+  return res;
 }
