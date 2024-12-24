@@ -1,93 +1,131 @@
 #include "MyScreen.h"
 #include "charset.cpp"
 
-void PCD8544::begin() {
-	// All pins are outputs (these displays cannot be read)...
-    pinMode(pin_sclk, OUTPUT);
-    pinMode(pin_sdin, OUTPUT);
-    pinMode(pin_dc, OUTPUT);
-    pinMode(pin_reset, OUTPUT);
-    pinMode(pin_sce, OUTPUT);
+void NokiaScreen::begin() {
+	DDRD |= 0xF0;
+	DDRB |= 2;
 
-    // Reset the controller state...
+    digitalWrite(pin_reset, LOW);
     digitalWrite(pin_reset, HIGH);
     digitalWrite(pin_sce, HIGH);
-    digitalWrite(pin_reset, LOW);
-    delay(100);
-    digitalWrite(pin_reset, HIGH);
-
-    // Set the LCD parameters...
-    this->send(PCD8544_CMD, 0x21);  // extended instruction set control (H=1)
-    this->send(PCD8544_CMD, 0x13);  // bias system (1:48)
-    this->send(PCD8544_CMD, 0xc2);  // default Vop (3.06 + 66 * 0.06 = 7V); other ver 0xb8
-    this->send(PCD8544_CMD, 0x20);  // extended instruction set control (H=0)
-    this->send(PCD8544_CMD, 0x09);  // all display segments on
-
-    // Activate LCD...
-    this->send(PCD8544_CMD, 0x08);  // display blank
-    this->send(PCD8544_CMD, 0x0c);  // normal mode (0x0d = inverse mode)
-    delay(100);
-
-    // Place the cursor at the origin...
-    this->send(PCD8544_CMD, 0x80);
-    this->send(PCD8544_CMD, 0x40);
+    
+    send_cmd(0x21);  // extended instruction set control (H=1)
+    send_cmd(0x13);  // bias system (1:48)
+    send_cmd(0xc2);  // default	Vop (3.06 + 66 * 0.06 = 7V); other ver 0xb8
+    send_cmd(0x20);  // extended instruction set control (H=0)
+    send_cmd(0x09);  // all display segments on
+    send_cmd(0x08);  // display blank
+    send_cmd(0x0c);  // normal mode (0x0d = inverse mode)
+    send_cmd(0x80);  // 0 column
+    send_cmd(0x40);  // 0 row
 }
 
-void PCD8544::setContrast(uint8_t level) {
-    // The PCD8544 datasheet specifies a maximum Vop of 8.5V for safe
-    // operation in low temperatures, which limits the contrast level.
-    if (level > 90)
-        level = 90;  // Vop = 3.06 + 90 * 0.06 = 8.46V
-
-    this->send(PCD8544_CMD, 0x21);  // extended instruction set control (H=1)
-    this->send(PCD8544_CMD, 0x80 | (level & 0x7f));
-    this->send(PCD8544_CMD, 0x20);  // extended instruction set control (H=0)
+void NokiaScreen::setContrast(uint8_t level) {
+    this->send_cmd(0x21);  // extended instruction set control (H=1)
+    this->send_cmd(0x80 | (min(level, 90) & 0x7f));
+    this->send_cmd(0x20);  // extended instruction set control (H=0)
 }
 
-void PCD8544::setCursor(uint8_t column, uint8_t line) {
-	column = (column % width);
-	line = (line % 6);
+void NokiaScreen::setCursor(uint8_t column, uint8_t line) {
 	cursor = (cursor & 0xfe00) + line * width + column;
-    this->send(PCD8544_CMD, 0x80 | column);
-    this->send(PCD8544_CMD, 0x40 | line);
+    send_cmd(0x80 | column);
+    send_cmd(0x40 | line);
 }
 
-size_t PCD8544::write(uint8_t chr) {
-    // Output one column at a time...
+void NokiaScreen::setCursor(uint16_t ind) {
+	cursor = (cursor & 0xfe00) + ind;
+    send_cmd(0x80 | (ind % width));
+    send_cmd(0x40 | (ind / width));
+}
+
+size_t NokiaScreen::write(uint8_t chr) {
     for (uint8_t i = 0; i < 5; i++) {
-        this->send(PCD8544_DATA, pgm_read_word(&charset[chr][i]));
+        send_data(pgm_read_word(&charset[chr][i]));
 	}
-
-    // One column between characters...
-    this->send(PCD8544_DATA, 0x00);
-    return 1;
+    send_data(0x00);
 }
 
-void PCD8544::send(uint8_t type, uint8_t data) {
-    PORTD &= ~(0b11 << pin_dc);
-    PORTD |= type << pin_dc;
-    shiftOut(pin_sdin, pin_sclk, MSBFIRST, data);
-    PORTD |= 1 << pin_sce;
-    if (type) {
-		screen_buffer[cursor & 511] = data;
-		cursor = (cursor & 0xfe00) + ((cursor & 0x1ff) + 1) % bufsize;
+void NokiaScreen::send_data(uint8_t data) {
+    PORTD |= 32;
+    for(int i = 0; i < 8; i++) {
+		PORTD &= ~16;
+		PORTD |= ((data >> i) & 1) << 4;
+		PORTB |= 2;
+		PORTB &= ~2;
+	}
+	screen_buffer[cursor & 511] = data;
+	cursor = (cursor & 0xfe00) + ((cursor & 0x1ff) + 1) % bufsize;
+}
+
+void NokiaScreen::send_cmd(uint8_t cmd) {
+    PORTD &= 223;
+    for(int i = 0; i < 8; i++) {
+		PORTD &= ~16;
+		PORTD |= ((cmd >> i) & 1) << 4;
+		PORTB |= 2;
+		PORTB &= ~2;
 	}
 }
 
-bool PCD8544::set_point(int16_t x, int16_t y) {
+void NokiaScreen::rst(){
+	setCursor(0, 0);
+	PORTD |= 32;
+	for(uint16_t i = 0; i < bufsize; i++) {
+		for(int l = 0; l < 8; l++) {
+			PORTD &= ~16;
+			PORTD |= ((screen_buffer[i] >> l) & 1) << 4;
+			PORTB |= 2;
+			PORTB &= ~2;
+		}
+	}
+}
+
+void NokiaScreen::setColor(uint8_t c){
+	cursor = (cursor & 512) | c << 9;
+}
+
+void NokiaScreen::setColored(uint16_t i, uint8_t data) {
+	if (cursor & 512)
+		screen_buffer[i] |= data;
+	else
+		screen_buffer[i] &= ~data;
+}
+
+bool NokiaScreen::set_data(uint8_t data, uint16_t i) {
+	uint8_t last = screen_buffer[i];
+	setColored(i, data);
+	setCursor(i);
+	send_data(screen_buffer[i]);
+	return last + data != screen_buffer[i];
+}
+
+void NokiaScreen::clear() {
+	setCursor(0, 0);
+	for(uint16_t i = 0; i < bufsize; i++)
+		send_data(0);
+}
+
+void NokiaScreen::reverse(uint16_t from, uint16_t to) {
+	if (from >= bufsize) return;
+	setCursor(from);
+	for(uint16_t i = from; i < to; i++)
+		send_data(~screen_buffer[i]);
+}
+
+bool NokiaScreen::set_point(int16_t x, int16_t y) {
 	if (x >= width || x < 0 || y >= height || y < 0)
 		return 0;
-	uint16_t n = y / 8 * width + x;
+	uint16_t n = (y >> 3) * width + x;
 	uint8_t tmp = screen_buffer[n];
 	setColored(n, 1 << (y & 7));
-	setCursor(x, y>>3);
-	send(HIGH, screen_buffer[n]);
+	setCursor(x, y >> 3);
+	send_data(screen_buffer[n]);
 	return tmp == screen_buffer[n];
 }
 
-void PCD8544::draw_line(int16_t x, int16_t y, uint16_t dx, uint16_t dy, int8_t sx, int8_t sy, int8_t sxx, int8_t syy) {
-	int16_t d = (dx << 1) - dy;
+void NokiaScreen::draw_line(int16_t x, int16_t y, uint16_t dx, uint16_t dy, int8_t sx, int8_t sy, int8_t sxx, int8_t syy) {
 	int16_t d1 = dx << 1;
+	int16_t d = d1 - dy;
 	int16_t d2 = (dx - dy) << 1;
 	for (uint16_t i = 1; i <= dy; i++) {
 		if (d > 0) {
@@ -101,7 +139,7 @@ void PCD8544::draw_line(int16_t x, int16_t y, uint16_t dx, uint16_t dy, int8_t s
 	}
 }
 
-void PCD8544::draw_line(int16_t x0, int16_t y0, int16_t x1, int16_t y1) {
+void NokiaScreen::draw_line(int16_t x0, int16_t y0, int16_t x1, int16_t y1) {
 	uint16_t dx = (x1 > x0) ? (x1 - x0) : (x0 - x1);
 	uint16_t dy = (y1 > y0) ? (y1 - y0) : (y0 - y1);
 	int8_t sx = (x1 >= x0) ? (1) : (-1);
@@ -113,7 +151,7 @@ void PCD8544::draw_line(int16_t x0, int16_t y0, int16_t x1, int16_t y1) {
 		draw_line(x0, y0 + sy, dx, dy, sx, sy, 0, 0);
 }
 
-void PCD8544::draw_circle(int16_t X1, int16_t Y1, int16_t y) {
+void NokiaScreen::draw_circle(int16_t X1, int16_t Y1, int16_t y) {
 	int16_t x = 0;
 	int16_t delta = 1 - 2 * y;
 	int16_t error = 0;
@@ -132,15 +170,7 @@ void PCD8544::draw_circle(int16_t X1, int16_t Y1, int16_t y) {
 	}
 }
 
-bool PCD8544::set_data(uint8_t data, uint16_t i) {
-	uint8_t last = screen_buffer[i];
-	setColored(i, data);
-	setCursor(i % width, i / width);
-	send(HIGH, screen_buffer[i]);
-	return last + data != screen_buffer[i];
-}
-
-bool PCD8544::draw_bmp(int8_t x, int8_t y, uint8_t (*reader) (), uint32_t* poi) {
+bool NokiaScreen::draw_bmp(int8_t x, int8_t y, uint8_t (*reader) (), uint32_t* poi) {
 	uint8_t sx = reader();
 	uint8_t sy = reader();
 	uint8_t shift = (8 - y % 8) % 8;
@@ -164,39 +194,3 @@ bool PCD8544::draw_bmp(int8_t x, int8_t y, uint8_t (*reader) (), uint32_t* poi) 
 	}
 	return intersected;
 }
-
-void PCD8544::rst(){
-	setCursor(0, 0);
-	for(uint16_t i = 0; i < bufsize; i++) {
-		PORTD &= ~(0b11 << pin_dc);
-		PORTD |= 1 << pin_dc;
-		shiftOut(pin_sdin, pin_sclk, MSBFIRST, screen_buffer[i]);
-		PORTD |= 1 << pin_sce;
-	}
-}
-
-void PCD8544::setColor(uint8_t c){
-	cursor &= 511;
-	cursor |= c << 9;
-}
-
-void PCD8544::setColored(uint16_t i, uint8_t data) {
-	if (cursor & 512)
-		screen_buffer[i] |= data;
-	else
-		screen_buffer[i] &= ~data;
-}
-
-void PCD8544::clear() {
-	setCursor(0, 0);
-	for(uint16_t i = 0; i < bufsize; i++)
-		send(HIGH, 0);
-}
-
-void PCD8544::reverse(uint16_t from, uint16_t to) {
-	if (from >= bufsize) return;
-	setCursor(from % width, from / width);
-	for(uint16_t i = from; i < to; i++)
-		send(HIGH, ~screen_buffer[i]);
-}
-

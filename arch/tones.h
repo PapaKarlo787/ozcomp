@@ -6,11 +6,10 @@ uint32_t size;
 uint8_t mhead;
 uint8_t mtail;
 uint32_t mbuffer[MBS];
-const uint8_t cols[] PROGMEM = { 9, 32, 24, 34, 2, 10, 36, 8, 33, 18, 40, 6, 42 };
 
 void fill_mbuffer() {
 	if (!start_pointer) return;
-	while((mtail-mhead+1) % MBS){
+	while((mtail - mhead + 1) % MBS){
 		mbuffer[mtail] = readNum(play_pointer+start_pointer);
 		play_pointer = (play_pointer + 4) % size;
 		mtail = (mtail + 1) % MBS;
@@ -23,16 +22,12 @@ void next_play(){
 	mhead = (mhead + 1) % MBS;
 	uint16_t freq = sig & 0xffff;
 	tone(17, freq, sig >> 16);
-#ifndef V1
 	if (flags & ((uint32_t)1 << 17)) {
-		uint8_t note = freq > 27 ? ((int16_t)(log(freq / 27.5) / log(1.05946309436))) % 12 : 12;
-		note = pgm_read_byte(&(cols[note]));
-		analogWrite(Rp, (note & 3) * 511);
-		analogWrite(Gp, ((note >> 2) & 3) * 511);
-		analogWrite(Bp, ((note >> 4) & 3) * 511);
+		digitalWrite(Rp, freq & 128);
+		digitalWrite(Gp, freq & 512);
+		digitalWrite(Bp, freq & 2048);
 	}
-#endif
-	if (freq == 0xffff)
+	if (freq == -1)
 		noTone(17);
 }
 

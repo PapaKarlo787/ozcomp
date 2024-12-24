@@ -1,43 +1,43 @@
-uint8_t read_(){
-	uint8_t temp[1];
-	sd_raw_read(ip, temp, 1);
+inline uint8_t read_(){
+	uint8_t temp;
+	sd_raw_read(ip, &temp, 1);
 	ip++;
-	return temp[0];
+	return temp;
 }
 
-uint8_t read_(uint32_t poi){
-	uint8_t temp[1];
-	sd_raw_read(poi, temp, 1);
-	return temp[0];
+inline uint8_t read_(uint32_t poi){
+	uint8_t temp;
+	sd_raw_read(poi, &temp, 1);
+	return temp;
 }
 
-void readRegisters() {
+inline void readRegisters() {
 	uint8_t i = read_();
 	r1 = i & 15;
 	r2 = i >> 4;
 }
 
-uint32_t readNum() {
-	uint8_t temp[4];
-	sd_raw_read(ip, temp, 4);
-	ip+=4;
-	return *((uint32_t*)&temp);
+inline uint32_t readNum() {
+	uint32_t temp;
+	sd_raw_read(ip, (uint8_t*)&temp, 4);
+	ip += 4;
+	return temp;
 }
 
-uint32_t readNum(uint32_t poi, uint8_t n = 4) {
-	uint8_t temp[4] = {0, 0, 0, 0};
-	sd_raw_read(poi, temp, n);
-	return *((uint32_t*)&temp);
+inline uint32_t readNum(uint32_t poi, uint8_t n = 4) {
+	uint32_t temp = 0;
+	sd_raw_read(poi, (uint8_t*)&temp, n);
+	return temp;
 }
 
-void setFlags(float x) {
+inline void setFlags(float x) {
 	flags &= 0xffff0000;
 	flags += (x > 0 ? 1 : 0) << 6;
 	flags += (x < 0 ? 1 : 0) << 5;
 	flags += (x == 0 ? 1 : 0) << 4;
 }
 
-void setFlags(uint32_t x) {
+inline void setFlags(uint32_t x) {
 	int32_t y = x;
 	flags &= 0xffff0000;
 	flags += (y > 0 ? 1 : 0) << 2;
@@ -45,31 +45,32 @@ void setFlags(uint32_t x) {
 	flags += y == 0 ? 1 : 0;
 }
 
-void setFlags(bool x) {
+inline void setFlags(bool x) {
 	flags &= 0xffff0000;
 	flags |= x ? 8 : 128;
 }
 
-void write_(uint8_t* data, uint8_t n){
-	sd_raw_write(ip, data, n);
+inline void write_(void* data, uint8_t n){
+	sd_raw_write(ip, (uint8_t*)data, n);
 }
 
-void write_(uint32_t poi, uint8_t* data, uint8_t n){
-	sd_raw_write(poi, data, n);
+inline void write_(uint32_t poi, void* data, uint8_t n){
+	sd_raw_write(poi, (uint8_t*)data, n);
 }
 
 void begin() {
-	analogWrite(A4, 1000);
+	randomSeed(analogRead(0));
+	digitalWrite(A4, 1);
 	while (!sd_raw_init()) {};
-	analogWrite(A4, 0);
-	lcd.begin();
-	analogWrite(A1, 1000);
+	digitalWrite(A4, 0);
+	digitalWrite(A1, 1);
 	kbd.begin();
+	digitalWrite(A1, 0);
+
+	lcd.begin();
 	timeUnix.begin();
 	flags = 0x30000;
 	// High flags
 	// 0)	color
 	// 1)	sound rgb
-	randomSeed(analogRead(0));
-	analogWrite(A1, 0);
 }

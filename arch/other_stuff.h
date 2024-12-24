@@ -21,14 +21,14 @@ void mzer_r() {
 	readRegisters();
 	uint8_t n = 0;
 	for (uint32_t i = readNum(); i > 0; i--)
-		write_(R[r1]+i-1, &n, 1);	
+		write_(R[r1] + i - 1, &n, 1);	
 }
 
 void mzer_c() {
 	uint32_t poi = readNum();
 	uint8_t n = 0;
 	for (uint32_t i = readNum(); i > 0; i--)
-		write_(poi+i-1, &n, 1);
+		write_(poi + i - 1, &n, 1);
 }
 
 void set_time() {
@@ -77,12 +77,12 @@ void mcp() {
 
 void scond() {
 	uint8_t	x = read_();
-	flags |= (uint32_t)1 << (x+16);
+	flags |= (uint32_t)1 << (x + 16);
 	if (!x) lcd.setColor(1);
 }
 
 void rcond() {
 	uint8_t	x = read_();
-	flags &= ~((uint32_t)1 << (x+16));
+	flags &= ~((uint32_t)1 << (x + 16));
 	if (!x) lcd.setColor(0);
 }

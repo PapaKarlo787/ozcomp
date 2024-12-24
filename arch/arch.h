@@ -9,8 +9,15 @@ uint32_t R[16];
 uint32_t S[16];
 uint8_t r1, r2;
 PS2Keyboard kbd;
-PCD8544 lcd;
+NokiaScreen lcd;
 iarduino_RTC timeUnix;
+
+
+union INT_FLOAT {
+	float f;
+	uint32_t i;
+};
+
 #include "system_functions.h"
 //realization of instructions
 #include "float_ariphmetics.h"

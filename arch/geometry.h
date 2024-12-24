@@ -27,7 +27,7 @@ void circle_c() {
 
 void line_rc() {
 	readRegisters();
-	lcd.draw_line(R[r1], R[r2], read_()+R[r2], read_()+R[r1]);
+	lcd.draw_line(R[r1], R[r2], read_() + R[r2], read_() + R[r1]);
 }
 
 void line_c() {

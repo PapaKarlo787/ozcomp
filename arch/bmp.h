@@ -1,8 +1,8 @@
-void bmp(uint8_t x, uint8_t y) {
+inline void bmp(uint8_t x, uint8_t y) {
 	uint32_t t = ip;
 	ip = readNum();
 	setFlags(lcd.draw_bmp(x, y, read_, &ip));
-	ip = t+4;
+	ip = t + 4;
 }
 
 void bmp_rc() {

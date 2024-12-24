@@ -6,7 +6,7 @@
 // yy - scale of Rb
 //		(11 means that x = 0, otherwise 1 << yy)
 
-uint32_t mov(uint8_t mask, uint8_t* s) {
+inline uint32_t lea(uint8_t mask, uint8_t* s) {
 	readRegisters();
 	uint8_t x = (mask & 3 == 3) ? 0 : (1 << (mask & 3));
 	mask >>= 2;
@@ -19,7 +19,7 @@ void mov_rm() {
 	readRegisters();
 	uint8_t x = r1;
 	uint8_t s;
-	uint32_t addr = mov(r2, &s);
+	uint32_t addr = lea(r2, &s);
 	R[x] = readNum(addr, s);
 }
 
@@ -27,8 +27,8 @@ void mov_mr() {
 	readRegisters();
 	uint8_t x = r1;
 	uint8_t s;
-	uint32_t addr = mov(r2, &s);
-	write_(addr, (uint8_t*)&R[x], s);
+	uint32_t addr = lea(r2, &s);
+	write_(addr, &R[x], s);
 }
 
 void mov_rr() {
@@ -48,5 +48,5 @@ void imovf() {
 
 void lea() {
 	readRegisters();
-	R[r1] = mov(r2, 0);
+	R[r1] = lea(r2, 0);
 }

@@ -1,4 +1,3 @@
-#define V2
 #include <Arduino.h>
 #include <sd_raw.h>
 #include <PS2Keyboard.h>

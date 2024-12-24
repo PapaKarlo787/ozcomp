@@ -1,12 +1,13 @@
 void fmov_rm() {
 	readRegisters();
-	uint32_t x = readNum(mov(r2, 0), 4);
-	Rf[r1] = *(float*)&x;
+	INT_FLOAT v;
+	v.i = readNum(lea(r2, 0), 4);
+	Rf[r1] = v.f;
 }
 
 void fmov_mr() {
 	readRegisters();
-	write_(mov(r2, 0), (uint8_t*)&Rf[r1], 4);
+	write_(lea(r2, 0), &Rf[r1], 4);
 }
 
 void fmov_rr() {
@@ -16,8 +17,9 @@ void fmov_rr() {
 
 void fmov_rc() {
 	readRegisters();
-	uint32_t x = readNum();
-	Rf[r1] = *(float*)&x;
+	INT_FLOAT v;
+	v.i = readNum();
+	Rf[r1] = v.f;
 }
 
 void fmovi() {

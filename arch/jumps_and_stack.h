@@ -9,18 +9,18 @@ void jmp_r(){
 
 void jmp_c_r(){
 	readRegisters();
-	ip = (read_() & flags) != 0 ? R[r1] : ip + 4;
+	ip = (read_() & flags) ? R[r1] : ip + 4;
 }
 
 void jmp_c() {
 	uint32_t x = read_();
-	ip = (x & flags) ? readNum() : ip+4;
+	ip = (x & flags) ? readNum() : ip + 4;
 	flags &= ~x;
 }
 
 void call_c() {
 	uint32_t old_ip = ip + 4;
-	write_(sp-=4, (uint8_t*)&old_ip, 4);
+	write_(sp-=4, &old_ip, 4);
 	ip = readNum();
 }
 
@@ -48,12 +48,12 @@ void lp_r() {
 
 void push() {
 	readRegisters();
-	write_(sp -= 4, (uint8_t*)&(R[r1]), 4);
+	write_(sp -= 4, &R[r1], 4);
 }
 
 void push_c() {
 	uint32_t x = readNum();
-	write_(sp -= 4, (uint8_t*)&x, 4);
+	write_(sp -= 4, &x, 4);
 }
 
 void pop() {
@@ -64,7 +64,7 @@ void pop() {
 
 void pushai() {
 	for(uint8_t i = 0; i < 16; i++)
-		write_(sp -= 4, (uint8_t*)&(R[i]), 4);
+		write_(sp -= 4, &R[i], 4);
 }
 
 void popai() {
@@ -76,25 +76,27 @@ void popai() {
 
 void fpush() {
 	readRegisters();
-	write_(sp -= 4, (uint8_t*)&(Rf[r1]), 4);
+	write_(sp -= 4, &Rf[r1], 4);
 }
 
 void fpop() {
 	readRegisters();
-	uint32_t x = readNum(sp, 4);
-	Rf[r1] = *(float*)&x;
+	INT_FLOAT v;
+	v.i = readNum(sp, 4);
+	Rf[r1] = v.f;
 	sp += 4;
 }
 
 void pushaf() {
 	for(uint8_t i = 0; i < 16; i++)
-		write_(sp -= 4, (uint8_t*)&(Rf[i]), 4);
+		write_(sp -= 4, &Rf[i], 4);
 }
 
 void popaf() {
+	INT_FLOAT v;
 	for(int8_t i = 15; i >= 0; i--) {
-		uint32_t x = readNum(sp, 4);
-		Rf[i] = *(float*)&x;
+		v.i = readNum(sp, 4);
+		Rf[i] = v.f;
 		sp += 4;
 	}
 }

@@ -23,11 +23,11 @@ void print_int() {
 
 void snd_r() {
 	readRegisters();
-	lcd.send(HIGH, R[r1]);
+	lcd.send_data(R[r1]);
 }
 
 void snd_c() {
-	lcd.send(HIGH, read_());
+	lcd.send_data(read_());
 }
 
 void set_cursor() {
@@ -55,7 +55,7 @@ void rpix_r() {
 }
 
 void rev() {
-	lcd.reverse(0, bufsize);
+	lcd.reverse();
 }
 
 void sts_r() {

@@ -37,13 +37,13 @@ void ps2interrupt(void) {
 	}
 }
 
-void gohi(uint8_t pin)
+inline void gohi(uint8_t pin)
 {
 	pinMode(pin, INPUT);
 	digitalWrite(pin, HIGH);
 }
 
-void golo(uint8_t pin)
+inline void golo(uint8_t pin)
 {
 	pinMode(pin, OUTPUT);
 	digitalWrite(pin, LOW);

@@ -9,8 +9,9 @@ void f_add_rr() {
 
 void f_add_rc() {
 	readRegisters();
-	uint32_t x = readNum();
-	setFlags(Rf[r1] = Rf[r1] + *(float*)&x);
+	INT_FLOAT v;
+	v.i = readNum();
+	setFlags(Rf[r1] += v.f);
 }
 
 void f_sub_rr() {
@@ -20,8 +21,9 @@ void f_sub_rr() {
 
 void f_sub_rc() {
 	readRegisters();
-	uint32_t x = readNum();
-	setFlags(Rf[r1] -= *(float*)&x);
+	INT_FLOAT v;
+	v.i = readNum();
+	setFlags(Rf[r1] -= v.f);
 }
 	
 void f_mul_rr() {
@@ -31,8 +33,9 @@ void f_mul_rr() {
 
 void f_mul_rc() {
 	readRegisters();
-	uint32_t x = readNum();
-	setFlags(Rf[r1] *= *(float*)&x);
+	INT_FLOAT v;
+	v.i = readNum();
+	setFlags(Rf[r1] *= v.f);
 }
 
 void f_div_rr() {
@@ -42,8 +45,9 @@ void f_div_rr() {
 
 void f_div_rc() {
 	readRegisters();
-	uint32_t x = readNum();
-	setFlags(Rf[r1] /= *(float*)&x);
+	INT_FLOAT v;
+	v.i = readNum();
+	setFlags(Rf[r1] /= v.f);
 }
 
 void f_pow_rr() {
@@ -53,8 +57,9 @@ void f_pow_rr() {
 
 void f_pow_rc() {
 	readRegisters();
-	uint32_t x = readNum();
-	Rf[r1] = pow(Rf[r1], *(float*)&x);
+	INT_FLOAT v;
+	v.i = readNum();
+	Rf[r1] = pow(Rf[r1], v.f);
 }
 
 void f_cmp_rr() {
@@ -64,8 +69,9 @@ void f_cmp_rr() {
 
 void f_cmp_rc() {
 	readRegisters();
-	uint32_t x = readNum();
-	setFlags(Rf[r1] - *(float*)&x);
+	INT_FLOAT v;
+	v.i = readNum();
+	setFlags(Rf[r1] - v.f);
 }
 
 void test_f() {
