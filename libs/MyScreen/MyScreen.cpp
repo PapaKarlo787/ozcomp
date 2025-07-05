@@ -173,10 +173,10 @@ void NokiaScreen::draw_circle(int16_t X1, int16_t Y1, int16_t y) {
 bool NokiaScreen::draw_bmp(int8_t x, int8_t y, uint8_t (*reader) (), uint32_t* poi) {
 	uint8_t sx = reader();
 	uint8_t sy = reader();
-	uint8_t shift = (8 - y % 8) % 8;
+	uint8_t shift = (8 - y & 7) & 7;
 	bool intersected = false;
 	if (y < 0) y -= 8;
-	y = y / 8 + (y % 8 ? 1 : 0);
+	y = (y >> 3) + (y & 7 ? 1 : 0);
 	int start = y * width + x;
 	for (uint8_t i = 0; i < sy; i++) {
 		if (i + y > -1 && i + y < 7){

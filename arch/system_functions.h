@@ -58,15 +58,22 @@ inline void write_(uint32_t poi, void* data, uint8_t n){
 	sd_raw_write(poi, (uint8_t*)data, n);
 }
 
-void begin() {
-	randomSeed(analogRead(0));
-	digitalWrite(A4, 1);
-	while (!sd_raw_init()) {};
-	digitalWrite(A4, 0);
-	digitalWrite(A1, 1);
-	kbd.begin();
-	digitalWrite(A1, 0);
+void kbd_read_bit() {
+	kbd.readBit();
+}
 
+void begin() {
+	pinMode(Rp, OUTPUT);
+	pinMode(Gp, OUTPUT);
+	pinMode(Bp, OUTPUT);
+	randomSeed(analogRead(0));
+	digitalWrite(Rp, 1);
+	while (!sd_raw_init()) {};
+	digitalWrite(Rp, 0);
+	digitalWrite(Gp, 1);
+	kbd.begin();
+	digitalWrite(Gp, 0);
+	attachInterrupt(1, kbd_read_bit, FALLING);
 	lcd.begin();
 	timeUnix.begin();
 	flags = 0x30000;
