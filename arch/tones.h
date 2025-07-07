@@ -2,7 +2,7 @@
 
 uint32_t play_pointer;
 uint32_t start_pointer;
-uint32_t size;
+uint32_t size_m;
 uint8_t mhead;
 uint8_t mtail;
 uint32_t mbuffer[MBS];
@@ -11,7 +11,7 @@ void fill_mbuffer() {
 	if (!start_pointer) return;
 	while((mtail - mhead + 1) % MBS){
 		mbuffer[mtail] = readNum(play_pointer+start_pointer);
-		play_pointer = (play_pointer + 4) % size;
+		play_pointer = (play_pointer + 4) % size_m;
 		mtail = (mtail + 1) % MBS;
 	}
 }
@@ -35,7 +35,7 @@ void play(){
 	uint32_t poi = readNum();
 	start_pointer = poi+4;
 	play_pointer = 0;
-	size = readNum(poi) << 2;
+	size_m = readNum(poi) << 2;
 	mhead = 0;
 	mtail = 0;
 	fill_mbuffer();

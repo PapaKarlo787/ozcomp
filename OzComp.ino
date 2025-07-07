@@ -3,6 +3,9 @@
 #include <PS2Keyboard.h>
 #include <MyScreen.h>
 #include <iarduino_RTC.h>
+
+#define RealScreen NokiaScreen
+
 #include "arch/arch.h"
 
 

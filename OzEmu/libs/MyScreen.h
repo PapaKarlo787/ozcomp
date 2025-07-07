@@ -1,40 +1,25 @@
 #include <ncurses.h>
 #include <string>
 #include <sys/ioctl.h>
-#include "charset.cpp"
+#include <SFML/Graphics.hpp>
+#include <vector>
+#include "charset.h"
 
-#define width 84
-#define height 48
-#define bufsize 504
+#define SCREEN_width 84
+#define SCREEN_height 48
+#define SCREEN_bufsize 504
 
-class PCD8544{
-private:
-	WINDOW *window;
+class Screen {
+protected:
 	uint8_t reversed = 0;
 
 public:
 	uint16_t cursor = 512;
-	uint8_t screen_buffer[bufsize];
+	uint8_t screen_buffer[SCREEN_bufsize];
+	
+	~Screen() = default;
 
-	void begin() {
-		struct winsize size;
-		uint16_t x, y;
-		if (ioctl(0, TIOCGWINSZ, (char *) &size) < 0) {
-			x = 0;
-			y = 0;
-		} else {
-			x = (size.ws_col - 84) >> 1;
-			y = (size.ws_row - 48) >> 1;
-		}
-		initscr();
-		noecho();
-		curs_set(0);
-		start_color();
-		init_pair(1, COLOR_WHITE, COLOR_BLUE);
-		window = newwin(48, 84, y, x);
-		wbkgd(window, COLOR_PAIR(1));
-		wrefresh(window);
-	}
+	virtual void begin() = 0;
 
 	void setCursor(uint8_t x, uint8_t y){
 		x %= 84;
@@ -50,8 +35,8 @@ public:
 	void write(uint8_t c){
 		if (c > 127) c = 127;
 		for (uint8_t i = 0; i < 5; i++)
-			send(0, charset[c][i]);
-		send(0, 0);
+			send_data(charset[c][i]);
+		send_data(0);
 	}
 
 	void print(float num){
@@ -66,24 +51,17 @@ public:
 			write(str[i]);
 	}
 
-	void send(uint32_t _, uint8_t num){
-		uint8_t x = (cursor & 511) % 84;
-		uint8_t y = (cursor & 511) / 84 * 8;
-		screen_buffer[cursor & 511] = num;
-		cursor = (cursor & 0xfe00) + ((cursor & 0x1ff) + 1) % bufsize;
-		for (unsigned int i = 0; i < 8; i++)
-			mvwaddch(window, y+i, x, ((num >> i) ^ reversed) & 1 ? 219 : ' ');
-		wrefresh(window);
-	}
+	virtual void send_data(uint8_t num) = 0;
+	virtual void update() = 0;
 
 	bool set_point(int16_t x, int16_t y) {
-		if (x >= width || x < 0 || y >= height || y < 0)
+		if (x >= SCREEN_width || x < 0 || y >= SCREEN_height || y < 0)
 			return 0;
-		uint16_t n = y / 8 * width + x;
+		uint16_t n = y / 8 * SCREEN_width + x;
 		uint8_t tmp = screen_buffer[n];
 		setColored(n, 1 << y % 8);
 		setCursor(x, y/8);
-		send(HIGH, screen_buffer[n]);
+		send_data(screen_buffer[n]);
 		return tmp == screen_buffer[n];
 	}
 
@@ -137,8 +115,8 @@ public:
 	bool set_data(uint8_t data, uint16_t i) {
 		uint8_t last = screen_buffer[i];
 		setColored(i, data);
-		setCursor(i % width, i / width);
-		send(HIGH, screen_buffer[i]);
+		setCursor(i % SCREEN_width, i / SCREEN_width);
+		send_data(screen_buffer[i]);
 		return last + data != screen_buffer[i];
 	}
 
@@ -149,20 +127,20 @@ public:
 		bool intersected = false;
 		if (y < 0) y -= 8;
 		y = y / 8 + (y % 8 ? 1 : 0);
-		int start = y * width + x;
+		int start = y * SCREEN_width + x;
 		for (uint8_t i = 0; i < sy; i++) {
 			if (i + y > -1 && i + y < 7){
 				for (uint8_t l = 0; l < sx; l++) {
-					if (l + x > -1 && l + x < width) {
+					if (l + x > -1 && l + x < SCREEN_width) {
 						uint16_t c = (uint16_t)reader() << (8 - shift);
 						if (i + y > 0)
-							intersected |= set_data(c & 0xff, start+l-width);
+							intersected |= set_data(c & 0xff, start+l-SCREEN_width);
 						if (i + y < 6)
 							intersected |= set_data(c >> 8, start+l);
 					} else (*poi)++;
 				}
 			} else (*poi) += sx;
-			start += width;
+			start += SCREEN_width;
 		}
 		return intersected;
 	}
@@ -174,33 +152,132 @@ public:
 			screen_buffer[i] &= ~data;
 	}
 
-	void rst() {
-		setCursor(0, 0);
-		for(uint16_t i = 0; i < bufsize; i++) {
-			uint8_t x = (i & 511) % 84;
-			uint8_t y = (i & 511) / 84 * 8;
-			for (unsigned int l = 0; l < 8; l++)
-				mvwaddch(window, y+l, x, ((screen_buffer[i] >> l) ^ reversed) & 1 ? 219 : ' ');
-		}
-		wrefresh(window);
-	}
+	virtual void rst() = 0;
 
 	void clear() {
 		setCursor(0, 0);
-		for(uint16_t i = 0; i < bufsize; i++)
-			send(HIGH, 0);
+		for(uint16_t i = 0; i < SCREEN_bufsize; i++)
+			send_data(0);
 	}
 
 	void reverse(uint16_t from, uint16_t to) {
-		if (from >= bufsize) return;
-		setCursor(from % width, from / width);
+		if (from >= SCREEN_bufsize) return;
+		setCursor(from % SCREEN_width, from / SCREEN_width);
 		for(uint16_t i = from; i < to; i++)
-			send(HIGH, ~screen_buffer[i]);
+			send_data(~screen_buffer[i]);
 	}
 
 	void reverse() {
 		reversed ^= 0xff;
-		for (uint16_t i = 0; i < bufsize; i++)
-			send(HIGH, screen_buffer[cursor & 511]);
+		for (uint16_t i = 0; i < SCREEN_bufsize; i++)
+			send_data(screen_buffer[cursor & 511]);
+	}
+};
+
+class GraphicsScreen: public Screen {
+public:
+	sf::RenderWindow window {sf::VideoMode(SCREEN_width * 10, SCREEN_height * 10), "Comp"};
+	std::vector<sf::RectangleShape> pixels;
+	void begin() override {
+		for (int y = 0; y < SCREEN_height * 8; y++) {
+			for (int x = 0; x < SCREEN_width; x++) {
+				sf::RectangleShape p(sf::Vector2f(10, 10));
+				p.setPosition(x * 10, y * 10);
+				p.setFillColor(sf::Color(255, 0, 0));
+				pixels.push_back(p);
+				window.draw(p);
+			}
+		}
+		window.display();
+	}
+	
+	void update() override {
+		sf::Event event;
+		window.pollEvent(event);
+		if (event.type==sf::Event::Closed)
+			window.close();
+	}
+	
+	void rst() override {
+		setCursor(0, 0);
+		for(uint16_t i = 0; i < SCREEN_bufsize; i++) {
+			uint16_t x = i % SCREEN_width;
+			uint16_t y = i / SCREEN_width * 8;
+			for (uint16_t l = 0; l < 8; l++) {
+				auto c = ((screen_buffer[i] >> l) ^ reversed) & 1 ? 255 : 0;
+				uint16_t z = (y + l) * SCREEN_width + x;
+				pixels[z].setFillColor(sf::Color(c, c, c));
+				window.draw(pixels[z]);
+			}
+		}
+		window.display();
+	}
+	
+	void send_data(uint8_t num) override {
+		uint16_t i = (cursor & 511);
+		screen_buffer[cursor & 511] = num;
+		cursor = (cursor & 0xfe00) + (i + 1) % SCREEN_bufsize;
+		uint16_t x = i % SCREEN_width;
+		uint16_t y = i / SCREEN_width * 8;
+		for (uint16_t l = 0; l < 8; l++) {
+			auto c = ((num >> l) ^ reversed) & 1 ? 255 : 0;
+			uint16_t z = (y + l) * SCREEN_width + x;
+			pixels[z].setFillColor(sf::Color(c, c, c));
+			window.draw(pixels[z]);
+		}
+		window.display();
+	}
+};
+
+class ConsoleScreen: public Screen {
+private:
+	WINDOW *window;
+
+public:
+	~ConsoleScreen() {
+		endwin();
+	}
+	
+	void begin() override {
+		struct winsize size;
+		uint16_t x, y;
+		if (ioctl(0, TIOCGWINSZ, (char *) &size) < 0) {
+			x = 0;
+			y = 0;
+		} else {
+			x = (size.ws_col - 84) >> 1;
+			y = (size.ws_row - 48) >> 1;
+		}
+		initscr();
+		noecho();
+		curs_set(0);
+		start_color();
+		init_pair(1, COLOR_WHITE, COLOR_BLUE);
+		window = newwin(48, 84, y, x);
+		wbkgd(window, COLOR_PAIR(1));
+		wrefresh(window);
+	}
+	
+	void update() override { }
+	
+	void rst() override {
+		setCursor(0, 0);
+		for(uint16_t i = 0; i < SCREEN_bufsize; i++) {
+			uint8_t x = (i & 511) % 84;
+			uint8_t y = (i & 511) / 84 * 8;
+			for (uint8_t l = 0; l < 8; l++)
+				mvwaddch(window, y+l, x, ((screen_buffer[i] >> l) ^ reversed) & 1 ? 219 : ' ');
+		}
+		wrefresh(window);
+	}
+	
+	void send_data(uint8_t num) override {
+		uint8_t x = (cursor & 511) % 84;
+		uint8_t y = (cursor & 511) / 84 * 8;
+		screen_buffer[cursor & 511] = num;
+		cursor = (cursor & 0xfe00) + ((cursor & 0x1ff) + 1) % SCREEN_bufsize;
+		for (uint8_t i = 0; i < 8; i++)
+			mvwaddch(window, y+i, x, ((num >> i) ^ reversed) & 1 ? 219 : ' ');
+		wrefresh(window);
 	}
 };

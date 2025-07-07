@@ -5,6 +5,9 @@ using namespace std;
 #include "libs/MyScreen.h" // kbd and lcd order of init is essential
 #include "libs/ps2.h"
 #include "libs/RTC.h"
+
+#define RealScreen ConsoleScreen
+
 #include "../arch/arch.h"
 
 int main(){
@@ -16,7 +19,7 @@ int main(){
 	delay(1500);
 	begin();
 	sp = 1 << 31;
-	while (true){
+	while (1) {
 		uint8_t x = read_();
 		comms[x]();
 		fill_mbuffer();

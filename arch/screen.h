@@ -59,19 +59,19 @@ void rev() {
 }
 
 void sts_r() {
-	sd_raw_write(R[read_()], lcd.screen_buffer, bufsize);
+	sd_raw_write(R[read_()], lcd.screen_buffer, SCREEN_bufsize);
 }
 
 void sts_c() {
-	sd_raw_write(readNum(), lcd.screen_buffer, bufsize);
+	sd_raw_write(readNum(), lcd.screen_buffer, SCREEN_bufsize);
 }
 
 void lds_r() {
-	sd_raw_read(R[read_()], lcd.screen_buffer, bufsize);
+	sd_raw_read(R[read_()], lcd.screen_buffer, SCREEN_bufsize);
 	lcd.rst();
 }
 
 void lds_c() {
-	sd_raw_read(readNum(), lcd.screen_buffer, bufsize);
+	sd_raw_read(readNum(), lcd.screen_buffer, SCREEN_bufsize);
 	lcd.rst();
 }

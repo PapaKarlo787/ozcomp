@@ -9,7 +9,7 @@ uint32_t R[16];
 uint32_t S[16];
 uint8_t r1, r2;
 PS2Keyboard kbd(10, 2, 8);
-NokiaScreen lcd;
+RealScreen lcd;
 iarduino_RTC timeUnix;
 
 
